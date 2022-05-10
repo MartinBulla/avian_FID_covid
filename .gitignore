@@ -20,15 +20,11 @@ freeze/
 .DS_Store
 .Rproj.user
 
-Data/m_tlb_s2.Rdata
-Data/m_tlbi_s2.Rdata
-Data/m_tlbi.Rdata
-Data/m_tlb.Rdata
-Data/m_tlbi_s.Rdata
-Data/m_tlb_s.Rdata
-Data/mi_s_time.Rdata
-Data/mi_time.Rdata
-mi_time.Rdata
+vis_cache/
+vis_raw_cache/
+
+FID_before-during_COVID_files/
+FID_before-during_COVID_raw_files/
 
 EXP_cold_part_files/
 zDraft_files/
