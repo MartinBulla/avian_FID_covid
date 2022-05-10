@@ -1,0 +1,17 @@
+base
+here
+data.table
+ggplot2
+MASS
+Matrix
+lme4
+arm
+mvtnorm
+survival
+TH.data
+multcomp
+carData
+effects
+viridisLite
+viridis
+rmarkdown

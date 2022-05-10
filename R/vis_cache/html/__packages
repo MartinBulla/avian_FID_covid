@@ -1,0 +1,14 @@
+base
+data.table
+ggplot2
+rmarkdown
+MASS
+Matrix
+lme4
+arm
+mvtnorm
+survival
+TH.data
+multcomp
+carData
+effects
