@@ -294,10 +294,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       #length(dxx[, unique(sp_loc)])
       #length(dxx[, unique(paste(IDLocality, Species, Covid))])
       set.seed(42)
-      pkk = dxx[, sample(pk, size = 1), by = .(IDLocality, Species, Covid)]
-      d11 = dxx[pk %in% pkk$V1]
+      dxx = dxx[,.SD[sample(.N, min(1,.N))],by = .(IDLocality, Species, Covid)]
 
-      m11=lmer(scale(log(FID))~
+      m12=lmer(scale(log(FID))~
                   scale(log(SD))+
                   scale(log(FlockSize))+
                   scale(log(BodyMass))+
@@ -305,23 +304,18 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|Year)+(0+Covid|Species)+ (1|sp_day_year) +(0+Covid|Country) + (0+Covid|IDLocality) + (1|sp_loc),
-                  data = d11,
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_m11 = est_out(m11, '12) (1|Year)+(0+Covid|Species)+ (1|sp_day_year) +(0+Covid|Country) + (0+Covid|IDLocality) + (1|sp_loc); 1/species/locality/period without PL')  
+                  (1|Year) + (Covid|Species)+ (Covid|IDLocality) + (1|sp_loc),
+                  data = dxx,
+                  REML = FALSE) # sp_day_year & Country & Genus can stay (but explains 0 var)
+        est_m12 = est_out(m12, '12) ((1|Year) + (Covid|Species)+ (Covid|IDLocality) + (1|sp_loc); 1/species/locality/period without PL')  
     # 1 obs/species/locality/covid from localities with >4 before/after
       dx = pp[N_during>4 & N_before >4]
-      dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species) & Country!='Poland']
+      dxx = d[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) & Country!='Poland']
       dxx[, pk:=1:nrow(dxx)]
-     
-      dxx=dxx[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) ]
-      #length(dxx[, unique(paste(IDLocality, Species, Covid))])
-      #table(dxx$sp_loc, dxx$Covid)
       set.seed(42)
-      pkk = dxx[, sample(pk, size = 1), by = .(IDLocality, Species, Covid)]
-      d11 = dxx[pk %in% pkk$V1]
+      dxx = dxx[,.SD[sample(.N, min(1,.N))],by = .(IDLocality, Species, Covid)]
 
-     m13=lmer(scale(log(FID))~
+      m13=lmer(scale(log(FID))~
                   scale(log(SD))+
                   scale(log(FlockSize))+
                   scale(log(BodyMass))+
@@ -329,22 +323,20 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                 (1|Species)+ (0+Covid|Country) + (0+Covid|IDLocality) + (1|sp_loc),
-                  data = d11,
-                  REML = FALSE)
+                  (1|Species), #similar if sp_loc used
+                  data = dxx,
+                  REML = FALSE
+                  ) 
+                  # year/genus/Country/IDLocality can stay (but explains 0 var)
+                  # also possible (1|Country) or (0+Covid|IDLocality) or (0+Covid|Country) + (0+Covid|IDLocality)
       # singular fit but just because some random effects estimated as null
-      est_m13 = est_out(m13, '13) 1|Species) +  (0+Covid|Country) + (0+Covid|IDLocality) + (1|sp_loc); 1/species/locality/period without PL & before/during >4')  
+      est_m13 = est_out(m13, '13) (1|Species); 1/species/locality/period without PL & before/during >4')  
     # 1 obs/species/locality/covid from localities with >4 before/after dif random structure
       dx = pp[N_during>4 & N_before >4]
-      dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species) & Country!='Poland']
+      dxx = d[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) & Country!='Poland']
       dxx[, pk:=1:nrow(dxx)]
-      
-      dxx=dxx[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) ]
-      #length(dxx[, unique(paste(IDLocality, Species, Covid))])
-      #table(dxx$sp_loc, dxx$Covid)
       set.seed(42)
-      pkk = dxx[, sample(pk, size = 1), by = .(IDLocality, Species, Covid)]
-      d11 = dxx[pk %in% pkk$V1]
+      dxx = dxx[,.SD[sample(.N, min(1,.N))],by = .(IDLocality, Species, Covid)]
 
       m14=lmer(scale(log(FID))~
                   scale(log(SD))+
@@ -354,15 +346,14 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|Species), # similar if sp_loc useed
-                  data = d11,
+                  (Covid|Species) + (1|sp_loc), # similar if sp_loc useed
+                  data = dxx,
                   REML = FALSE) # (Covid|IDLocality) +
-      est_m14 = est_out(m14, '14) (1|Species); 1/species/locality/period without PL & before/during >4')  
+      est_m14 = est_out(m14, '14) (Covid|Species)+ (1|sp_loc); 1/species/locality/period without PL & before/during >4')  
     
     # avg obs/species/locality/covid from localities
-      # 1 obs/species/locality/covid
       dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species) & Country!='Poland']
-      length(dxx[, unique(paste(sp_loc, Covid))])
+      #length(dxx[, unique(paste(sp_loc, Covid))])
       m = lm(log(FID) ~ log(SD),dxx)
       dxx[, resid_FID := resid(m)]
       a = dxx[, mean(resid_FID) ,by = .(Country, IDLocality, genus, Species, sp_loc, Covid)]
@@ -374,12 +365,66 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   (1|genus) + (Covid|Species)+ (Covid|Country) + (Covid|IDLocality) + (1|sp_loc),
                   data = a,
                   REML = FALSE) # (Covid|IDLocality) +
-      est_m15 = est_out(m15, '15) (1|genus) + (Covid|Species)+ (Covid|Country) + (Covid|IDLocality) + (1|sp_loc); 1 average/species/locality/period without PL; on means from resid_FID')  
+      est_m15 = est_out(m15, '15) (1|genus) + (Covid|Species)+ (Covid|Country) + (Covid|IDLocality) + (1|sp_loc); 1 average resid_FID/species/locality/period without PL')  
+    # avg obs/species/locality/covid from localities with >4 before/afteer
+      dx = pp[N_during>4 & N_before >4]
+      dxx = d[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) & Country!='Poland']
+      dxx[, pk:=1:nrow(dxx)]
+      m = lm(log(FID) ~ log(SD),dxx)
+      dxx[, resid_FID := resid(m)]
+      a = dxx[, mean(resid_FID) ,by = .(Country, IDLocality, genus, Species, sp_loc, Covid)]
+      setnames(a, old = 'V1', new = 'resid_FID_avg')
+      #ggplot(a, aes(x = resid_FID_avg)) +geom_histogram()
+     
+      m16=lmer(scale(resid_FID_avg)~
+                  scale(Covid)+
+                  (1|genus) + (Covid|Species)+ (0+Covid|Country) + (Covid|IDLocality) + (1|sp_loc),
+                  data = a,
+                  REML = FALSE,
+                  control = lmerControl(
+                  optimizer ='optimx', optCtrl=list(method='nlminb')))  # (Covid|IDLocality) +
+      est_m16 = est_out(m16, '16) (1|genus) + (Covid|Species)+ (0+Covid|Country) + (Covid|IDLocality) + (1|sp_loc); 1 average resid_FID/species/locality/period without PL & before/during >4')  
+    # avg per species and country from above
+      dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species) & Country!='Poland']
+      length(dxx[, unique(paste(sp_loc, Covid))])
+      m = lm(log(FID) ~ log(SD),dxx)
+      dxx[, resid_FID := resid(m)]
+      a = dxx[, mean(resid_FID) ,by = .(Country, IDLocality, genus, Species, sp_loc, Covid)]
+      setnames(a, old = 'V1', new = 'resid_FID_avg')
+      aa=a[,mean(resid_FID_avg),.(genus, Country, Species, Covid)]
+      setnames(aa, old = 'V1', new = 'resid_FID_avg')
+      #ggplot(a, aes(x = resid_FID_avg)) +geom_histogram()
+     
+      m17=lmer(scale(resid_FID_avg)~
+                  scale(Covid)+
+                  (1|genus) + (1|Species)+ (1|Country),
+                  data = aa,
+                  REML = FALSE) # (Covid|IDLocality) +
+      est_m17 = est_out(m17, '17) (1|genus) + (Covid|Species)+ (Covid|Country) ; 1 average resid_FID/species/country/period without PL')  
+    # avg per species from above
+      dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species) & Country!='Poland']
+      length(dxx[, unique(paste(sp_loc, Covid))])
+      m = lm(log(FID) ~ log(SD),dxx)
+      dxx[, resid_FID := resid(m)]
+      a = dxx[, mean(resid_FID) ,by = .(Country, IDLocality, genus, Species, sp_loc, Covid)]
+      setnames(a, old = 'V1', new = 'resid_FID_avg')
+      aa=a[,mean(resid_FID_avg),.(genus, Country, Species, Covid)]
+      setnames(aa, old = 'V1', new = 'resid_FID_avg')
+      aaa=aa[,mean(resid_FID_avg),.(genus, Species, Covid)]
+      setnames(aaa, old = 'V1', new = 'resid_FID_avg')
+      #ggplot(a, aes(x = resid_FID_avg)) +geom_histogram()
+     
+      m18=lmer(scale(resid_FID_avg)~
+                  scale(Covid)+
+                  (Covid|genus),
+                  data = aaa,
+                  REML = FALSE) # (Covid|IDLocality) +
+      est_m18 = est_out(m18, '18) (Covid|genus); 1 average resid_FID/species/period without PL')  
     
-      
+      t.test(aaa$resid_FID_avg[aaa$Covid == 0], aaa$resid_FID_avg[aaa$Covid == 1],paired = TRUE, alternative = "two.sided")
       
   # plot
-      x = rbind(est_mf_max, est_mf_max_, est_mf, est_mf_10, est_mf_5ba,est_mf_9ba,est_mf_5baP,est_mf_5ba_loc_P, est_mf_5ba_loc_P_2,est_mf_5ba_loc_P_2_year,est_mf_5ba_loc_P_2_year14,est_m11,est_m13,est_m14,est_m15)
+      x = rbind(est_mf_max, est_mf_max_, est_mf, est_mf_10, est_mf_5ba,est_mf_9ba,est_mf_5baP,est_mf_5ba_loc_P, est_mf_5ba_loc_P_2,est_mf_5ba_loc_P_2_year,est_mf_5ba_loc_P_2_year14,est_m12,est_m13,est_m14,est_m15,est_m16,est_m17,est_m18)
 
       g = 
       ggplot(x[predictor == 'scale(Covid)'], aes(y = model, x = estimate, col = model)) +
@@ -419,11 +464,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                 axis.title=element_text(size=9)
                 )
       g
-      ggsave(here::here('Outputs/effect_sizes.png'),g, width = 20, height =10, units = 'cm')
+      ggsave(here::here('Outputs/effect_sizes_2022-05-10_evening.png'),g, width = 30, height =8, units = 'cm')
 
-
-
-    acf(resid(m11), type="p", main=list("Temporal autocorrelation:\npartial series residual",cex=0.8))
+  # model ass
+    acf(resid(m16), type="p", main=list("Temporal autocorrelation:\npartial series residual",cex=0.8))
 
 
 #' ### exploration
