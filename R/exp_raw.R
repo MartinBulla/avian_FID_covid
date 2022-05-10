@@ -24,16 +24,17 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     require(ggplot2)
     require(MASS)
     require(multcomp)
+    require(optimx)
     require(PerformanceAnalytics)
     require(viridis)
   
-  # constants
+    # constants
     round_ = 3 # number of decimal places to round model coefficients
     nsim = 5000 # number of simulations to extract estimates and 95%CrI
     ax_lines = "grey60" # defines color of the axis lines
     colors <- c("#999999", "#E69F00", "#56B4E9") #viridis(3)
 
-  # customized ggplot theme
+    # customized ggplot theme
       theme_MB = theme(  
                 title = element_text(size=8, colour="grey30"),
                 axis.line = element_blank(),
@@ -65,7 +66,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                 legend.box.margin = margin(l = -6), #legend.justification = c(-1,0),
                 legend.background = element_blank()
                 )  
-  # function for estimates
+    # function for estimates
     est_out =function(model = m, label = "", nsim = 5000){
         bsim = sim(model, n.sim=5000) 
         v = apply(bsim@fixef, 2, quantile, prob=c(0.5))
@@ -89,18 +90,12 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     d[, flock_ln := log(FlockSize)]
     #d[Country == 'Australia', Day_:= abs(Day - 189)]
     
-
     d1 = d[Covid == 1, .N, by = Species]
     d2 = d[Covid == 0, .N, by = Species]
     setnames(d1, old = 'N', new ='N_during')
     setnames(d2, old = 'N', new ='N_before')
     dd = merge(d1,d2)  
     da = merge(d1,d2, all = TRUE)
-
-    nrow(dd) # only 55 species scored during and after covid - is that an issue?)
-    nrow(da[!Species%in%dd$Species & is.na(N_before)]) # the rest 80 scored  during covid, and only 13 before
-    nrow(da[!Species%in%dd$Species & !is.na(N_before)]) # only 13 before
-
 
     p1 = d[Covid == 1, .N, by = .(IDLocality, Species)]
     p2 = d[Covid == 0, .N, by = .(IDLocality, Species)]
@@ -109,15 +104,12 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     pp = merge(p1,p2)  
     pa = merge(p1,p2, all = TRUE)
     
-    length(unique(pp$Species))
-    nrow(pp[N_during>4 & N_before>4])
-#' ### Model
-#' #### Full - all data
-#' To control for pseudo-replication we fitted genus, species, country, species at specific location and species at a given day of a given year as random intercepts and period (before lockdown and during lockdown) as random slope to all random intercepts. Given the singular fit, we removed random slope from intercepts where correlations were -1 and kept the model with random slope for country and species at sampling location.
+#' ### Models
+#' To control for pseudo-replication we fitted year, genus, species, country, species at specific location and species at a given day of a given year as random intercepts and period (before lockdown and during lockdown) as random slope to all random intercepts. Given the singular fit, we removed random slope from intercepts where correlations were -1 and kept the model with random slope for country and species at sampling location.
   
 # CHECK SINGULARITIES and ADD average model a model with 1 sample per species and locality
   # prepare estimates 
-    # all data, all random slopes 
+    # all data, all random slopes - singularity 
       mf_max=lmer(scale(log(FID))~
                   scale(log(SD))+
                   scale(log(FlockSize))+
@@ -126,10 +118,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (Covid|genus)+(Covid|Species)+(Covid|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
-                  data = d) # (Covid|IDLocality) +
-      est_mf_max = est_out(mf_max, '01) (Covid|genus) + (Covid|Species) + (CovidCovid|sp_day_year) + (Covid|Country) + (Covid|sp_loc)')  
-    # all data, all random slopes, but some without cor
+                  (1|Year) + (Covid|genus)+(Covid|Species)+(Covid|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
+                  data = d)# # (Covid|IDLocality) +
+      est_mf_max = est_out(mf_max, '01) (Year) + (Covid|genus) + (Covid|Species) + (CovidCovid|sp_day_year) + (Covid|Country) + (Covid|sp_loc)')  
+    # all data, all random slopes, but some without cor to avoid singularity
       mf_max_=lmer(scale(log(FID))~
                   scale(log(SD))+
                   scale(log(FlockSize))+
@@ -138,9 +130,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (0+Covid|genus)+(0+Covid|Species)+(0+Covid|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
+                  (1|Year) +(0+Covid|genus)+(0+Covid|Species)+(0+Covid|sp_day_year) + (Covid|Country) + (0+Covid|IDLocality) +(Covid|sp_loc),
                   data = d, REML = FALSE) # (Covid|IDLocality) +
-      est_mf_max_ = est_out(mf_max, '02) (0+Covid|genus) + (0+Covid|Species) + (0+Covid|sp_day_year) + (Covid|Country) + (Covid|sp_loc)')   
+      est_mf_max_ = est_out(mf_max, '02) (1|Year) + (0+Covid|genus) + (0+Covid|Species) + (0+Covid|sp_day_year) + (Covid|Country) + (0+Covid|IDLocality) + (Covid|sp_loc)')   
     # all data, random slopes that allow for non-singular fit 
       mf=lmer(scale(log(FID))~
                   scale(log(SD))+
@@ -150,9 +142,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
-                  data = d, REML = FALSE) # (Covid|IDLocality) +
-      est_mf = est_out(mf, '03) (1|genus) + (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc)')
+                  (1|Year) +(1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
+                  data = d, REML = FALSE, control = lmerControl(
+                           optimizer ='optimx', optCtrl=list(method='nlminb')))# (Covid|IDLocality) +
+      est_mf = est_out(mf, '03) (1|Year) +(1|genus) + (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc)')
     
     # >9 per species
       d[, Nsp := .N, Species]
@@ -164,9 +157,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
+                  (1|Year) + (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
                   data = d[Nsp>9], REML = FALSE) # (Covid|IDLocality) +
-      est_mf_10 = est_out(mf_10, '04) (1|genus) + (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc); >9/species')  
+      est_mf_10 = est_out(mf_10, '04) (1|Year) + (1|genus) + (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc); >9/species')  
     
     # before & during > 4/species, random slopes that allow for non-singular fit 
       dx = dd[N_during>4 & N_before >4]
@@ -180,10 +173,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
+                  (1|Year) + (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
                   data = d[Species %in% dx$Species],
                   REML = FALSE) # (Covid|IDLocality) +
-      est_mf_5ba = est_out(mf_5ba, '05) (1|genus) + (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc); >4/species/period')  
+      est_mf_5ba = est_out(mf_5ba, '05) (1|Year) +(1|genus) + (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc); >4/species/period')  
     # before & during > 9/species, random slopes that allow for non-singular fit 
       dx = dd[N_during>9 & N_before >9]
       #dxx = d[Species %in% dx$Species]
@@ -196,27 +189,29 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
+                  (1|Year) + (1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
                   data = d[Species %in% dx$Species],
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_mf_9ba = est_out(mf_9ba, '06) (1|genus) + (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc); >9/species/period')  
+                  REML = FALSE) # (1|genus) explained 0 so taken out, but for reporting could stay(Covid|IDLocality) +
+      est_mf_9ba = est_out(mf_9ba, '06) (1|Year) +  (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc); >9/species/period')  
     # no Poland before & during > 4/species, random structure that allow for non-singular fit 
       dx = dd[N_during>4 & N_before >4]
       dxx = d[Species %in% dx$Species & Country!='Poland']
       #dxx = d[Species %in% dx$Species]
       #dx2 = dd[N_during>9 & N_before >9]
       mf_5baP=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  (1|genus)+(1|Species)+ (Covid|Country) + (Covid|sp_loc),
-                  data = d[Species %in% dx$Species & Country!='Poland'],
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_mf_5baP = est_out(mf_5baP, '07) (1|genus) + (1|Species) + (Covid|Country) + (Covid|sp_loc); >4/species/period without PL')  
+            scale(log(SD))+
+            scale(log(FlockSize))+
+            scale(log(BodyMass))+
+            scale(sin(rad)) + scale(cos(rad)) + 
+            #scale(Day)+
+            scale(Temp)+
+            scale(Covid)+
+            (1|Year) + (1|genus) + (1|Species)+ (Covid|Country) + (Covid|sp_loc),
+            data = d[Species %in% dx$Species & Country!='Poland'],
+            REML = FALSE, control = lmerControl(
+                  optimizer ='optimx', optCtrl=list(method='nlminb'))) 
+                  # (Covid|IDLocality) +
+      est_mf_5baP = est_out(mf_5baP, '07)  (1|Year) + (1|genus) + (1|Species) + (Covid|Country) + (Covid|sp_loc); >4/species/period without PL')  
     # no Poland before & during > 4/species/locality/covid, random structure that allow for non-singular fit
       dx = pp[N_during>4 & N_before >4]
       dxx = d[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) & Country!='Poland']
@@ -230,10 +225,13 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|Species)+ (1|sp_day_year) +(0+Covid|Country) + (Covid|IDLocality) + (Covid|sp_loc),
+                  (1|Year) + (1|Species)+ (1|sp_day_year) +(0+Covid|Country) + (Covid|IDLocality) + (0+Covid|sp_loc),
                   data = dxx,
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_mf_5ba_loc_P = est_out(mf_5ba_loc_P, '08) (1|Species) + (0+Covid|Country) + (Covid|sp_loc); >4/species/locality/period without PL')  
+                  REML = FALSE, control = lmerControl(
+                  optimizer ='optimx', optCtrl=list(method='nlminb'))) 
+                  # (1|genus) explained 0 so taken out, but for reporting could stay
+                  # (Covid|IDLocality) +
+      est_mf_5ba_loc_P = est_out(mf_5ba_loc_P, '08) (1|Year) + (1|genus)+(1|Species) + (1|sp_day_year)+ (0+Covid|Country) + (Covid|IDLocality) + (0+Covid|sp_loc); >4/species/locality/period without PL')  
     # diff model structures for previous
       dx = pp[N_during>4 & N_before >4]
       dxx = d[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) & Country!='Poland']
@@ -247,10 +245,12 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|Species)+ (1|sp_day_year) +(0+Covid|Country) + (Covid|IDLocality) + (Covid|sp_loc),
+                  (1|Year) + (1|Species)+ (1|sp_day_year) +(0+Covid|Country) + (Covid|IDLocality) + (1|sp_loc),
                   data = dxx,
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_mf_5ba_loc_P_2 = est_out(mf_5ba_loc_P_2, '09) (1|Species) + (0+Covid|Country) + (Covid|IDLocality) +(Covid|sp_loc); >4/species/locality/period without PL')  
+                  REML = FALSE,
+                  control = lmerControl(
+                  optimizer ='optimx', optCtrl=list(method='nlminb'))) # (Covid|IDLocality) +
+      est_mf_5ba_loc_P_2 = est_out(mf_5ba_loc_P_2, '09) (1|Year) + (1|Species) + (1|sp_day_year) + (0+Covid|Country) + (Covid|IDLocality) +(1|sp_loc); >4/species/locality/period without PL')  
     # year diff structures Poland before & during > 4/species/locality, random structure that allow for non-singular fit
       dx = pp[N_during>4 & N_before >4]
       dxx = d[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) & Country!='Poland']
@@ -264,10 +264,12 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|Year)+  (1|Species)+ (1|sp_day_year) +(0+Covid|Country) + (Covid|IDLocality) + (0+Covid|sp_loc),
+                  (1|Year)+  (1|genus)+(1|Species)+ (1|sp_day_year) +(0+Covid|Country) + (Covid|IDLocality) + (0+Covid|sp_loc),
                   data = dxx,
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_mf_5ba_loc_P_2_year = est_out(mf_5ba_loc_P_2_year, '10) (1|Year) + (1|Species) + (0+Covid|Country) + (Covid|IDLocality) +(0+Covid|sp_loc); >4/species/locality/period without PL')  
+                  REML = FALSE,
+                  control = lmerControl(
+                  optimizer ='optimx', optCtrl=list(method='nlminb'))) # (Covid|IDLocality) +
+      est_mf_5ba_loc_P_2_year = est_out(mf_5ba_loc_P_2_year, '10) (1|Year) + (1|genus) + (1|Species) + (1|sp_day_year)+(0+Covid|Country) + (Covid|IDLocality) +(0+Covid|sp_loc); >4/species/locality/period without PL')  
     # year diff structures Poland before & during > 4/species/locality, random structure that allow for non-singular fit; without 2014
       dx = pp[N_during>4 & N_before >4]
       dxx = d[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) & Country!='Poland' & !IDLocality%in%d[Year == 2014, unique(IDLocality)]]
@@ -289,8 +291,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     # 1 obs/species/locality/covid
       dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species) & Country!='Poland']
       dxx[, pk:=1:nrow(dxx)]
-       length(dxx[, unique(sp_loc)])
-      length(dxx[, unique(paste(IDLocality, Species, Covid))])
+      #length(dxx[, unique(sp_loc)])
+      #length(dxx[, unique(paste(IDLocality, Species, Covid))])
+      set.seed(42)
       pkk = dxx[, sample(pk, size = 1), by = .(IDLocality, Species, Covid)]
       d11 = dxx[pk %in% pkk$V1]
 
@@ -302,22 +305,23 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|Year)+(0+Covid|Species)+ (1|sp_day_year) +(0+Covid|Country) + (Covid|IDLocality) + (1|sp_loc),
+                  (1|Year)+(0+Covid|Species)+ (1|sp_day_year) +(0+Covid|Country) + (0+Covid|IDLocality) + (1|sp_loc),
                   data = d11,
                   REML = FALSE) # (Covid|IDLocality) +
-      est_m11 = est_out(m11, '12) (1|Year) + (0+Covid|Species) + (1|sp_day_year) + (0+Covid|Country) + (Covid|IDLocality) + (1|sp_loc); 1/species/locality/period without PL')  
+      est_m11 = est_out(m11, '12) (1|Year)+(0+Covid|Species)+ (1|sp_day_year) +(0+Covid|Country) + (0+Covid|IDLocality) + (1|sp_loc); 1/species/locality/period without PL')  
     # 1 obs/species/locality/covid from localities with >4 before/after
       dx = pp[N_during>4 & N_before >4]
       dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species) & Country!='Poland']
       dxx[, pk:=1:nrow(dxx)]
-      
+     
       dxx=dxx[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) ]
       #length(dxx[, unique(paste(IDLocality, Species, Covid))])
       #table(dxx$sp_loc, dxx$Covid)
+      set.seed(42)
       pkk = dxx[, sample(pk, size = 1), by = .(IDLocality, Species, Covid)]
       d11 = dxx[pk %in% pkk$V1]
 
-      m13=lmer(scale(log(FID))~
+     m13=lmer(scale(log(FID))~
                   scale(log(SD))+
                   scale(log(FlockSize))+
                   scale(log(BodyMass))+
@@ -327,7 +331,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   scale(Covid)+
                  (1|Species)+ (0+Covid|Country) + (0+Covid|IDLocality) + (1|sp_loc),
                   data = d11,
-                  REML = FALSE) # (Covid|IDLocality) +
+                  REML = FALSE)
+      # singular fit but just because some random effects estimated as null
       est_m13 = est_out(m13, '13) 1|Species) +  (0+Covid|Country) + (0+Covid|IDLocality) + (1|sp_loc); 1/species/locality/period without PL & before/during >4')  
     # 1 obs/species/locality/covid from localities with >4 before/after dif random structure
       dx = pp[N_during>4 & N_before >4]
@@ -337,6 +342,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       dxx=dxx[paste(IDLocality, Species) %in% paste(dx$IDLocality, dx$Species) ]
       #length(dxx[, unique(paste(IDLocality, Species, Covid))])
       #table(dxx$sp_loc, dxx$Covid)
+      set.seed(42)
       pkk = dxx[, sample(pk, size = 1), by = .(IDLocality, Species, Covid)]
       d11 = dxx[pk %in% pkk$V1]
 
@@ -348,10 +354,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|sp_loc),
+                  (1|Species), # similar if sp_loc useed
                   data = d11,
                   REML = FALSE) # (Covid|IDLocality) +
-      est_m14 = est_out(m14, '14) (1|sp_loc); 1/species/locality/period without PL & before/during >4')  
+      est_m14 = est_out(m14, '14) (1|Species); 1/species/locality/period without PL & before/during >4')  
     
     # avg obs/species/locality/covid from localities
       # 1 obs/species/locality/covid
@@ -413,7 +419,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                 axis.title=element_text(size=9)
                 )
       g
-      ggsave(here::here('Outputs/effect_sizes.png'),g, width = 12, height =10, units = 'cm')
+      ggsave(here::here('Outputs/effect_sizes.png'),g, width = 20, height =10, units = 'cm')
 
 
 
@@ -422,6 +428,11 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 
 #' ### exploration
 #' #### sample sizes
+    nrow(dd) # only 55 species scored during and after covid - is that an issue?)
+    nrow(da[!Species%in%dd$Species & is.na(N_before)]) # the rest 80 scored  during covid, and only 13 before
+    nrow(da[!Species%in%dd$Species & !is.na(N_before)]) # only 13 before
+
+
     data.frame(table(d$Species,d$Covid))
     table(d$Year)
     summary(as.factor(data.frame(table(d$sp_day_year))$Freq))
@@ -431,6 +442,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     nrow(dd) # only 55 species scored during and after covid - is that an issue?)
     nrow(da[!Species%in%dd$Species & is.na(N_before)]) # the rest 80 scored  during covid, and only 13 before
     nrow(da[!Species%in%dd$Species & !is.na(N_before)]) # only 13 before
+
+    length(unique(pp$Species))
+    nrow(pp[N_during>4 & N_before>4])
 
      table(dx$IDLocality)
      table(dx$IDLocality, dx$Year)
