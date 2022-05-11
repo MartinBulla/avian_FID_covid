@@ -592,7 +592,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
    ggplot(d, aes(x = Day, y = FID)) + geom_smooth() + scale_y_continuous(trans = 'log10')
    ggplot(d, aes(x = Day, y = FID)) + geom_point() + geom_smooth() + scale_y_continuous(trans = 'log10')
    
+   ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE)
    ggplot(d, aes(x = Day, y = FID)) + geom_point(aes(col = Country), alpha = 0.8) + geom_smooth(col ='red', fill = 'red') + scale_y_continuous(trans = 'log10') + facet_wrap(~Year, nrow = 1) + scale_color_viridis(discrete=TRUE) 
+   
    ggplot(d[!Country%in%'Australia'], aes(x = Day, y = FID)) + geom_point(aes(col = Country), alpha = 0.8) + geom_smooth(col ='red', fill = 'red') + scale_y_continuous(trans = 'log10') + facet_wrap(~Year, nrow = 1) + scale_color_viridis(discrete=TRUE) 
    ggplot(d[!Country%in%c('Australia','Poland')], aes(x = Day, y = FID)) + geom_point(aes(col = Country), alpha = 0.8) + geom_smooth(col ='red', fill = 'red') + scale_y_continuous(trans = 'log10') + facet_wrap(~Year, nrow = 1) + scale_color_viridis(discrete=TRUE) 
    
