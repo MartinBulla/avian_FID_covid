@@ -185,6 +185,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   (1|Year) +(1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
                   data = d, REML = FALSE, control = lmerControl(
                            optimizer ='optimx', optCtrl=list(method='nlminb')))# (Covid|IDLocality) +
+      #d[,res := resid(mf)]
       est_mf_01c = est_out(mf, '01c) (1|Year) +(1|genus) + (1|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc)')
     # 01d no 2014, random slopes that allow for non-singular fit 
       mf1d=lmer(scale(log(FID))~
@@ -826,6 +827,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         control = lmerControl( 
             optimizer ='optimx', optCtrl=list(method='nlminb')) 
         )  
+     s[, res := resid(m01b)]
         # (1|Year) explains nothing - could stay 
      est_m01b = est_out(m01b, '01b) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc)') 
 
@@ -953,6 +955,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
           )  
 
 #' not used
+  save(d,s, file = 'Data/for_Peto.Rdata')
   # get pictures
     t = ggimage::phylopic_uid('Turdus merula')
     t = ggimage::phylopic_uid(x$Species)
