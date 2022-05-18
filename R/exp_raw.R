@@ -158,7 +158,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|Year) + (Covid|genus)+(Covid|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
+                  (1|Year) + (scale(Covid)|genus)+(scale(Covid)|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (scale(Covid)|sp_loc),
                   data = d)# # (Covid|IDLocality) +
       est_mf_01a = est_out(mf_max, '01a) (Year) + (Covid|genus) + (Covid|Species) + (1|sp_day_year) + (Covid|Country) + (Covid|sp_loc)')  
     # 01b all data, all random slopes, but some without cor to avoid singularity
@@ -587,8 +587,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
      aw[Species %in% x[N%in%c(1,2), Species], genus2:='other']
 
   # check
-     ggplot(a, aes(x = resid_FID_avg)) + geom_histogram()
-     ggplot(a, aes(x=FID_avg, y = resid_FID_avg)) + 
+    ggplot(a, aes(x = resid_FID_avg)) + geom_histogram()
+    ggplot(a, aes(x=FID_avg, y = resid_FID_avg)) + 
         stat_smooth() + 
         geom_point() +
         stat_cor(aes(label = ..r.label..),  label.x = 0.3, size = 2) +
@@ -608,12 +608,13 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
       #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
       #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
-      geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
+      #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
+      geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
         #ggtitle ("Sim based")+
       geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
       facet_wrap(~genus2) +
       geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
-      scale_color_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
+      scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
       scale_x_continuous("Before COVID flight initiation distance", expand = c(0, 0), trans = 'log10') +
       scale_y_continuous("During COVID flight initiation distance", expand = c(0, 0), trans = 'log10') +
       labs(title = "Species means per sampling location")+
@@ -629,7 +630,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
                                      trim = FALSE)
     grid.draw(ggx)
-    ggsave('Outputs/before_after_Genus.png',ggx, width=4.5,height=4,dpi=600)
+    ggsave('Outputs/before_after_Genus_fill.png',ggx, width=4.5,height=4,dpi=600)
    
   # resid per species
      ggplot(aw, aes(x = resid_FID_avg.0, y = resid_FID_avg.1)) + 
@@ -740,8 +741,19 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
      table(dx$IDLocality, dx$Year)   
 #' #### distributions & correlations  
    
-   chart.Correlation(d[, c('FID_ln', 'SD_ln', 'flock_ln', 'body_ln', 'Hour','Temp', 'Day')], histogram=TRUE, pch=19)
-   mtext("Single observations", side=3, line=3)
+   d[, sin_rad:=sin(rad)]
+   d[, cos_rad:=cos(rad)]
+
+   dp = d[,c('StringencyIndex','FID_ln','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day')]
+   setnames(dp,old = c('StringencyIndex','FID_ln','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day'), new = c('Stringency\nindex','Escape distance\nln(m)','Starting distance\nln(m)', 'Flock size\nln (m)', 'Body mass\nln(m)', 'Sinus\n of radians', 'Cosinus\nof radians','Temperature\n°C', 'Day'))
+    png("Outputs/Fig_Sx.png", width =17, height = 17, units = "cm", bg = "transparent", res = 600)
+    chart.Correlation(dp, histogram=TRUE, pch=19, alpha = 0.5)
+    mtext("Single observations", side=3, line=3)
+    dev.off()
+
+   #ggpairs(d[, c('Country','StringencyIndex','FID_ln','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day')], aes(colour = Country, alpha = 0.4))
+   #ggpairs(d[, c('StringencyIndex','FID_ln','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day')], axisLabels = c("internal"))
+
     #ggplot(d, aes(x = FID))+geom_histogram()
     #ggplot(d, aes(x = log(FID)))+geom_histogram()
     #ggplot(d, aes(x = FID_z))+geom_histogram()
@@ -786,7 +798,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
    s = d[Covid == 1]
    s[, Nsp := .N, by ='Species']
    s[, sp := gsub('[_]', ' ', Species)]
-  ##### Explore
+   ##### Explore
      ggplot(s, aes(x=StringencyIndex)) + geom_histogram()
      ggplot(s, aes(x=StringencyIndex)) + geom_histogram()+ facet_wrap(~Country)
      ggplot(s, aes(x = Day, y = FID)) + geom_point(aes(col = Country), alpha = 0.8) + geom_smooth(col ='red', fill = 'red') + scale_y_continuous(trans = 'log10') + facet_wrap(~Year, nrow = 1) + scale_color_viridis(discrete=TRUE) 
@@ -794,26 +806,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
      ggplot(s, aes(x = Day, y = StringencyIndex)) + geom_point(aes(col = Country), alpha = 0.8) + geom_smooth(col ='red', fill = 'red') +  facet_wrap(~Year, nrow = 1) + scale_color_viridis(discrete=TRUE) 
     
      table(s$Species)
-  ##### MODEL outputs
+   ##### MODEL outputs
     # estimates 
-     m01a=lmer(scale(log(FID))~
-          scale(log(SD))+
-          scale(log(FlockSize))+
-          scale(log(BodyMass))+
-          scale(sin(rad)) + scale(cos(rad)) + 
-          #scale(Day)+
-          scale(Temp)+
-          scale(StringencyIndex)+
-          (scale(StringencyIndex)|Species) + (1|Country) + (1|IDLocality),  
-          data = s, REML = FALSE, 
-          control = lmerControl(
-              optimizer ='optimx', optCtrl=list(method='L-BFGS-B'))
-          ) 
-          # (1|Year), (1|genus), (1|sp_day_year), (1|sp_loc),  explain nothing - could stay
-     est_m01a = est_out(m01a, '01a) (scale(StringencyIndex)|Species) + (1|Country) + (1|IDLocality)')  
-
-
-     m01b=lmer(scale(log(FID))~ 
+     m01a=lmer(scale(log(FID))~ 
+        Year+ 
         scale(log(SD))+ 
         scale(log(FlockSize))+ 
         scale(log(BodyMass))+ 
@@ -821,17 +817,16 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         #scale(Day)+ 
         scale(Temp)+ 
         scale(StringencyIndex)+ 
-        (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + 
-        (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc),   
+        (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc),
         data = s, REML = FALSE,  
         control = lmerControl( 
             optimizer ='optimx', optCtrl=list(method='nlminb')) 
         )  
-     s[, res := resid(m01b)]
+     s[, res := resid(m01a)]
         # (1|Year) explains nothing - could stay 
-     est_m01b = est_out(m01b, '01b) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc)') 
-
-     m02a=lmer(scale(log(FID))~
+     est_m01a = est_out(m01a, '01a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc)')
+     m01b=lmer(scale(log(FID))~
+          Year+       
           scale(log(SD))+
           scale(log(FlockSize))+
           scale(log(BodyMass))+
@@ -839,14 +834,32 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
           #scale(Day)+
           scale(Temp)+
           scale(StringencyIndex)+
-          (scale(StringencyIndex)|Species) + (1|Country) + (1|IDLocality),  
-          data = s[Nsp>4], REML = FALSE, 
+          (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc),  
+          data = s, REML = FALSE, 
           control = lmerControl(
-              optimizer ='optimx', optCtrl=list(method='L-BFGS-B'))
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
           ) 
-     est_m02a = est_out(m02a, '02a)  (scale(StringencyIndex)|Species) + (1|Country) + (1|IDLocality); >4/species') 
+          # (1|Year), (1|genus), (1|sp_day_year), (1|sp_loc),  explain nothing - could stay
+     est_m01b = est_out(m01b, '01b) (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc)')  
+     m01c=lmer(scale(log(FID))~
+          Year+       
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(StringencyIndex)+
+          (1|Country) + (scale(StringencyIndex)|IDLocality),  
+          data = s, REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+          # (1|Year), (1|genus), (1|sp_day_year), (1|sp_loc),  explain nothing - could stay
+     est_m01c = est_out(m01c, '01c) (1|Country) + (scale(StringencyIndex)|IDLocality)')  
 
-     m02b=lmer(scale(log(FID))~ 
+     m02a=lmer(scale(log(FID))~ 
+        Year+ 
         scale(log(SD))+ 
         scale(log(FlockSize))+ 
         scale(log(BodyMass))+ 
@@ -861,9 +874,88 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
             optimizer ='optimx', optCtrl=list(method='nlminb')) 
         )  
         # (1|Year) explains nothing - could stay 
-     est_m02b = est_out(m02b, '02b) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc);>4/species') 
+     est_m02a = est_out(m02a, '02a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc);>4/species')   
+     m02b=lmer(scale(log(FID))~
+          Year+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(StringencyIndex)+
+          (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc),  
+          data = s[Nsp>4], REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+     est_m02b = est_out(m02b, '02b)  (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc); >4/species') 
+     m02c=lmer(scale(log(FID))~
+          Year+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(StringencyIndex)+
+          (1|Country) + (scale(StringencyIndex)|IDLocality),  
+          data = s[Nsp>4], REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+     est_m02c = est_out(m02c, '02c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >4/species') 
+     
+     m03a=lmer(scale(log(FID))~ 
+        Year+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(StringencyIndex)+ 
+        (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + 
+        (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc),   
+        data = s[Nsp>9], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+        # (1|Year) explains nothing - could stay 
+     est_m03a = est_out(m03a, '03a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc);>9/species') 
+     m03b=lmer(scale(log(FID))~
+          Year+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(StringencyIndex)+
+          (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc),  
+          data = s[Nsp>9], REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+     est_m03b = est_out(m03b, '03b)  (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc); >9/species') 
+     m03c=lmer(scale(log(FID))~
+          Year+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(StringencyIndex)+
+          (1|Country) + (scale(StringencyIndex)|IDLocality),  
+          data = s[Nsp>9], REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+     est_m03c = est_out(m03c, '03c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >9/species') 
+
     # plot
-      xs = rbind(est_m01a,est_m01b, est_m02a, est_m02b)
+      xs = rbind(est_m01a,est_m01b,est_m01c, est_m02a, est_m02b,est_m02c, est_m03a, est_m03b, est_m03c)
 
       g = 
       ggplot(xs[predictor == 'scale(StringencyIndex)'], aes(y = model, x = estimate, col = model)) +
@@ -903,7 +995,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                 axis.title=element_text(size=9)
                 )
       g
-      ggsave(here::here('Outputs/effect_sizes_stringency.png'),g, width = 30, height =3, units = 'cm')
+      ggsave(here::here('Outputs/effect_sizes_stringency_2022-05-17.png'),g, width = 30, height =5, units = 'cm')
   ##### visualise
     g = 
     ggplot(s[Nsp>9], aes(x = StringencyIndex, y = FID)) +
