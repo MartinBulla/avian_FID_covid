@@ -12,13 +12,14 @@
 
 !/Data/
 !/R/
-!/Output/
+!/Outputs/
 !/Reports/
 
 # Ignore everything in freeze (even if in Except)
 freeze/
 .DS_Store
 .Rproj.user
+model_sim/
 
 vis_cache/
 vis_raw_cache/
