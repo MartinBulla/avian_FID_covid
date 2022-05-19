@@ -15,6 +15,7 @@ Make tables and check model ass
     require(MASS)
     require(multcomp)
     require(optimx)
+    require(performance)  
     require(PerformanceAnalytics)
     require(png)
     require(rphylopic)
@@ -91,44 +92,219 @@ Make tables and check model ass
         return(theimg)
         }
     # for Supplementary Table output based on sim
-        R_out = function(name = "define", model = m, nsim = 5000){
-         bsim <- sim(model, n.sim=nsim)  
+      m_out = function(model = m, type = "mixed", 
+        name = "define", dep = "define", fam = 'Gaussian',
+        round_ = 3, nsim = 5000, aic = FALSE, save_sim = 'Data/model_sim/', back_tran = FALSE, perc_ = 1){
+          # perc_ 1 = proportion or 100%
+        bsim = sim(model, n.sim=nsim)  
+        
+        if(save_sim!=FALSE){save(bsim, file = paste0(save_sim, name,'.RData'))}
+       
+        if(type != "mixed"){
+          v = apply(bsim@coef, 2, quantile, prob=c(0.5))
+          ci = apply(bsim@coef, 2, quantile, prob=c(0.025,0.975)) 
+
+          if(back_tran == TRUE & fam == "binomial"){
+           v = perc_*plogis(v)
+           ci = perc_*plogis(ci)
+           }
+          if(back_tran == TRUE & fam == "binomial_logExp"){
+                v = perc_*(1-plogis(v))
+                ci = perc_*(1-plogis(ci))
+                ci = rbind(ci[2,],ci[1,])
+               }
+
+          if(back_tran == TRUE & fam == "Poisson"){
+           v = exp(v)
+           ci = exp(ci)
+          }
+
+         oi=data.frame(type='fixed',effect=rownames(coef(summary(model))),estimate=v, lwr=ci[1,], upr=ci[2,])
+          rownames(oi) = NULL
+          oi$estimate_r=round(oi$estimate,round_)
+          oi$lwr_r=round(oi$lwr,round_)
+          oi$upr_r=round(oi$upr,round_)
+          if(perc_ == 100){
+           oi$estimate_r = paste0(oi$estimate_r,"%")
+           oi$lwr_r = paste0(oi$lwr_r,"%")
+           oi$upr_r = paste0(oi$upr_r,"%")
+          }
+         x=data.table(oi[c('type',"effect", "estimate_r","lwr_r",'upr_r')]) 
+       
+        }else{
+         v = apply(bsim@fixef, 2, quantile, prob=c(0.5))
+         ci = apply(bsim@fixef, 2, quantile, prob=c(0.025,0.975)) 
+
+         if(back_tran == TRUE & fam == "binomial"){
+          v = perc_*plogis(v)
+          ci = perc_*plogis(ci)
+         }
+          if(back_tran == TRUE & fam == "binomial_logExp"){
+                v = perc_*(1-plogis(v))
+                ci = perc_*(1-plogis(ci))
+                ci = rbind(ci[2,],ci[1,])
+               }
+
+          if(back_tran == TRUE & fam == "Poisson"){
+            v = exp(v)
+            ci = exp(ci)
+         }
+
+        oi=data.table(type='fixed',effect=rownames(coef(summary(model))),estimate=v, lwr=ci[1,], upr=ci[2,])
+            rownames(oi) = NULL
+            oi[,estimate_r := round(estimate,round_)]
+            oi[,lwr_r := round(lwr,round_)]
+            oi[,upr_r :=round(upr,round_)]
+            if(perc_ == 100){
+             oi[,estimate_r := paste0(estimate_r,"%")]
+             oi[,lwr_r := paste0(lwr_r,"%")]
+             oi[,upr_r := paste0(upr_r,"%")]
+            }
+         oii=oi[,c('type',"effect", "estimate_r","lwr_r",'upr_r')] 
+        
          l=data.frame(summary(model)$varcor)
          l = l[is.na(l$var2),]
          l$var1 = ifelse(is.na(l$var1),"",l$var1)
          l$pred = paste(l$grp,l$var1)
 
-         q50={}
+         q050={}
          q025={}
          q975={}
          pred={}
          
          # variance of random effects
          for (ran in names(bsim@ranef)) {
-           #ran =names(bsim@ranef)[1]
            ran_type = l$var1[l$grp == ran]
            for(i in ran_type){
-              # i = ran_type[2]
-            q50=c(q50,quantile(apply(bsim@ranef[[ran]][,,i], 1, var), prob=c(0.5)))
-            q025=c(q025,quantile(apply(bsim@ranef[[ran]][,,i], 1, var), prob=c(0.025)))
-            q975=c(q975,quantile(apply(bsim@ranef[[ran]][,,i], 1, var), prob=c(0.975)))
+            q050=c(q050,quantile(apply(bsim@ranef[[ran]][,,ran_type], 1, var), prob=c(0.5)))
+            q025=c(q025,quantile(apply(bsim@ranef[[ran]][,,ran_type], 1, var), prob=c(0.025)))
+            q975=c(q975,quantile(apply(bsim@ranef[[ran]][,,ran_type], 1, var), prob=c(0.975)))
             pred= c(pred,paste(ran, i))
             }
            }
          # residual variance
-         q50=c(q50,quantile(bsim@sigma^2, prob=c(0.5)))
+         q050=c(q050,quantile(bsim@sigma^2, prob=c(0.5)))
          q025=c(q025,quantile(bsim@sigma^2, prob=c(0.025)))
          q975=c(q975,quantile(bsim@sigma^2, prob=c(0.975)))
          pred= c(pred,'Residual')
 
-         ci = c(round(100*q025/sum(q025))[1], round(100*q975/sum(q975))[1])
-         ci = ci[order(ci)]
-         
-         ri=data.table(model = name, repeatability=paste0(round(100*q50/sum(q50)),'%')[1], CI = paste0(paste(ci[1], ci[2], sep ="-"), '%'))
-         
-         
-         return(ri)
+         ri=data.table(type='random %',effect=pred, estimate_r=round(100*q050/sum(q050)), lwr_r=round(100*q025/sum(q025)), upr_r=round(100*q975/sum(q975)))
+           
+         ri[lwr_r>upr_r, lwr_rt := upr_r]
+         ri[lwr_r>upr_r, upr_rt := lwr_r]
+         ri[!is.na(lwr_rt), lwr_r := lwr_rt]
+         ri[!is.na(upr_rt), upr_r := upr_rt]
+         ri$lwr_rt = ri$upr_rt = NULL
+
+         ri[,estimate_r := paste0(estimate_r,'%')]
+         ri[,lwr_r := paste0(lwr_r,'%')]
+         ri[,upr_r := paste0(upr_r,'%')]
+        
+        x = data.table(rbind(oii,ri))
+        }
+        
+        x[1, model := name]                                                                
+        x[1, response := dep]                                                                
+        x[1, error_structure := fam]      
+        N = length(resid(model))                                                          
+        x[1, N := N ]                                                                
+
+        x=x[ , c('model', 'response', 'error_structure', 'N', 'type',"effect", "estimate_r","lwr_r",'upr_r')] 
+
+        if (aic == TRUE){   
+            x[1, AIC := AIC(update(model,REML = FALSE))] 
+            }
+        if (aic == "AICc"){
+            aicc = AICc(model)
+            x[1, AICc := aicc] 
+        }
+        if(type == "mixed" & nrow(x[type=='random %' & estimate_r =='0%'])==0){
+          R2_mar = as.numeric(r2_nakagawa(model)$R2_marginal)
+          R2_con = as.numeric(r2_nakagawa(model)$R2_conditional)
+          x[1, R2_mar := R2_mar]
+          x[1, R2_con := R2_con]
          }
+        x[is.na(x)] = ""
+        return(x)
+      } 
+    # model assumption function
+      m_ass = function(name = 'define', mo = m0, dat = d, fixed = NULL, categ = NULL, trans = "none", spatial = TRUE, temporal = TRUE, PNG = TRUE, outdir = 'outdir'){
+       l=data.frame(summary(mo)$varcor)
+       l = l[is.na(l$var2),]
+       n = nrow(l)-1+length(fixed)+length(categ) + 4 + if(temporal==TRUE){1}else{0} + if(spatial==TRUE){1}else{0} 
+     
+       if(PNG == TRUE){
+        png(paste(outdir,name, ".png", sep=""), width=9,height=9,units="in",res=600) # width = 6
+        par(mfrow=c(ceiling(n/6),6)) #c(ceiling(n/5),5))
+         }else{
+          dev.new(width=12,height=7)
+          par(mfrow=c(ceiling(n/6),6))
+        }
+       
+         
+       
+       scatter.smooth(fitted(mo),resid(mo),col='grey');abline(h=0, lty=2, col ='red')
+       scatter.smooth(fitted(mo),sqrt(abs(resid(mo))), col='grey')
+       qqnorm(resid(mo), main=list("Normal Q-Q Plot: residuals", cex=0.8),col='grey');qqline(resid(mo))
+       #unique(l$grp[l$grp!="Residual"])
+       for(i in unique(l$grp[l$grp!="Residual"])){
+        #i = "mean_year"
+        ll=ranef(mo)[names(ranef(mo))==i][[1]]
+        if(ncol(ll)==1){
+         qqnorm(ll[,1], main = paste(i,names(ll)[1]),col='grey');qqline(ll[,1], col ='red')
+         }else{
+          qqnorm(ll[,1], main = paste(i,names(ll)[1]),col='grey');qqline(ll[,1], col ='red')
+          qqnorm(ll[,2], main = paste(i,names(ll)[2]),col='grey');qqline(ll[,2], col ='red')
+         }
+        }
+        
+       # variables
+       scatter={} 
+       for (i in rownames(summary(mo)$coef)) {
+            #i = "lat_abs"
+          j=sub("\\).*", "", sub(".*\\(", "",i)) 
+          scatter[length(scatter)+1]=j
+        }
+        x = data.frame(scatter=unique(scatter)[2:length(unique(scatter))],
+                        log_ = grepl("log",rownames(summary(mo)$coef)[2:length(unique(scatter))]), stringsAsFactors = FALSE)
+        for (i in 1:length(fixed)){
+            jj =fixed[i]
+            variable=dat[, ..jj][[1]]
+            if(trans[i]=='log'){
+            scatter.smooth(resid(mo)~log(variable),xlab=paste('log(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+            }else if(trans[i]=='abs'){
+            scatter.smooth(resid(mo)~abs(variable),xlab=paste('abs(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+            }else{
+            scatter.smooth(resid(mo)~variable,xlab=jj,col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+          }
+         }
+        
+        if(length(categ)>0){
+          for(i in categ){
+             variable=dat[, ..i][[1]]
+              boxplot(resid(mo)~variable, medcol='grey', whiskcol='grey', staplecol='grey', boxcol='grey', outcol='grey');abline(h=0, lty=3, lwd=1, col = 'red')
+             }
+        }     
+              
+        if(temporal == TRUE){
+            acf(resid(mo), type="p", main=list("Temporal autocorrelation:\npartial series residual",cex=0.8))
+            }
+        if(spatial == TRUE){    
+        spdata=data.frame(resid=resid(mo), x=dat$Lon, y=dat$Lat)
+            spdata$col=ifelse(spdata$resid<0,rgb(83,95,124,100, maxColorValue = 255),ifelse(spdata$resid>0,rgb(253,184,19,100, maxColorValue = 255), 'red'))
+            #cex_=c(1,2,3,3.5,4)
+            cex_=c(1,1.5,2,2.5,3)
+            spdata$cex=as.character(cut(abs(spdata$resid), 5, labels=cex_))
+          plot(spdata$x, spdata$y,col=spdata$col, cex=as.numeric(spdata$cex), pch= 16, main=list('Spatial distribution of residuals', cex=0.8))
+            legend("topleft", pch=16, legend=c('>0','<0'), ,col=c(rgb(83,95,124,100, maxColorValue = 255),rgb(253,184,19,100, maxColorValue = 255)), cex=0.8)
+          plot(spdata$x[spdata$resid<0], spdata$y[spdata$resid<0],col=spdata$col[spdata$resid<0], cex=as.numeric(spdata$cex[spdata$resid<0]), pch= 16, main=list('Spatial distribution of residuals (<0)', cex=0.8))
+          plot(spdata$x[spdata$resid>=0], spdata$y[spdata$resid>=0],col=spdata$col[spdata$resid>=0], cex=as.numeric(spdata$cex[spdata$resid>=0]), pch= 16, main=list('Spatial distribution of residuals (>=0)', cex=0.8))
+            }
+       
+       mtext(paste(slot(mo,"call")[1],'(',slot(mo,"call")[2],sep=''), side = 3, line = -1, cex=0.7,outer = TRUE)
+      if(PNG==TRUE){dev.off()}
+      }
+    
   # data
     o  =  fread('Data/phylopic.txt')
     setnames(o, old = c('Name', 'Code'), new = c('genus2', 'uid'))
@@ -394,7 +570,7 @@ Make tables and check model ass
     grid.draw(ggx)
     ggsave('Outputs/raw_stringency_loess_2.png',ggx, width=6,height=7,dpi=600)
    
-# Figure C, Sy, Sz
+# Figure C, Sy, Sz, Tables
   
   # prepare estimates Period
     # 01a all data, all random slopes - singularity 
@@ -670,12 +846,12 @@ Make tables and check model ass
   # Figure C
     xc = rbind(est_m1d, est_m2b,est_m3b,est_m01c, est_m02c,est_m03c)
     xc = xc[predictor %in% c('scale(Covid)', 'scale(StringencyIndex)')]
-    xc[predictor %in% 'scale(Covid)', predictor := 'Period (before/during shutdown)']
-    xc[predictor %in% 'scale(StringencyIndex)', predictor := 'Shutdown stringency index']
-    xc[, N:=c('N = 6369; all data', 'N = 5260; >4 observations/species/period', 'N = 5106; >9 observations/species/period',
-              'N = 3676; all data', 'N = 3573; >4 observations/species', 'N = 3425; >9 observations/species')]
-    xc[, N := factor(N, levels = c('N = 6369; all data', 'N = 5260; >4 observations/species/period', 'N = 5106; >9 observations/species/period',
-              'N = 3676; all data', 'N = 3573; >4 observations/species', 'N = 3425; >9 observations/species'))]
+    xc[predictor %in% 'scale(Covid)', predictor := 'Period (before/during COVID-19 shutdown)']
+    xc[predictor %in% 'scale(StringencyIndex)', predictor := 'Stringency of Governmental COVID-19 restrictions']
+    xc[, N:=c('N = 6369; all data', 'N = 5260; ≥5 observations/species/period', 'N = 5106; ≥10 observations/species/period',
+              'N = 3676; all data', 'N = 3573; ≥5 observations/species', 'N = 3425; ≥10 observations/species')]
+    xc[, N := factor(N, levels = c('N = 6369; all data', 'N = 5260; ≥5 observations/species/period', 'N = 5106; ≥10 observations/species/period',
+              'N = 3676; all data', 'N = 3573; ≥5 observations/species', 'N = 3425; ≥10 observations/species'))]
     
     col_ = c(rep(viridis(1, alpha = 1, begin = 0.3, end = 0.4, direction = 1, option = "D"),3),
               rep(viridis(1, alpha = 1, begin = 0.8, end = 0.8, direction = 1, option = "D"),3))
@@ -815,6 +991,36 @@ Make tables and check model ass
     # combine
      ggsave(here::here('Outputs/Figure_Syz_.png'),rbind(ggplotGrob(g),ggplotGrob(g0)), width = 30, height =10, units = 'cm') 
 
+  # TABLES
+    m1a_ = m_out(name = "Table 1a", dep = 'Period', model = m1a, nsim = 5000)
+    m1b_ = m_out(name = "Table 1b", dep = 'Period',model = m1b, nsim = 5000)
+    m1c_ = m_out(name = "Table 1c", dep = 'Period',model = m1c, nsim = 5000)
+    m1d_ = m_out(name = "Table 1d", dep = 'Period',model = m1d, nsim = 5000)
+
+    m2a_ = m_out(name = "Table 2a", dep = 'Period',model = m2a, nsim = 5000)
+    m2b_ = m_out(name = "Table 2b", dep = 'Period',model = m2b, nsim = 5000)
+    m3a_ = m_out(name = "Table 3a", dep = 'Period',model = m3a, nsim = 5000)
+    m3b_ = m_out(name = "Table 3b", dep = 'Period',model = m3b, nsim = 5000)
+
+    m01a_ = m_out(name = "Table 4a", dep = 'Stringency Index',model = m01a, nsim = 5000)
+    m01b_ = m_out(name = "Table 4b", dep = 'Stringency Index',model = m01b, nsim = 5000)
+    m01c_ = m_out(name = "Table 4c", dep = 'Stringency Index',model = m01c, nsim = 5000)
+   
+
+    m02a_ = m_out(name = "Table 5a", dep = 'Stringency Index',model = m02a, nsim = 5000)
+    m02b_ = m_out(name = "Table 5b", dep = 'Stringency Index',model = m02b, nsim = 5000)
+    m03a_ = m_out(name = "Table 6a", dep = 'Stringency Index',model = m03a, nsim = 5000)
+    m03b_ = m_out(name = "Table 6b", dep = 'Stringency Index',model = m03b, nsim = 5000)
+
+    out = rbind(m1a_, m1b_, m1c_, m1d_, m2a_, m2b_, m3a_, m3b_, m01a_, m01b_, m01c_, m02a_, m02b_, m03a_, m03b_, fill = TRUE)
+    out[is.na(out)] = ""
+
+    fwrite(file = "./Outputs/Table.csv", out)
+
+  
+  m_ass(name = "Table 1a", mo = m1a, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+  
+  
 # Figure Sx
    d[, sin_rad:=sin(rad)]
    d[, cos_rad:=cos(rad)]
