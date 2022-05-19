@@ -1,6 +1,3 @@
-
-Make tables and check model ass
-
 #' ##### Code to load tools & data
   # packages
     require(arm)
@@ -228,30 +225,36 @@ Make tables and check model ass
         return(x)
       } 
     # model assumption function
-      m_ass = function(name = 'define', mo = m0, dat = d, fixed = NULL, categ = NULL, trans = "none", spatial = TRUE, temporal = TRUE, PNG = TRUE, outdir = 'outdir'){
+      m_ass = function(name = 'define', mo = m0, dat = d, fixed = NULL, categ = NULL, trans = "none", spatial = TRUE, temporal = TRUE, PNG = TRUE, outdir = 'outdir', n_col=8, width_ = 10, height_ = 5.5){
        l=data.frame(summary(mo)$varcor)
        l = l[is.na(l$var2),]
-       n = nrow(l)-1+length(fixed)+length(categ) + 4 + if(temporal==TRUE){1}else{0} + if(spatial==TRUE){1}else{0} 
+       nt = if(temporal==TRUE){1}else{0}
+       ns = if(spatial==TRUE){7}else{0}
+       n = 3+nrow(l)-1+length(fixed)+length(categ) +  nt +  ns
      
        if(PNG == TRUE){
-        png(paste(outdir,name, ".png", sep=""), width=9,height=9,units="in",res=600) # width = 6
-        par(mfrow=c(ceiling(n/6),6)) #c(ceiling(n/5),5))
+        png(paste(outdir,name, ".png", sep=""), width=width_,height=height_,units="in",res=600) # width = 6
+        par(mfrow=c(4, n_col),tcl = -0.08, cex = 0.5, cex.main = 0.9,#ceiling(n/n_col),n_col)
+            oma = c(1,1,2,1),
+            mar = c(2, 2, 2, 1), mgp=c(1,0,0)
+            )
          }else{
-          dev.new(width=12,height=7)
-          par(mfrow=c(ceiling(n/6),6))
+          dev.new(width=width_,height=height_)
+          par(mfrow=c(4,n_col), tcl = -0.08, cex = 0.5, cex.main = 0.9,#ceiling(n/n_col),n_col)
+            oma = c(1,1,2,1),
+            mar = c(2, 2, 2, 1), mgp=c(1,0,0)
+            )
         }
-       
-         
        
        scatter.smooth(fitted(mo),resid(mo),col='grey');abline(h=0, lty=2, col ='red')
        scatter.smooth(fitted(mo),sqrt(abs(resid(mo))), col='grey')
-       qqnorm(resid(mo), main=list("Normal Q-Q Plot: residuals", cex=0.8),col='grey');qqline(resid(mo))
+       qqnorm(resid(mo), main=list("Normal Q-Q Plot: residuals"),col='grey');qqline(resid(mo), col = 'red')
        #unique(l$grp[l$grp!="Residual"])
        for(i in unique(l$grp[l$grp!="Residual"])){
         #i = "mean_year"
         ll=ranef(mo)[names(ranef(mo))==i][[1]]
         if(ncol(ll)==1){
-         qqnorm(ll[,1], main = paste(i,names(ll)[1]),col='grey');qqline(ll[,1], col ='red')
+         qqnorm(ll[,1], main = paste(i,names(ll)[1]),col='grey',);qqline(ll[,1], col ='red')
          }else{
           qqnorm(ll[,1], main = paste(i,names(ll)[1]),col='grey');qqline(ll[,1], col ='red')
           qqnorm(ll[,2], main = paste(i,names(ll)[2]),col='grey');qqline(ll[,2], col ='red')
@@ -259,50 +262,72 @@ Make tables and check model ass
         }
         
        # variables
-       scatter={} 
-       for (i in rownames(summary(mo)$coef)) {
-            #i = "lat_abs"
-          j=sub("\\).*", "", sub(".*\\(", "",i)) 
-          scatter[length(scatter)+1]=j
-        }
-        x = data.frame(scatter=unique(scatter)[2:length(unique(scatter))],
-                        log_ = grepl("log",rownames(summary(mo)$coef)[2:length(unique(scatter))]), stringsAsFactors = FALSE)
-        for (i in 1:length(fixed)){
-            jj =fixed[i]
-            variable=dat[, ..jj][[1]]
-            if(trans[i]=='log'){
-            scatter.smooth(resid(mo)~log(variable),xlab=paste('log(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
-            }else if(trans[i]=='abs'){
-            scatter.smooth(resid(mo)~abs(variable),xlab=paste('abs(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
-            }else{
-            scatter.smooth(resid(mo)~variable,xlab=jj,col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+         scatter={} 
+         for (i in rownames(summary(mo)$coef)) {
+              #i = "lat_abs"
+            j=sub("\\).*", "", sub(".*\\(", "",i)) 
+            scatter[length(scatter)+1]=j
           }
-         }
-        
-        if(length(categ)>0){
-          for(i in categ){
-             variable=dat[, ..i][[1]]
-              boxplot(resid(mo)~variable, medcol='grey', whiskcol='grey', staplecol='grey', boxcol='grey', outcol='grey');abline(h=0, lty=3, lwd=1, col = 'red')
-             }
-        }     
+          x = data.frame(scatter=unique(scatter)[2:length(unique(scatter))],
+                          log_ = grepl("log",rownames(summary(mo)$coef)[2:length(unique(scatter))]), stringsAsFactors = FALSE)
+          for (i in 1:length(fixed)){
+              jj =fixed[i]
+              variable=dat[, ..jj][[1]]
+              if(trans[i]=='log'){
+              scatter.smooth(resid(mo)~log(variable),xlab=paste('log(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+              }else if(trans[i]=='abs'){
+              scatter.smooth(resid(mo)~abs(variable),xlab=paste('abs(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+              }else if(trans[i]=='sin'){scatter.smooth(resid(mo)~sin(variable),xlab=paste('sin(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+              }else if(trans[i]=='cos'){scatter.smooth(resid(mo)~cos(variable),xlab=paste('cos(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+              }else{
+              scatter.smooth(resid(mo)~variable,xlab=jj,col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
+            }
+           }
+          
+          if(length(categ)>0){
+            for(i in categ){
+               variable=dat[, ..i][[1]]
+                boxplot(resid(mo)~variable, medcol='grey', whiskcol='grey', staplecol='grey', boxcol='grey', outcol='grey', xlab = i);abline(h=0, lty=3, lwd=1, col = 'red')
+               }
+          }     
               
         if(temporal == TRUE){
-            acf(resid(mo), type="p", main=list("Temporal autocorrelation:\npartial series residual",cex=0.8))
+            acf(resid(mo), type="p", main=list("Temporal autocorrelation:\npartial series residual"))
             }
         if(spatial == TRUE){    
-        spdata=data.frame(resid=resid(mo), x=dat$Lon, y=dat$Lat)
+          spdata=data.frame(resid=resid(mo), x=dat$Lon, y=dat$Lat)
             spdata$col=ifelse(spdata$resid<0,rgb(83,95,124,100, maxColorValue = 255),ifelse(spdata$resid>0,rgb(253,184,19,100, maxColorValue = 255), 'red'))
             #cex_=c(1,2,3,3.5,4)
             cex_=c(1,1.5,2,2.5,3)
             spdata$cex=as.character(cut(abs(spdata$resid), 5, labels=cex_))
-          plot(spdata$x, spdata$y,col=spdata$col, cex=as.numeric(spdata$cex), pch= 16, main=list('Spatial distribution of residuals', cex=0.8))
-            legend("topleft", pch=16, legend=c('>0','<0'), ,col=c(rgb(83,95,124,100, maxColorValue = 255),rgb(253,184,19,100, maxColorValue = 255)), cex=0.8)
-          plot(spdata$x[spdata$resid<0], spdata$y[spdata$resid<0],col=spdata$col[spdata$resid<0], cex=as.numeric(spdata$cex[spdata$resid<0]), pch= 16, main=list('Spatial distribution of residuals (<0)', cex=0.8))
-          plot(spdata$x[spdata$resid>=0], spdata$y[spdata$resid>=0],col=spdata$col[spdata$resid>=0], cex=as.numeric(spdata$cex[spdata$resid>=0]), pch= 16, main=list('Spatial distribution of residuals (>=0)', cex=0.8))
-            }
+          plot(spdata$x, spdata$y,col=spdata$col, cex=as.numeric(spdata$cex), pch= 16, main=list('Spatial distribution of residuals', cex=0.8), xlab = 'Longitude', ylab = 'Latitude')
+            legend("topright", pch=16, legend=c('>0','<0'), ,col=c(rgb(83,95,124,100, maxColorValue = 255),rgb(253,184,19,100, maxColorValue = 255)))
+          plot(spdata$x[spdata$resid<0], spdata$y[spdata$resid<0],col=spdata$col[spdata$resid<0], cex=as.numeric(spdata$cex[spdata$resid<0]), pch= 16, main=list('residuals <0'), xlab = 'Longitude', ylab = 'Latitude')
+          plot(spdata$x[spdata$resid>=0], spdata$y[spdata$resid>=0],col=spdata$col[spdata$resid>=0], cex=as.numeric(spdata$cex[spdata$resid>=0]), pch= 16, main=list('residual >=0'), xlab = 'Longitude', ylab = 'Latitude')
+
+
+          # EU
+          dat$res = resid(mo)
+          spdata=data.frame(resid = dat$res[dat$Country!='Australia'], x=dat$Lon[dat$Country!='Australia'], y=dat$Lat[dat$Country!='Australia'])
+          spdata$col=ifelse(spdata$resid<0,rgb(83,95,124,100, maxColorValue = 255),ifelse(spdata$resid>0,rgb(253,184,19,100, maxColorValue = 255), 'red'))
+            #cex_=c(1,2,3,3.5,4)
+            cex_=c(1,1.5,2,2.5,3)
+            spdata$cex=as.character(cut(abs(spdata$resid), 5, labels=cex_))
+          plot(spdata$x[spdata$resid<0], spdata$y[spdata$resid<0],col=spdata$col[spdata$resid<0], cex=as.numeric(spdata$cex[spdata$resid<0]), pch= 16, main=list('EU -  residuals <0'), xlab = 'Longitude', ylab = 'Latitude')
+          plot(spdata$x[spdata$resid>=0], spdata$y[spdata$resid>=0],col=spdata$col[spdata$resid>=0], cex=as.numeric(spdata$cex[spdata$resid>=0]), pch= 16, main=list('EU residuals >=0)'), xlab = 'Longitude', ylab = 'Latitude')
+
+          # Australia
+          spdata=data.frame(resid = dat$res[dat$Country=='Australia'], x=dat$Lon[dat$Country=='Australia'], y=dat$Lat[dat$Country=='Australia'])
+          spdata$col=ifelse(spdata$resid<0,rgb(83,95,124,100, maxColorValue = 255),ifelse(spdata$resid>0,rgb(253,184,19,100, maxColorValue = 255), 'red'))
+            #cex_=c(1,2,3,3.5,4)
+            cex_=c(1,1.5,2,2.5,3)
+            spdata$cex=as.character(cut(abs(spdata$resid), 5, labels=cex_))
+          plot(spdata$x[spdata$resid<0], spdata$y[spdata$resid<0],col=spdata$col[spdata$resid<0], cex=as.numeric(spdata$cex[spdata$resid<0]), pch= 16, main=list('Australia residuals <0'), xlab = 'Longitude', ylab = 'Latitude')
+          plot(spdata$x[spdata$resid>=0], spdata$y[spdata$resid>=0],col=spdata$col[spdata$resid>=0], cex=as.numeric(spdata$cex[spdata$resid>=0]), pch= 16, main=list('Australia residuals >=0'), xlab = 'Longitude', ylab = 'Latitude')
+          }
        
-       mtext(paste(slot(mo,"call")[1],'(',slot(mo,"call")[2],sep=''), side = 3, line = -1, cex=0.7,outer = TRUE)
-      if(PNG==TRUE){dev.off()}
+       mtext(stringr::str_wrap(paste(paste0(name," model: "), slot(mo,"call")[1],'(',slot(mo,"call")[2],sep=''), width = ceiling(nchar(paste(slot(mo,"call")[1],'(',slot(mo,"call")[2],sep=''))/2)+10), side = 3, line = 0, cex=0.5,outer = TRUE, col = 'darkblue') #ceiling(nchar(paste(slot(mo,"call")[1],'(',slot(mo,"call")[2],sep=''))/2)
+       if(PNG==TRUE){dev.off()}
       }
     
   # data
@@ -1002,11 +1027,11 @@ Make tables and check model ass
     m3a_ = m_out(name = "Table 3a", dep = 'Period',model = m3a, nsim = 5000)
     m3b_ = m_out(name = "Table 3b", dep = 'Period',model = m3b, nsim = 5000)
 
+    
     m01a_ = m_out(name = "Table 4a", dep = 'Stringency Index',model = m01a, nsim = 5000)
     m01b_ = m_out(name = "Table 4b", dep = 'Stringency Index',model = m01b, nsim = 5000)
     m01c_ = m_out(name = "Table 4c", dep = 'Stringency Index',model = m01c, nsim = 5000)
    
-
     m02a_ = m_out(name = "Table 5a", dep = 'Stringency Index',model = m02a, nsim = 5000)
     m02b_ = m_out(name = "Table 5b", dep = 'Stringency Index',model = m02b, nsim = 5000)
     m03a_ = m_out(name = "Table 6a", dep = 'Stringency Index',model = m03a, nsim = 5000)
@@ -1017,10 +1042,27 @@ Make tables and check model ass
 
     fwrite(file = "./Outputs/Table.csv", out)
 
-  
-  m_ass(name = "Table 1a", mo = m1a, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
-  
-  
+  # modelAss
+    m_ass(name = "Table 1a", mo = m1a, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 1b", mo = m1b, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 1c", mo = m1c, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 1d", mo = m1d, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+
+    m_ass(name = "Table 2a", mo = m2a, dat = d[Species %in% dd[N_during>4 & N_before >4, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 2b", mo = m2b, dat = d[Species %in% dd[N_during>4 & N_before >4, Species]],fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+
+    m_ass(name = "Table 3a", mo = m3a, dat = d[Species %in% dd[N_during>9 & N_before >9, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 3b", mo = m3b, dat = d[Species %in% dd[N_during>9 & N_before >9, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+
+    m_ass(name = "Table 4a", mo = m01a, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 4b", mo = m01b, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 4c", mo = m01c, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    
+    m_ass(name = "Table 5a", mo = m02a, dat = s[Nsp>4],fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 5b", mo = m02b, dat = s[Nsp>4], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 6a", mo = m03a, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table 6b", mo = m03b, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+
 # Figure Sx
    d[, sin_rad:=sin(rad)]
    d[, cos_rad:=cos(rad)]
