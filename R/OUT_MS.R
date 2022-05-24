@@ -22,6 +22,7 @@
     nsim = 5000 # number of simulations to extract estimates and 95%CrI
     ax_lines = "grey60" # defines color of the axis lines
     colors <- c("#999999", "#E69F00", "#56B4E9") #viridis(3)
+    set.seed(42)
   # functions
     # to add images to panels
       annotation_custom2 <- function (grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, data) {
@@ -392,210 +393,54 @@
     s[, Nsp := .N, by ='Species']
     s[, sp := gsub('[_]', ' ', Species)]
 #' ## Figures
-# Figure A
-    # prepare data
-        dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species)]
-            #length(dxx[, unique(paste(sp_loc, Covid))])
-        m = lm(log(FID) ~ log(SD),dxx)
-        dxx[, resid_FID := resid(m)]
-        a = dxx[, .(mean(resid_FID),sd(resid_FID),mean(FID),.N) ,by = .(Country, IDLocality, genus, Species, sp_loc, Covid)]
-        setnames(a, old = c('V1','V2','V3'), new = c('resid_FID_avg', 'SD','FID_avg'))
-        a[is.na(SD), SD := 0]   
 
-        aw = reshape(a, idvar = c('Country', 'IDLocality', 'genus', 'Species', 'sp_loc'), timevar = 'Covid', direction = "wide")  
-        aw[, Species := gsub('[_]', ' ', Species)]
-        aw = merge(aw,t, all.x =TRUE)
-        table(aw$Family)
-       
-        x = aw[, .N, by = Species]
-        x[order(Species)]
-        aw[, genus2 := genus]
-        aw[Species %in% x[N%in%c(1,2), Species], genus2:='other']
+# Figure S1
+   d[, sin_rad:=sin(rad)]
+   d[, cos_rad:=cos(rad)]
 
-          aw[genus2=='Phoenicurus', unique(Species)]
+   dp = d[,c('StringencyIndex','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day')]
+   setnames(dp,old = c('StringencyIndex','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day'), new = c('Stringency\nindex','Starting distance\nln(m)', 'Flock size\nln (m)', 'Body mass\nln(m)', 'Sinus\n of radians', 'Cosinus\nof radians','Temperature\n°C', 'Day'))
+   
+   png("Outputs/Fig_S1.png", width =17, height = 17, units = "cm", bg = "transparent", res = 600)
+   chart.Correlation(dp, histogram=TRUE, pch=19, alpha = 0.5)
+   mtext("Single observations", side=3, line=3)
+   dev.off()
 
-        o[genus2=='Motacilla' | uid%in%c('67a9ecfd-58ba-44a4-9986-243b6e610419'), uid:='cf522e02-35cc-44f5-841c-0e642987c2e4']
-        o[genus2=='Sylvia', uid:='67a9ecfd-58ba-44a4-9986-243b6e610419']
+# Figure Su - year trend
+   px = pp[N_during>4 & N_before>4]
+   dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
+    table(dxx$IDLocality, dxx$Year)
 
-        o[,size:=0.2]
-        o[ genus2%in%c('Anas','Columba','Dendrocopos','Sturnus'), size := c(0.25, 0.25, 0.15, 0.1)]
-        o[, FID_avg.0 := 1.5]
-        o[, FID_avg.1 := 20]
-        o[ genus2%in%c('Anas','Columba'), FID_avg.0 := c(1.7, 1.7)]
-        
-        o[, resid_FID_avg.0 := -1.7]
-        o[, resid_FID_avg.1 := 0.7]
-        o[ genus2%in%c('Anas','Columba'), resid_FID_avg.0 := c(-1.6, -1.6)]
-
-        o[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos','Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
-        
-        aw[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos', 'Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
-
-        aw[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos', 'Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
-    # plot from web
-        g = 
-        ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
-          #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
-          #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
-          #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
-          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
-            #ggtitle ("Sim based")+
-          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
-          facet_wrap(~genus2) +
-          geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
-          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
-          scale_x_continuous("Before shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
-          scale_y_continuous("During shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
-          labs(title = "Species means per sampling location")+
-          theme_MB  +
-          theme(
-                  plot.title = element_text(size=7),
-                  strip.background = element_blank(),
-                  #panel.spacing = unit(1, "mm"),
-                  legend.position = c(1, 0),
-                  legend.justification = c(1, 0)
-                  )  
-        gg <- ggplotGrob(g) #gg$layout$name
-        ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
-                                         trim = FALSE)
-        grid.draw(ggx)
-        ggsave('Outputs/before_after_Genus_fill.png',ggx, width=4.5,height=4,dpi=600)
-    # USE plot from files
-        columba = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Columba.png')))
-        Dendrocopos = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Dendrocopos.png')))
-        Larus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Larus_flip.png')))
-        Picus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Picus.png')))
-        Motacilla = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Motacilla.png')))
-        Erithacus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Erithacus.png')))
-        Phoenicurus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Phoenicurus.png')))
-        Turdus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Turdus.png')))
-        Sylvia = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sylvia.png')))
-        Parus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Parus_flip.png')))
-        Sitta = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sitta.png')))
-        Pica = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Pica.png')))
-        Garrulus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Garrulus.png')))
-        Corvus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Corvus.png')))
-        Sturnus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sturnus.png')))
-        Passer = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Passer_flip.png')))
-        Fringilla = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Fringilla.png')))
-        other = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/other.png')))
-
-        g = 
-        ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
-          #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
-          #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
-          #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
-          annotation_custom2(anas, data=o[genus2 == 'Anas'], xmin = 0.05, xmax =0.5, ymax = 2.6)+
-          annotation_custom2(Larus, data=o[genus2 == 'Larus'], xmin = 0.05, xmax =0.5, ymax = 2.6)+
-          annotation_custom2(columba, data=o[genus2 == 'Columba'], xmin = 0.05, xmax =0.4, ymax = 2.7)+
-          annotation_custom2(Dendrocopos, data=o[genus2 == 'Dendrocopos'], xmin = 0.05, xmax =0.25, ymax = 2.6)+
-          annotation_custom2(Picus, data=o[genus2 == 'Picus'], xmin = 0.05, xmax =0.4, ymax = 2.7)+
-          annotation_custom2(Motacilla, data=o[genus2 == 'Motacilla'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
-          annotation_custom2(Erithacus, data=o[genus2 == 'Erithacus'], xmin = 0.05, xmax =0.35, ymax = 2.7)+
-          annotation_custom2(Phoenicurus, data=o[genus2 == 'Phoenicurus'], xmin = 0.05, xmax =0.46, ymax = 2.7)+
-          annotation_custom2(Turdus, data=o[genus2 == 'Turdus'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
-          annotation_custom2(Sylvia, data=o[genus2 == 'Sylvia'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
-          annotation_custom2(Parus, data=o[genus2 == 'Parus'], xmin = 0.05, xmax =0.42, ymax = 2.7)+
-          annotation_custom2(Sitta, data=o[genus2 == 'Sitta'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
-          annotation_custom2(Pica, data=o[genus2 == 'Pica'], xmin = 0.05, xmax =0.5, ymax = 2.5)+
-          annotation_custom2(Garrulus, data=o[genus2 == 'Garrulus'], xmin = 0.05, xmax =0.6, ymax = 2.7)+
-          annotation_custom2(Corvus, data=o[genus2 == 'Corvus'], xmin = 0.05, xmax =0.4, ymax = 2.55)+
-          annotation_custom2(Sturnus, data=o[genus2 == 'Sturnus'], xmin = 0.05, xmax =0.24, ymax = 2.65)+
-          annotation_custom2(Passer, data=o[genus2 == 'Passer'], xmin = 0.05, xmax =0.36, ymax = 2.65)+
-          annotation_custom2(Fringilla, data=o[genus2 == 'Fringilla'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
-          annotation_custom2(other, data=o[genus2 == 'other'], xmin = 0.05, xmax =0.45, ymax = 2.4)+
-          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
-            #ggtitle ("Sim based")+
-          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
-          facet_wrap(~genus2) +
-          #geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
-          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
-          scale_x_continuous("Before shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
-          scale_y_continuous("During shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
-          labs(title = "Species means per sampling location")+
-          theme_MB  +
-          theme(
-                  plot.title = element_text(size=7),
-                  strip.background = element_blank(),
-                  #panel.spacing = unit(1, "mm"),
-                  legend.position = c(1, 0),
-                  legend.justification = c(1, 0)
-                  )  
-        gg <- ggplotGrob(g) #gg$layout$name
-        ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
-                                         trim = FALSE)
-        grid.draw(ggx)
-        ggsave('Outputs/before_after_Genus_fill_files_.png',ggx, width=4.5,height=4,dpi=600)
-    # legend
-        # correlation between mean fid and residual fid
-            ggplot(a, aes(x = resid_FID_avg)) + geom_histogram()
-            ggplot(a, aes(x=FID_avg, y = resid_FID_avg)) + 
-                stat_smooth() + 
-                geom_point() +
-                stat_cor(aes(label = ..r.label..),  label.x = 0.3, size = 2) +
-                scale_x_continuous(trans = 'log10')
-            ggplot(aw, aes(x = N.0-N.1)) +geom_histogram()
-            nrow(aw[abs(N.0-N.1)>2])
-            nrow(aw[!abs(N.0-N.1)>2])
-    # supplement
-        g2 =     
-        ggplot(aw, aes(x = resid_FID_avg.0, y = resid_FID_avg.1)) + 
-          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
-          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
-          facet_wrap(~genus2) +
-          #geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + 
-          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
-          scale_x_continuous("Before COVID residual escape distance", expand = c(0, 0)) +
-          scale_y_continuous("During COVID residual escape distance", expand = c(0, 0)) +
-          labs(title = "Species means per sampling location")+
-          theme_MB  +
-          theme(
-                plot.title = element_text(size=7),
-                strip.background = element_blank(),
-                legend.position = "none",
-                #legend.position = c(1, 0),
-                legend.justification = c(1, 0)
-                )     
-
-        gg2 <- ggplotGrob(g2) #gg$layout$name
-        ggx2 <- gtable_filter_remove(gg2, name = paste0("axis-b-", c(2, 4), "-4"),
-                                         trim = FALSE)
-
-        grid.draw(cbind(cbind(ggx,ggx2 ,  size = "last")))
-        ggsave('Outputs/Fig_Sw1_2.png',cbind(ggx,ggx2 , size = "last"), width=4.5*2,height=4,dpi=600)
-# Figure B
-  g = 
-    ggplot(s[Nsp>9], aes(x = StringencyIndex, y = FID)) +
-      stat_smooth(se = FALSE, aes(colour = 'LOESS smooth'), lwd = 0.5)+ # show_guide=TRUE
-      #stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
-      geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
-      facet_wrap(~sp, ncol = 6) +
-      scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
-      scale_x_continuous("COVID measure stringency index", expand = c(0, 0)) +
-      scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
-      #annotate("text", x = 1, y = 1, label = c(rep("", 52),"Observation"), hjust = -0.08, size = 1) +
-      #labs(title = "Species means per sampling location")+
-      scale_colour_manual(values=c('grey60'))+
-      #scale_color_manual(name = 'try', values = c('LOESS smoothed = "grey60"'))+
-      theme_MB  +
-      theme(
+   dxx[, sp_C_loc2 := paste(gsub('[_]', ' ', Species), Country, IDLocality, sep ='\n')]
+   dxx[, genus := sub("_.*", "", Species)]
+   g = 
+   ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Year)) + 
+    geom_boxplot() + facet_wrap(~sp_C_loc2) + 
+    scale_y_continuous("Flight initiation distance [m]", trans = 'log10') + 
+    scale_x_discrete("Year", guide = guide_axis(angle = 45)) +
+    scale_color_continuous()+
+    theme_MB  +
+    theme(
           plot.title = element_text(size=7),
           strip.background = element_blank(),
-          strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
+          strip.text.x = element_text(size = 5, color="grey30",  margin=margin(1,1,1,1,"mm")),
           #panel.spacing = unit(1, "mm"),
-          legend.position = c(1, -0.01),
+          legend.position = "none",#c(1, 0.01),
           legend.justification = c(1, 0),
           legend.title = element_blank(),
           #legend.spacing.y = unit(-0.78, "cm")
-          legend.spacing.y = unit(0.02, "cm")
+          #legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+          legend.spacing.y = unit(-0.9, "cm"),
+          axis.text.x = element_text(colour="grey30", size = 6),
+          axis.text.y=element_text(colour="grey30", size = 6)
           ) 
 
-    gg <- ggplotGrob(g) #gg$layout$name
-    ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-9"), trim = FALSE)
-    grid.draw(ggx)
-    ggsave('Outputs/raw_stringency_loess_2.png',ggx, width=6,height=7,dpi=600)
-   
-# Figure C, Sy, Sz, Tables
+   ggsave(here::here('Outputs/Fig_Su.png'),g, width = 18, height =16, units = 'cm')
+
+   #ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE)
+   #ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE) + facet_wrap(~Country, ncol = 5)
+
+# Figure 1, Syz, Tables
   
   # prepare estimates Period
     # 01a all data, all random slopes - singularity 
@@ -868,11 +713,11 @@
           ) 
      est_m03c = est_out(m03c, '03c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >9/species') 
 
-  # Figure C
+  # Figure 1
     xc = rbind(est_m1d, est_m2b,est_m3b,est_m01c, est_m02c,est_m03c)
     xc = xc[predictor %in% c('scale(Covid)', 'scale(StringencyIndex)')]
-    xc[predictor %in% 'scale(Covid)', predictor := 'Period (before/during COVID-19 shutdown)']
-    xc[predictor %in% 'scale(StringencyIndex)', predictor := 'Stringency of Governmental COVID-19 restrictions']
+    xc[predictor %in% 'scale(Covid)', predictor := 'a) Period\n    (before/during COVID-19 shutdown)']
+    xc[predictor %in% 'scale(StringencyIndex)', predictor := 'b) Stringency of governmental\n    COVID-19 restrictions']
     xc[, N:=c('N = 6369; all data', 'N = 5260; ≥5 observations/species/period', 'N = 5106; ≥10 observations/species/period',
               'N = 3676; all data', 'N = 3573; ≥5 observations/species', 'N = 3425; ≥10 observations/species')]
     xc[, N := factor(N, levels = c('N = 6369; all data', 'N = 5260; ≥5 observations/species/period', 'N = 5106; ≥10 observations/species/period',
@@ -926,7 +771,7 @@
                 axis.title=element_text(size=7)
                 )
     g
-    ggsave(here::here('Outputs/Figure_C_2col.png'),g, width = 9.2, height =6, units = 'cm')   
+    ggsave(here::here('Outputs/Fig_1_width-92mm.png'),g, width = 9.2, height =6, units = 'cm')   
 
   # Figure Syz  
     # prepare plot for Period
@@ -1017,66 +862,268 @@
      ggsave(here::here('Outputs/Figure_Syz_.png'),rbind(ggplotGrob(g),ggplotGrob(g0)), width = 30, height =10, units = 'cm') 
 
   # TABLES
-    m1a_ = m_out(name = "Table 1a", dep = 'Period', model = m1a, nsim = 5000)
-    m1b_ = m_out(name = "Table 1b", dep = 'Period',model = m1b, nsim = 5000)
-    m1c_ = m_out(name = "Table 1c", dep = 'Period',model = m1c, nsim = 5000)
-    m1d_ = m_out(name = "Table 1d", dep = 'Period',model = m1d, nsim = 5000)
+    m1a_ = m_out(name = "Table S1 - 1a", dep = 'Period', model = m1a, nsim = 5000)
+    m1b_ = m_out(name = "Table S1 - 1b", dep = 'Period',model = m1b, nsim = 5000)
+    m1c_ = m_out(name = "Table S1 - 1c", dep = 'Period',model = m1c, nsim = 5000)
+    m1d_ = m_out(name = "Table S1 - 1d", dep = 'Period',model = m1d, nsim = 5000)
 
-    m2a_ = m_out(name = "Table 2a", dep = 'Period',model = m2a, nsim = 5000)
-    m2b_ = m_out(name = "Table 2b", dep = 'Period',model = m2b, nsim = 5000)
-    m3a_ = m_out(name = "Table 3a", dep = 'Period',model = m3a, nsim = 5000)
-    m3b_ = m_out(name = "Table 3b", dep = 'Period',model = m3b, nsim = 5000)
+    m2a_ = m_out(name = "Table S1 - 2a", dep = 'Period',model = m2a, nsim = 5000)
+    m2b_ = m_out(name = "Table S1 - 2b", dep = 'Period',model = m2b, nsim = 5000)
+    m3a_ = m_out(name = "Table S1 - 3a", dep = 'Period',model = m3a, nsim = 5000)
+    m3b_ = m_out(name = "Table S1 - 3b", dep = 'Period',model = m3b, nsim = 5000)
 
     
-    m01a_ = m_out(name = "Table 4a", dep = 'Stringency Index',model = m01a, nsim = 5000)
-    m01b_ = m_out(name = "Table 4b", dep = 'Stringency Index',model = m01b, nsim = 5000)
-    m01c_ = m_out(name = "Table 4c", dep = 'Stringency Index',model = m01c, nsim = 5000)
+    m01a_ = m_out(name = "Table S2 - 1a", dep = 'Stringency Index',model = m01a, nsim = 5000)
+    m01b_ = m_out(name = "Table S2 - 1b", dep = 'Stringency Index',model = m01b, nsim = 5000)
+    m01c_ = m_out(name = "Table S2 - 1c", dep = 'Stringency Index',model = m01c, nsim = 5000)
    
-    m02a_ = m_out(name = "Table 5a", dep = 'Stringency Index',model = m02a, nsim = 5000)
-    m02b_ = m_out(name = "Table 5b", dep = 'Stringency Index',model = m02b, nsim = 5000)
-    m03a_ = m_out(name = "Table 6a", dep = 'Stringency Index',model = m03a, nsim = 5000)
-    m03b_ = m_out(name = "Table 6b", dep = 'Stringency Index',model = m03b, nsim = 5000)
+    m02a_ = m_out(name = "Table S2 - 2a", dep = 'Stringency Index',model = m02a, nsim = 5000)
+    m02b_ = m_out(name = "Table S2 - 2b", dep = 'Stringency Index',model = m02b, nsim = 5000)
+    m02c_ = m_out(name = "Table S2 - 2c", dep = 'Stringency Index',model = m02c, nsim = 5000)
+    
+    m03a_ = m_out(name = "Table S2 - 3a", dep = 'Stringency Index',model = m03a, nsim = 5000)
+    m03b_ = m_out(name = "Table S2 - 3b", dep = 'Stringency Index',model = m03b, nsim = 5000)
+    m03c_ = m_out(name = "Table S2 - 3c", dep = 'Stringency Index',model = m03c, nsim = 5000)
 
-    out = rbind(m1a_, m1b_, m1c_, m1d_, m2a_, m2b_, m3a_, m3b_, m01a_, m01b_, m01c_, m02a_, m02b_, m03a_, m03b_, fill = TRUE)
+    out = rbind(m1a_, m1b_, m1c_, m1d_, m2a_, m2b_, m3a_, m3b_, m01a_, m01b_, m01c_, m02a_, m02b_, m02c_, m03a_, m03b_, m03c_,fill = TRUE)
     out[is.na(out)] = ""
 
-    fwrite(file = "./Outputs/Table.csv", out)
+    fwrite(file = "./Outputs/Table_S1&2.csv", out)
 
   # modelAss
-    m_ass(name = "Table 1a", mo = m1a, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 1b", mo = m1b, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 1c", mo = m1c, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 1d", mo = m1d, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S1 - 1a", mo = m1a, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S1 - 1b", mo = m1b, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S1 - 1c", mo = m1c, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S1 - 1d", mo = m1d, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
 
-    m_ass(name = "Table 2a", mo = m2a, dat = d[Species %in% dd[N_during>4 & N_before >4, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 2b", mo = m2b, dat = d[Species %in% dd[N_during>4 & N_before >4, Species]],fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S1 - 2a", mo = m2a, dat = d[Species %in% dd[N_during>4 & N_before >4, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S1 - 2b", mo = m2b, dat = d[Species %in% dd[N_during>4 & N_before >4, Species]],fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
 
-    m_ass(name = "Table 3a", mo = m3a, dat = d[Species %in% dd[N_during>9 & N_before >9, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 3b", mo = m3b, dat = d[Species %in% dd[N_during>9 & N_before >9, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S1 - 3a", mo = m3a, dat = d[Species %in% dd[N_during>9 & N_before >9, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S1 - 3b", mo = m3b, dat = d[Species %in% dd[N_during>9 & N_before >9, Species]], fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
 
-    m_ass(name = "Table 4a", mo = m01a, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 4b", mo = m01b, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 4c", mo = m01c, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 1a", mo = m01a, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 1b", mo = m01b, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 1c", mo = m01c, dat = s, fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
     
-    m_ass(name = "Table 5a", mo = m02a, dat = s[Nsp>4],fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 5b", mo = m02b, dat = s[Nsp>4], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 6a", mo = m03a, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
-    m_ass(name = "Table 6b", mo = m03b, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 2a", mo = m02a, dat = s[Nsp>4],fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 2b", mo = m02b, dat = s[Nsp>4], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 2c", mo = m02c, dat = s[Nsp>4], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 3a", mo = m03a, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 3b", mo = m03b, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+    m_ass(name = "Table S2 - 3c", mo = m03c, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
+# Figure 2
+    # prepare data
+        dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species)]
+            #length(dxx[, unique(paste(sp_loc, Covid))])
+        m = lm(log(FID) ~ log(SD),dxx)
+        dxx[, resid_FID := resid(m)]
+        a = dxx[, .(mean(resid_FID),sd(resid_FID),mean(FID),.N) ,by = .(Country, IDLocality, genus, Species, sp_loc, Covid)]
+        setnames(a, old = c('V1','V2','V3'), new = c('resid_FID_avg', 'SD','FID_avg'))
+        a[is.na(SD), SD := 0]   
 
-# Figure Sx
-   d[, sin_rad:=sin(rad)]
-   d[, cos_rad:=cos(rad)]
+        aw = reshape(a, idvar = c('Country', 'IDLocality', 'genus', 'Species', 'sp_loc'), timevar = 'Covid', direction = "wide")  
+        aw[, Species := gsub('[_]', ' ', Species)]
+        aw = merge(aw,t, all.x =TRUE)
+        table(aw$Family)
+       
+        x = aw[, .N, by = Species]
+        x[order(Species)]
+        aw[, genus2 := genus]
+        aw[Species %in% x[N%in%c(1,2), Species], genus2:='other']
 
-   dp = d[,c('StringencyIndex','FID_ln','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day')]
-   setnames(dp,old = c('StringencyIndex','FID_ln','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day'), new = c('Stringency\nindex','Escape distance\nln(m)','Starting distance\nln(m)', 'Flock size\nln (m)', 'Body mass\nln(m)', 'Sinus\n of radians', 'Cosinus\nof radians','Temperature\n°C', 'Day'))
+          aw[genus2=='Phoenicurus', unique(Species)]
+
+        o[genus2=='Motacilla' | uid%in%c('67a9ecfd-58ba-44a4-9986-243b6e610419'), uid:='cf522e02-35cc-44f5-841c-0e642987c2e4']
+        o[genus2=='Sylvia', uid:='67a9ecfd-58ba-44a4-9986-243b6e610419']
+
+        o[,size:=0.2]
+        o[ genus2%in%c('Anas','Columba','Dendrocopos','Sturnus'), size := c(0.25, 0.25, 0.15, 0.1)]
+        o[, FID_avg.0 := 1.5]
+        o[, FID_avg.1 := 20]
+        o[ genus2%in%c('Anas','Columba'), FID_avg.0 := c(1.7, 1.7)]
+        
+        o[, resid_FID_avg.0 := -1.7]
+        o[, resid_FID_avg.1 := 0.7]
+        o[ genus2%in%c('Anas','Columba'), resid_FID_avg.0 := c(-1.6, -1.6)]
+
+        o[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos','Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
+        
+        aw[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos', 'Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
+
+        aw[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos', 'Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
+    # plot from web
+        g = 
+        ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
+          #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
+          #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
+          #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
+          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
+            #ggtitle ("Sim based")+
+          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
+          facet_wrap(~genus2) +
+          geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
+          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
+          scale_x_continuous("Before shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          scale_y_continuous("During shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          labs(title = "Species means per sampling location")+
+          theme_MB  +
+          theme(
+                  plot.title = element_text(size=7),
+                  strip.background = element_blank(),
+                  #panel.spacing = unit(1, "mm"),
+                  legend.position = c(1, 0),
+                  legend.justification = c(1, 0)
+                  )  
+        gg <- ggplotGrob(g) #gg$layout$name
+        ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
+                                         trim = FALSE)
+        grid.draw(ggx)
+        ggsave('Outputs/before_after_Genus_fill.png',ggx, width=4.5,height=4,dpi=600)
+    # USE plot from files
+        anas = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Anas.png')))
+        columba = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Columba.png')))
+        Dendrocopos = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Dendrocopos.png')))
+        Larus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Larus_flip.png')))
+        Picus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Picus.png')))
+        Motacilla = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Motacilla.png')))
+        Erithacus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Erithacus.png')))
+        Phoenicurus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Phoenicurus.png')))
+        Turdus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Turdus.png')))
+        Sylvia = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sylvia.png')))
+        Parus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Parus_flip.png')))
+        Sitta = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sitta.png')))
+        Pica = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Pica.png')))
+        Garrulus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Garrulus.png')))
+        Corvus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Corvus.png')))
+        Sturnus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sturnus.png')))
+        Passer = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Passer_flip.png')))
+        Fringilla = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Fringilla.png')))
+        other = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/other.png')))
+
+        ann_text <- data.frame(FID_avg.0 = 8, FID_avg.1 = 10,lab = "Text",
+                       genus2 = factor('Anas',levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos','Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other')))
+        g = 
+        ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
+          #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
+          #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
+          #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
+          annotation_custom2(anas, data=o[genus2 == 'Anas'], xmin = 0.05, xmax =0.5, ymax = 2.6)+
+          annotation_custom2(Larus, data=o[genus2 == 'Larus'], xmin = 0.05, xmax =0.5, ymax = 2.6)+
+          annotation_custom2(columba, data=o[genus2 == 'Columba'], xmin = 0.05, xmax =0.4, ymax = 2.7)+
+          annotation_custom2(Dendrocopos, data=o[genus2 == 'Dendrocopos'], xmin = 0.05, xmax =0.25, ymax = 2.6)+
+          annotation_custom2(Picus, data=o[genus2 == 'Picus'], xmin = 0.05, xmax =0.4, ymax = 2.7)+
+          annotation_custom2(Motacilla, data=o[genus2 == 'Motacilla'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
+          annotation_custom2(Erithacus, data=o[genus2 == 'Erithacus'], xmin = 0.05, xmax =0.35, ymax = 2.7)+
+          annotation_custom2(Phoenicurus, data=o[genus2 == 'Phoenicurus'], xmin = 0.05, xmax =0.46, ymax = 2.7)+
+          annotation_custom2(Turdus, data=o[genus2 == 'Turdus'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
+          annotation_custom2(Sylvia, data=o[genus2 == 'Sylvia'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
+          annotation_custom2(Parus, data=o[genus2 == 'Parus'], xmin = 0.05, xmax =0.42, ymax = 2.7)+
+          annotation_custom2(Sitta, data=o[genus2 == 'Sitta'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
+          annotation_custom2(Pica, data=o[genus2 == 'Pica'], xmin = 0.05, xmax =0.5, ymax = 2.5)+
+          annotation_custom2(Garrulus, data=o[genus2 == 'Garrulus'], xmin = 0.05, xmax =0.6, ymax = 2.7)+
+          annotation_custom2(Corvus, data=o[genus2 == 'Corvus'], xmin = 0.05, xmax =0.4, ymax = 2.55)+
+          annotation_custom2(Sturnus, data=o[genus2 == 'Sturnus'], xmin = 0.05, xmax =0.24, ymax = 2.65)+
+          annotation_custom2(Passer, data=o[genus2 == 'Passer'], xmin = 0.05, xmax =0.36, ymax = 2.65)+
+          annotation_custom2(Fringilla, data=o[genus2 == 'Fringilla'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
+          annotation_custom2(other, data=o[genus2 == 'other'], xmin = 0.05, xmax =0.45, ymax = 2.4)+
+          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
+            #ggtitle ("Sim based")+
+          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
+          geom_text(data = ann_text,label = "No difference", col = "grey80",angle = 45, size = 2) + 
+          facet_wrap(~genus2) +
+          #geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
+          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
+          scale_x_continuous("Before COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          scale_y_continuous("During COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          labs(title = "Species means per sampling location")+
+          theme_MB  +
+          theme(
+                  plot.title = element_text(size=7),
+                  strip.background = element_blank(),
+                  #panel.spacing = unit(1, "mm"),
+                  legend.position = c(1, 0.025),
+                  legend.justification = c(1, 0)
+                  )  
+        gg <- ggplotGrob(g) #gg$layout$name
+        ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
+                                         trim = FALSE)
+        grid.draw(ggx)
+        ggsave('Outputs/Fig_2.png',ggx, width=4.5,height=4.5,dpi=600) # 11.43cm
+    # legend
+        # correlation between mean fid and residual fid
+            ggplot(a, aes(x = resid_FID_avg)) + geom_histogram()
+            ggplot(a, aes(x=FID_avg, y = resid_FID_avg)) + 
+                stat_smooth() + 
+                geom_point() +
+                stat_cor(aes(label = ..r.label..),  label.x = 0.3, size = 2) +
+                scale_x_continuous(trans = 'log10')
+            ggplot(aw, aes(x = N.0-N.1)) +geom_histogram()
+            nrow(aw[abs(N.0-N.1)>2])
+            nrow(aw[!abs(N.0-N.1)>2])
+    # supplement
+        g2 =     
+        ggplot(aw, aes(x = resid_FID_avg.0, y = resid_FID_avg.1)) + 
+          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
+          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
+          facet_wrap(~genus2) +
+          #geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + 
+          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
+          scale_x_continuous("Before COVID-19 shutdown - residual escape distance", expand = c(0, 0)) +
+          scale_y_continuous("During COVID-19 shutdown - residual escape distance", expand = c(0, 0)) +
+          labs(title = "Species means per sampling location")+
+          theme_MB  +
+          theme(
+                plot.title = element_text(size=7),
+                strip.background = element_blank(),
+                legend.position = "none",
+                #legend.position = c(1, 0),
+                legend.justification = c(1, 0)
+                )     
+
+        gg2 <- ggplotGrob(g2) #gg$layout$name
+        ggx2 <- gtable_filter_remove(gg2, name = paste0("axis-b-", c(2, 4), "-4"),
+                                         trim = FALSE)
+
+        grid.draw(cbind(cbind(ggx,ggx2 ,  size = "last")))
+        ggsave('Outputs/Fig_Sw1_2_var2.png',cbind(ggx,ggx2 , size = "last"), width=4.5*2,height=4.5,dpi=600)
+# Figure 3
+  g = 
+    ggplot(s[Nsp>9], aes(x = StringencyIndex, y = FID)) +
+      stat_smooth(se = FALSE, aes(colour = 'Locally weighted\nsmoothing'), lwd = 0.5)+ # show_guide=TRUE
+      #stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
+      geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
+      facet_wrap(~sp, ncol = 6) +
+      scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
+      scale_x_continuous("Stringency index of governmental COVID-19 restrictions", expand = c(0, 0)) +
+      scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+      #annotate("text", x = 1, y = 1, label = c(rep("", 52),"Observation"), hjust = -0.08, size = 1) +
+      #labs(title = "Species means per sampling location")+
+      scale_colour_manual(values=c('grey60'))+
+      #scale_color_manual(name = 'try', values = c('LOESS smoothed = "grey60"'))+
+      theme_MB  +
+      theme(
+          plot.title = element_text(size=7),
+          strip.background = element_blank(),
+          strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
+          #panel.spacing = unit(1, "mm"),
+          legend.position = c(1, 0.01),
+          legend.justification = c(1, 0),
+          legend.title = element_blank(),
+          #legend.spacing.y = unit(-0.78, "cm")
+          #legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+          legend.spacing.y = unit(-0.9, "cm")
+          ) 
+
+    gg <- ggplotGrob(g) #gg$layout$name
+    ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-9"), trim = FALSE)
+    grid.draw(ggx)
+    ggsave('Outputs/Figure_3_width-152mm_v2.png',ggx, width=6,height=7,dpi=600)
    
-   png("Outputs/Fig_Sx.png", width =17, height = 17, units = "cm", bg = "transparent", res = 600)
-   chart.Correlation(dp, histogram=TRUE, pch=19, alpha = 0.5)
-   mtext("Single observations", side=3, line=3)
-   dev.off()
 
-   
 # DELETE
+  x = d[,.N, by = .(Year, Species, IDLocality, Covid)]
+
   # Figure Sy
   # estimates Period
     # 01a all data, all random slopes - singularity 
