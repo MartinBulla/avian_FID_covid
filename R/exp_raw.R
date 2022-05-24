@@ -38,7 +38,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     nsim = 5000 # number of simulations to extract estimates and 95%CrI
     ax_lines = "grey60" # defines color of the axis lines
     colors <- c("#999999", "#E69F00", "#56B4E9") #viridis(3)
-
+    set.seed(42)
     # function to remove ggplot components
       gtable_filter_remove <- function (x, name, trim = TRUE){
         matches <- !(x$layout$name %in% name)
@@ -338,7 +338,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   #scale(Day)+
                   scale(Temp)+
                   scale(Covid)+
-                  (1|Year) + (Covid|Species)+ (1|sp_day_year) +(0+Covid|Country) + (Covid|IDLocality) + (1|sp_loc),
+                  (1|Year) +  (scale(Covid)|Species)+ (1|sp_day_year) +(scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc),
                   data = dxx,
                   REML = FALSE, control = lmerControl(
                   optimizer ='optimx', optCtrl=list(method='nlminb'))) 
@@ -522,7 +522,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       
   # plot
       x = rbind(est_mf_01a,est_mf_01b, est_mf_01c, est_mf_01d, est_mf_01e, est_mf_01f, est_mf_02a,est_mf_02b, est_mf_03a,est_mf_03b,est_mf_04b,est_mf_04a, est_mf_05a,est_mf_05b,est_mf_05c,est_mf_05d,est_m06a,est_m06b,est_m07a,est_m07b,est_m08,est_m09)
-
+      #x = est_mf_05a
       g = 
       ggplot(x[predictor == 'scale(Covid)'], aes(y = model, x = estimate, col = model)) +
           geom_vline(xintercept = 0, col = "grey30", lty =3)+
