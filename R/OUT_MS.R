@@ -406,7 +406,7 @@
    mtext("Single observations", side=3, line=3)
    dev.off()
 
-# Figure Su - year trend
+# Figure Sua - year trend
    px = pp[N_during>4 & N_before>4]
    dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
     table(dxx$IDLocality, dxx$Year)
@@ -436,6 +436,37 @@
           ) 
 
    ggsave(here::here('Outputs/Fig_Su.png'),g, width = 18, height =16, units = 'cm')
+
+# Figure Sub - year trend
+   px = pp[N_during>0 & N_before>0]
+   dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
+    table(dxx$IDLocality, dxx$Year)
+
+   dxx[, sp_C_loc2 := paste(gsub('[_]', ' ', Species), Country, IDLocality, sep ='\n')]
+   dxx[, genus := sub("_.*", "", Species)]
+   g = 
+   ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Year)) + 
+    geom_boxplot() + facet_wrap(~sp_C_loc2, ncol = 15) + 
+    scale_y_continuous("Flight initiation distance [m]", trans = 'log10') + 
+    scale_x_discrete("Year", guide = guide_axis(angle = 45)) +
+    scale_color_continuous()+
+    theme_MB  +
+    theme(
+          plot.title = element_text(size=7),
+          strip.background = element_blank(),
+          strip.text.x = element_text(size = 5, color="grey30",  margin=margin(1,1,1,1,"mm")),
+          #panel.spacing = unit(1, "mm"),
+          legend.position = "none",#c(1, 0.01),
+          legend.justification = c(1, 0),
+          legend.title = element_blank(),
+          #legend.spacing.y = unit(-0.78, "cm")
+          #legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+          legend.spacing.y = unit(-0.9, "cm"),
+          axis.text.x = element_text(colour="grey30", size = 6),
+          axis.text.y=element_text(colour="grey30", size = 6)
+          ) 
+
+   ggsave(here::here('Outputs/Fig_Su_atLeast1.png'),g, width = 24, height =30, units = 'cm')
 
    #ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE)
    #ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE) + facet_wrap(~Country, ncol = 5)
