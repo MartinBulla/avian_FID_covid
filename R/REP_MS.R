@@ -1118,6 +1118,38 @@
 
         grid.draw(cbind(cbind(ggx,ggx2 ,  size = "last")))
         ggsave('Outputs/Fig_Sw1_2_var2.png',cbind(ggx,ggx2 , size = "last"), width=4.5*2,height=4.5,dpi=600)
+    # species panel figure
+      ann_text <- data.frame(FID_avg.0 = 8, FID_avg.1 = 10,lab = "Text",
+                       Species = factor('Aegithalos caudatus',levels = levels(as.factor(aw$Species))))
+      g = 
+        ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
+          #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
+          #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
+          #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
+          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
+            #ggtitle ("Sim based")+
+          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
+          geom_text(data = ann_text,label = "No difference", col = "grey80",angle = 45, size = 2) + 
+          facet_wrap(~Species) +
+          #geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
+          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
+          scale_x_continuous("Before COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          scale_y_continuous("During COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          labs(title = "Species means per sampling location")+
+          theme_MB  +
+          theme(
+                  plot.title = element_text(size=7),
+                  strip.background = element_blank(),
+                  #panel.spacing = unit(1, "mm"),
+                  legend.position = c(1, 0.025),
+                  legend.justification = c(1, 0)
+                  )  
+        gg <- ggplotGrob(g) #gg$layout$name
+        ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
+                                         trim = FALSE)
+        grid.draw(ggx)
+        ggsave('Outputs/Fig_2_species.png',gg, width=4.5*1.75,height=4.5*1.75,dpi=600) # 11.43cm
+
 # Figure 3
   g = 
     ggplot(s[Nsp>9], aes(x = StringencyIndex, y = FID)) +
