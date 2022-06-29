@@ -436,7 +436,7 @@
           axis.text.y=element_text(colour="grey30", size = 6)
           ) 
 
-   ggsave(here::here('Outputs/Fig_Su.png'),g, width = 18, height =16, units = 'cm')
+   ggsave(here::here('Outputs/Fig_S4.png'),g, width = 18, height =16, units = 'cm')
 
 # not used - Figure Sub - year trend for >0 observations/site before and during covid
    px = pp[N_during>0 & N_before>0]
@@ -947,7 +947,7 @@
     m_ass(name = "Table S2 - 3a", mo = m03a, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
     m_ass(name = "Table S2 - 3b", mo = m03b, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
     m_ass(name = "Table S2 - 3c", mo = m03c, dat = s[Nsp>9], fixed = c('Year','SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','StringencyIndex'), trans = c("","log","log","log","sin","cos","","") , categ = 'Year', outdir = 'Outputs/modelAss/')
-# Figure 2
+# Figure 2, S3, S5
     # prepare data
         dxx = d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species)]
             #length(dxx[, unique(paste(sp_loc, Covid))])
@@ -987,35 +987,8 @@
         aw[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos', 'Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
 
         aw[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos', 'Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
-    # plot from web
-        g = 
-        ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
-          #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
-          #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
-          #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
-          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
-            #ggtitle ("Sim based")+
-          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
-          facet_wrap(~genus2) +
-          geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
-          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
-          scale_x_continuous("Before shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
-          scale_y_continuous("During shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
-          labs(title = "Species means per sampling location")+
-          theme_MB  +
-          theme(
-                  plot.title = element_text(size=7),
-                  strip.background = element_blank(),
-                  #panel.spacing = unit(1, "mm"),
-                  legend.position = c(1, 0),
-                  legend.justification = c(1, 0)
-                  )  
-        gg <- ggplotGrob(g) #gg$layout$name
-        ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
-                                         trim = FALSE)
-        grid.draw(ggx)
-        ggsave('Outputs/before_after_Genus_fill.png',ggx, width=4.5,height=4,dpi=600)
-    # USE plot from files
+  
+    # Fig 2 & left panel of S5- plot from files
         anas = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Anas.png')))
         columba = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Columba.png')))
         Dendrocopos = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Dendrocopos.png')))
@@ -1083,20 +1056,10 @@
         gg <- ggplotGrob(g) #gg$layout$name
         ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
                                          trim = FALSE)
-        grid.draw(ggx)
+        #grid.draw(ggx)
         ggsave('Outputs/Fig_2.png',ggx, width=4.5,height=4.5,dpi=600) # 11.43cm
-    # legend
-        # correlation between mean fid and residual fid
-            ggplot(a, aes(x = resid_FID_avg)) + geom_histogram()
-            ggplot(a, aes(x=FID_avg, y = resid_FID_avg)) + 
-                stat_smooth() + 
-                geom_point() +
-                stat_cor(aes(label = ..r.label..),  label.x = 0.3, size = 2) +
-                scale_x_continuous(trans = 'log10')
-            ggplot(aw, aes(x = N.0-N.1)) +geom_histogram()
-            nrow(aw[abs(N.0-N.1)>2])
-            nrow(aw[!abs(N.0-N.1)>2])
-    # supplement
+    
+    # Fig S5 right panel
         g2 =     
         ggplot(aw, aes(x = resid_FID_avg.0, y = resid_FID_avg.1)) + 
           geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
@@ -1119,13 +1082,93 @@
         gg2 <- ggplotGrob(g2) #gg$layout$name
         ggx2 <- gtable_filter_remove(gg2, name = paste0("axis-b-", c(2, 4), "-4"),
                                          trim = FALSE)
-
+    # Fig S5 combine
         grid.draw(cbind(cbind(ggx,ggx2 ,  size = "last")))
         ggsave('Outputs/Fig_Sw1_2_var2.png',cbind(ggx,ggx2 , size = "last"), width=4.5*2,height=4.5,dpi=600)
-    # species panel figure
+    
+    # Fig S5 legend
+        # correlation between mean fid and residual fid
+            ggplot(a, aes(x = resid_FID_avg)) + geom_histogram()
+            ggplot(a, aes(x=FID_avg, y = resid_FID_avg)) + 
+                stat_smooth() + 
+                geom_point() +
+                stat_cor(aes(label = ..r.label..),  label.x = 0.3, size = 2) +
+                scale_x_continuous(trans = 'log')
+            ggplot(dxx, aes(x=FID, y = resid_FID)) + 
+                stat_smooth() + 
+                geom_point() +
+                stat_cor(aes(label = ..r.label..),  label.x = 0.3, size = 2) +
+                scale_x_continuous(trans = 'log')    
+            cor(log(dxx$FID), dxx$resid_FID)
+            cor(log(a$FID_avg), a$resid_FID_avg)
+            ggplot(aw, aes(x = N.0-N.1)) +geom_histogram()
+            nrow(aw[abs(N.0-N.1)>2])
+            nrow(aw[!abs(N.0-N.1)>2])
+     
+    # not used - plot from web
+        g = 
+        ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
+          #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
+          #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
+          #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
+          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
+            #ggtitle ("Sim based")+
+          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
+          facet_wrap(~genus2) +
+          geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
+          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
+          scale_x_continuous("Before shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          scale_y_continuous("During shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          labs(title = "Species means per sampling location")+
+          theme_MB  +
+          theme(
+                  plot.title = element_text(size=7),
+                  strip.background = element_blank(),
+                  #panel.spacing = unit(1, "mm"),
+                  legend.position = c(1, 0),
+                  legend.justification = c(1, 0)
+                  )  
+        gg <- ggplotGrob(g) #gg$layout$name
+        ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
+                                         trim = FALSE)
+        grid.draw(ggx)
+        ggsave('Outputs/before_after_Genus_fill.png',ggx, width=4.5,height=4,dpi=600)  
+    
+    # S3
+      aw[, sp2 := gsub(" ", "\n", Species)]
       ann_text <- data.frame(FID_avg.0 = 8, FID_avg.1 = 10,lab = "Text",
                        Species = factor('Aegithalos caudatus',levels = levels(as.factor(aw$Species))))
-      g = 
+      ann_text$sp2 = gsub(" ", "\n", ann_text$Species)
+      g2 = 
+        ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
+          #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
+          #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
+          #geom_point(pch = 21, alpha = 0.7, aes(col = Country)) + 
+          geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
+            #ggtitle ("Sim based")+
+          geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
+          geom_text(data = ann_text,label = "No difference", col = "grey80",angle = 45, size = 2) + 
+          facet_wrap(~sp2) +
+          #geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
+          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
+          scale_x_continuous("Before COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          scale_y_continuous("During COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+          labs(title = "Species means per sampling location")+
+          theme_MB  +
+          theme(
+                  plot.title = element_text(size=7),
+                  strip.background = element_blank(),
+                  #panel.spacing = unit(1, "mm"),
+                  legend.position = c(0.96, 0.0),
+                  legend.justification = c(1, 0)
+                  )  
+        gg2 <- ggplotGrob(g2) #gg2$layout$name
+        ggx2 <- gtable_filter_remove(gg2, name = c(paste0("axis-b-", c(2, 4), "-7"), "axis-b-6-6"),
+                                         trim = FALSE)
+        #grid.draw(ggx2)
+        ggsave('Outputs/Fig_S3_species.png',ggx2, width=13.5,height=17.5,unit = 'cm', dpi=600) # 11.43cm
+      # not used S3 version
+        g = 
         ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
           #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
           #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
@@ -1152,11 +1195,12 @@
         ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
                                          trim = FALSE)
         grid.draw(ggx)
-        ggsave('Outputs/Fig_2_species.png',gg, width=4.5*1.75,height=4.5*1.75,dpi=600) # 11.43cm
-
+        ggsave('Outputs/Fig_S3_names1row.png',gg, width=4.5*1.75,height=4.5*1.75,dpi=600) # 11.43cm
 # Figure 3
+  ss = s[Nsp>9]
+  ss[, sp2 := gsub(" ", "\n", sp)]
   g = 
-    ggplot(s[Nsp>9], aes(x = StringencyIndex, y = FID)) +
+    ggplot(ss, aes(x = StringencyIndex, y = FID)) +
       stat_smooth(se = FALSE, aes(colour = 'Locally weighted\nsmoothing'), lwd = 0.5)+ # show_guide=TRUE
       #stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
       geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
@@ -1172,9 +1216,9 @@
       theme(
           plot.title = element_text(size=7),
           strip.background = element_blank(),
-          strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
+          #strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
           #panel.spacing = unit(1, "mm"),
-          legend.position = c(1, 0.01),
+          legend.position = c(0.98, 0.02),
           legend.justification = c(1, 0),
           legend.title = element_blank(),
           #legend.spacing.y = unit(-0.78, "cm")
@@ -1184,375 +1228,39 @@
 
     gg <- ggplotGrob(g) #gg$layout$name
     ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-9"), trim = FALSE)
-    grid.draw(ggx)
-    ggsave('Outputs/Figure_3_width-152mm_v2.png',ggx, width=6,height=7,dpi=600)
-   
+    #grid.draw(ggx)
+    ggsave('Outputs/Fig_3_width-152mm_v3.png',ggx, width=19,height=22.2, unit = 'cm',dpi=600)
 
-# DELETE
-  x = d[,.N, by = .(Year, Species, IDLocality, Covid)]
+    g2 = 
+    ggplot(ss, aes(x = StringencyIndex, y = FID)) +
+      stat_smooth(se = FALSE, aes(colour = 'Locally weighted\nsmoothing'), lwd = 0.5)+ # show_guide=TRUE
+      #stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
+      geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
+      facet_wrap(~sp2, ncol = 6) +
+      scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
+      scale_x_continuous("Stringency index of governmental COVID-19 restrictions", expand = c(0, 0)) +
+      scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
+      #annotate("text", x = 1, y = 1, label = c(rep("", 52),"Observation"), hjust = -0.08, size = 1) +
+      #labs(title = "Species means per sampling location")+
+      scale_colour_manual(values=c('grey60'))+
+      #scale_color_manual(name = 'try', values = c('LOESS smoothed = "grey60"'))+
+      theme_MB  +
+      theme(
+          plot.title = element_text(size=7),
+          strip.background = element_blank(),
+          #strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
+          #panel.spacing = unit(1, "mm"),
+          legend.position = c(1, 0.01),
+          legend.justification = c(1, 0),
+          legend.title = element_blank(),
+          #legend.spacing.y = unit(-0.78, "cm")
+          #legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+          legend.spacing.y = unit(-0.9, "cm")
+          ) 
 
-  # Figure Sy
-  # estimates Period
-    # 01a all data, all random slopes - singularity 
-      m1a=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  (1|Year) + (scale(Covid)|genus)+(scale(Covid)|Species)+(1|sp_day_year) + (scale(Covid)|Country) +(scale(Covid)|IDLocality) + (scale(Covid)|sp_loc),
-                  data = d)# # (Covid|IDLocality) +
-      est_m1a = est_out(m1a, '01a) (1|Year) + (scale(Covid)|genus) + (scale(Covid)|Species) + (1|sp_day_year) + (scale(Covid)|Country) + (scale(Covid)|IDLocality) + (scale(Covid)|sp_loc)')  
-    # 01b all data, all random slopes, but some without cor to avoid singularity
-      m1b=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  #(1|Year) +(0+Covid|genus)+(0+Covid|Species)+(1|sp_day_year) + (Covid|Country) + (0+Covid|IDLocality) +(Covid|sp_loc)
-                  (1|Year) + (0+scale(Covid)|genus)+(0+scale(Covid)|Species)+(1|sp_day_year) + (scale(Covid)|Country) +(scale(Covid)|IDLocality) + (scale(Covid)|sp_loc),
-                  data = d, REML = FALSE) # (0+scale(Covid)|genus) is zero 
-      est_m1b = est_out(m1b, '01b) (1|Year) + (0+scale(Covid)|genus) + (0+scale(Covid)|Species) + (1|sp_day_year) + (scale(Covid)|Country) + (scale(Covid)|IDLocality) + (scale(Covid)|sp_loc)')   
-    # 01c all data, random slopes that allow for non-singular fit 
-      m1c=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  (1|Year) +(1|genus)+(1|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (scale(Covid)|IDLocality) + (scale(Covid)|sp_loc),
-                  data = d, REML = FALSE, control = lmerControl(
-                           optimizer ='optimx', optCtrl=list(method='nlminb')))# (Covid|IDLocality) +
-      #d[,res := resid(mf)]
-      est_m1c = est_out(m1c, '01c) (1|Year) + (1|genus) + (1|Species) + (1|sp_day_year) + (scale(Covid)|Country) + (scale(Covid)|IDLocality) + (scale(Covid)|sp_loc)')
-    # 01d all data, random slopes that allow for non-singular fit with simple struccture
-      m1d=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  (1|Year) +(1|genus)+(1|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc),
-                  data = d, REML = FALSE, control = lmerControl(
-                           optimizer ='optimx', optCtrl=list(method='nlminb')))# (Covid|IDLocality) +
-      #d[,res := resid(mf)]
-      est_m1d = est_out(m1d, '01d) (1|Year) + (1|genus) + (1|Species) + (1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc)')
-
-    # 02a) before & during > 4/species - singularity 
-      dx = dd[N_during>4 & N_before >4]
-      #dxx = d[Species %in% dx$Species]
-      #dx2 = dd[N_during>9 & N_before >9]
-      m2a=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  (1|Year) + (scale(Covid)|genus)+(scale(Covid)|Species)+(1|sp_day_year) + (scale(Covid)|Country) +(scale(Covid)|IDLocality) + (scale(Covid)|sp_loc),
-                  #(1|Year) + (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
-                  data = d[Species %in% dx$Species],
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_m2a = est_out(m2a, '02a) (1|Year) + (scale(Covid)|genus)+(scale(Covid)|Species) + (1|sp_day_year) + (scale(Covid)|Country) + (scale(Covid)|IDLocality) + (scale(Covid)|sp_loc); >4/species/period')  
-    # 02b) before & during > 4/species, random slopes that allow for non-singular fit and simple structure
-      dx = dd[N_during>4 & N_before >4]
-      #dxx = d[Species %in% dx$Species]
-      #dx2 = dd[N_during>9 & N_before >9]
-      m2b=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  (1|Year) +(1|genus)+(1|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc),
-                  #(1|Year) + (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
-                  data = d[Species %in% dx$Species],
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_m2b = est_out(m2b, '02b) (1|Year) + (1|genus) + (1|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc); >4/species/period')  
-       
-    # 03a) before & during > 9/species - singularity 
-      dx = dd[N_during>9 & N_before >9]
-      #dxx = d[Species %in% dx$Species]
-      #dx2 = dd[N_during>9 & N_before >9]
-      m3a=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  (1|Year) + (scale(Covid)|genus)+(scale(Covid)|Species)+(1|sp_day_year) + (scale(Covid)|Country) +(scale(Covid)|IDLocality) + (scale(Covid)|sp_loc),
-                  #(1|Year) + (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
-                  data = d[Species %in% dx$Species],
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_m3a = est_out(m3a, '03a) (1|Year) + (scale(Covid)|genus)+(scale(Covid)|Species) + (1|sp_day_year) + (scale(Covid)|Country) + (scale(Covid)|IDLocality) + (scale(Covid)|sp_loc); >9/species/period')  
-    # 03b) before & during > 9/species, random slopes that allow for non-singular fit and simple structure
-      dx = dd[N_during>9 & N_before >9]
-      #dxx = d[Species %in% dx$Species]
-      #dx2 = dd[N_during>9 & N_before >9]
-      m3b=lmer(scale(log(FID))~
-                  scale(log(SD))+
-                  scale(log(FlockSize))+
-                  scale(log(BodyMass))+
-                  scale(sin(rad)) + scale(cos(rad)) + 
-                  #scale(Day)+
-                  scale(Temp)+
-                  scale(Covid)+
-                  (1|Year) +(1|genus)+(1|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc),
-                  #(1|Year) + (1|genus)+(1|Species)+(1|sp_day_year) + (Covid|Country) + (Covid|sp_loc),
-                  data = d[Species %in% dx$Species],
-                  REML = FALSE) # (Covid|IDLocality) +
-      est_m3b = est_out(m3b, '03b) (1|Year) + (1|genus) + (1|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc); >9/species/period')  
-  # plot
-      xs = rbind(est_m1a,est_m1b,est_m1c, est_m2a, est_m2b,est_m3a, est_m3b)
-
-      g = 
-      ggplot(xs[predictor == 'scale(Covid)'], aes(y = model, x = estimate, col = model)) +
-          geom_vline(xintercept = 0, col = "grey30", lty =3)+
-          geom_errorbar(aes(xmin = lwr, xmax = upr, col = model), width = 0, position = position_dodge(width = 0.01) ) +
-          #ggtitle ("Sim based")+
-          geom_point(position = position_dodge(width = 0.01)) +
-          #scale_colour_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
-          #scale_fill_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
-          scale_color_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
-          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE)) + 
-          scale_y_discrete(limits=rev)+
-          coord_fixed(ratio = 0.05)+
-          #scale_shape(guide = guide_legend(reverse = TRUE)) + 
-          #scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2,2, by = 1), labels = seq(-2,2, by = 1)) +
-          labs(y = NULL ,x = "Standardized effect size", title = "a) Effect of Period (before/during shutdown)") +
-          #ylim(c(0,100))+
-          #coord_flip()+
-          theme_bw() +
-          theme( legend.position ="none",
-                plot.title = element_text(size=7),
-                legend.title=element_text(size=7), 
-                legend.text=element_text(size=6),
-                ##legend.spacing.y = unit(0.1, 'cm'), 
-                legend.key.height= unit(0.5,"line"),
-                #plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r =0.5, unit =  "pt"),
-                panel.grid = element_blank(),
-                panel.border = element_blank(),
-                panel.background = element_blank(),
-                axis.line = element_line(colour = ax_lines, size = 0.25),
-                axis.line.y = element_blank(),
-                axis.ticks.y = element_blank(),
-                axis.ticks.x= element_line( colour = ax_lines, size = 0.25),
-                axis.ticks.length = unit(1, "pt"),
-                axis.text.x = element_text(colour="black", size = 6),
-                axis.text.y=element_text(colour="black", size = 7),
-                axis.title=element_text(size=7)
-                )
-      g
-      ggsave(here::here('Outputs/Figure_Sy.png'),g, width = 30, height =5, units = 'cm')
-        
-   
-  # Figure Sz   
-      # estimates 
-       m01a=lmer(scale(log(FID))~ 
-          Year+ 
-          scale(log(SD))+ 
-          scale(log(FlockSize))+ 
-          scale(log(BodyMass))+ 
-          scale(sin(rad)) + scale(cos(rad)) +  
-          #scale(Day)+ 
-          scale(Temp)+ 
-          scale(StringencyIndex)+ 
-          (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc),
-          data = s, REML = FALSE,  
-          control = lmerControl( 
-              optimizer ='optimx', optCtrl=list(method='nlminb')) 
-          )  
-       s[, res := resid(m01a)]
-          # (1|Year) explains nothing - could stay 
-       est_m01a = est_out(m01a, '01a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc)')
-       m01b=lmer(scale(log(FID))~
-            Year+       
-            scale(log(SD))+
-            scale(log(FlockSize))+
-            scale(log(BodyMass))+
-            scale(sin(rad)) + scale(cos(rad)) + 
-            #scale(Day)+
-            scale(Temp)+
-            scale(StringencyIndex)+
-            (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc),  
-            data = s, REML = FALSE, 
-            control = lmerControl(
-                optimizer ='optimx', optCtrl=list(method='nlminb'))
-            ) 
-            # (1|Year), (1|genus), (1|sp_day_year), (1|sp_loc),  explain nothing - could stay
-       est_m01b = est_out(m01b, '01b) (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc)')  
-       m01c=lmer(scale(log(FID))~
-            Year+       
-            scale(log(SD))+
-            scale(log(FlockSize))+
-            scale(log(BodyMass))+
-            scale(sin(rad)) + scale(cos(rad)) + 
-            #scale(Day)+
-            scale(Temp)+
-            scale(StringencyIndex)+
-            (1|Country) + (scale(StringencyIndex)|IDLocality),  
-            data = s, REML = FALSE, 
-            control = lmerControl(
-                optimizer ='optimx', optCtrl=list(method='nlminb'))
-            ) 
-            # (1|Year), (1|genus), (1|sp_day_year), (1|sp_loc),  explain nothing - could stay
-       est_m01c = est_out(m01c, '01c) (1|Country) + (scale(StringencyIndex)|IDLocality)')  
-
-       m02a=lmer(scale(log(FID))~ 
-          Year+ 
-          scale(log(SD))+ 
-          scale(log(FlockSize))+ 
-          scale(log(BodyMass))+ 
-          scale(sin(rad)) + scale(cos(rad)) +  
-          #scale(Day)+ 
-          scale(Temp)+ 
-          scale(StringencyIndex)+ 
-          (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + 
-          (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc),   
-          data = s[Nsp>4], REML = FALSE,  
-          control = lmerControl( 
-              optimizer ='optimx', optCtrl=list(method='nlminb')) 
-          )  
-          # (1|Year) explains nothing - could stay 
-       est_m02a = est_out(m02a, '02a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc);>4/species')   
-       m02b=lmer(scale(log(FID))~
-            Year+ 
-            scale(log(SD))+
-            scale(log(FlockSize))+
-            scale(log(BodyMass))+
-            scale(sin(rad)) + scale(cos(rad)) + 
-            #scale(Day)+
-            scale(Temp)+
-            scale(StringencyIndex)+
-            (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc),  
-            data = s[Nsp>4], REML = FALSE, 
-            control = lmerControl(
-                optimizer ='optimx', optCtrl=list(method='nlminb'))
-            ) 
-       est_m02b = est_out(m02b, '02b)  (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc); >4/species') 
-       m02c=lmer(scale(log(FID))~
-            Year+ 
-            scale(log(SD))+
-            scale(log(FlockSize))+
-            scale(log(BodyMass))+
-            scale(sin(rad)) + scale(cos(rad)) + 
-            #scale(Day)+
-            scale(Temp)+
-            scale(StringencyIndex)+
-            (1|Country) + (scale(StringencyIndex)|IDLocality),  
-            data = s[Nsp>4], REML = FALSE, 
-            control = lmerControl(
-                optimizer ='optimx', optCtrl=list(method='nlminb'))
-            ) 
-       est_m02c = est_out(m02c, '02c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >4/species') 
-       
-       m03a=lmer(scale(log(FID))~ 
-          Year+ 
-          scale(log(SD))+ 
-          scale(log(FlockSize))+ 
-          scale(log(BodyMass))+ 
-          scale(sin(rad)) + scale(cos(rad)) +  
-          #scale(Day)+ 
-          scale(Temp)+ 
-          scale(StringencyIndex)+ 
-          (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + 
-          (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc),   
-          data = s[Nsp>9], REML = FALSE,  
-          control = lmerControl( 
-              optimizer ='optimx', optCtrl=list(method='nlminb')) 
-          )  
-          # (1|Year) explains nothing - could stay 
-       est_m03a = est_out(m03a, '03a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc);>9/species') 
-       m03b=lmer(scale(log(FID))~
-            Year+ 
-            scale(log(SD))+
-            scale(log(FlockSize))+
-            scale(log(BodyMass))+
-            scale(sin(rad)) + scale(cos(rad)) + 
-            #scale(Day)+
-            scale(Temp)+
-            scale(StringencyIndex)+
-            (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc),  
-            data = s[Nsp>9], REML = FALSE, 
-            control = lmerControl(
-                optimizer ='optimx', optCtrl=list(method='nlminb'))
-            ) 
-       est_m03b = est_out(m03b, '03b)  (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc); >9/species') 
-       m03c=lmer(scale(log(FID))~
-            Year+ 
-            scale(log(SD))+
-            scale(log(FlockSize))+
-            scale(log(BodyMass))+
-            scale(sin(rad)) + scale(cos(rad)) + 
-            #scale(Day)+
-            scale(Temp)+
-            scale(StringencyIndex)+
-            (1|Country) + (scale(StringencyIndex)|IDLocality),  
-            data = s[Nsp>9], REML = FALSE, 
-            control = lmerControl(
-                optimizer ='optimx', optCtrl=list(method='nlminb'))
-            ) 
-       est_m03c = est_out(m03c, '03c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >9/species') 
-
-      # plot
-        xs0 = rbind(est_m01a,est_m01b,est_m01c, est_m02a, est_m02b,est_m02c, est_m03a, est_m03b, est_m03c)
-
-        r g0
-        ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
-        
-
-        g = 
-        ggplot(xc, aes(y = N, x = estimate, col = N)) +
-            geom_vline(xintercept = 0, col = "grey30", lty =3)+
-            geom_errorbar(aes(xmin = lwr, xmax = upr, col = N), width = 0, position = position_dodge(width = 0.01) ) +
-            #ggtitle ("Sim based")+
-            geom_point(position = position_dodge(width = 0.01)) +
-            #scale_colour_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
-            #scale_fill_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
-            scale_color_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
-            scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE)) + 
-            scale_y_discrete(limits=rev, position = "right")+
-            #coord_fixed(ratio = 0.05)+ #,xlim = c(-0.23, 0.15)
-            #scale_shape(guide = guide_legend(reverse = TRUE)) + 
-            #scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2,2, by = 1), labels = seq(-2,2, by = 1)) +
-            labs(y = NULL ,x = "Standardize effect sizes ") + #title = "a)",Effect of Period (before/during shutdown)
-            #ylim(c(0,100))+
-            #coord_flip()+
-            #facet_wrap(~predictor, nrow = 2)
-            theme_bw() +
-            theme( legend.position ="none",
-                  plot.title = element_text(size=7),
-                  plot.tag = element_text(size=7),
-                  legend.title=element_text(size=7), 
-                  legend.text=element_text(size=6),
-                  ##legend.spacing.y = unit(0.1, 'cm'), 
-                  legend.key.height= unit(0.5,"line"),
-                  #plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r =0.5, unit =  "pt"),
-                  panel.grid = element_blank(),
-                  panel.border = element_blank(),
-                  panel.background = element_blank(),
-                  axis.line = element_line(colour = ax_lines, size = 0.25),
-                  axis.line.y = element_blank(),
-                  axis.ticks.y = element_blank(),
-                  axis.ticks.x= element_line( colour = ax_lines, size = 0.25),
-                  axis.ticks.length = unit(1, "pt"),
-                  axis.text.x = element_text(colour="black", size = 6),
-                  axis.text.y=element_text(colour="black", size = 7),
-                  axis.title=element_text(size=7)
-                  )
+    gg2 <- ggplotGrob(g2) #gg$layout$name
+    ggx2 <- gtable_filter_remove(gg2, name = paste0("axis-b-", c(2, 4), "-9"), trim = FALSE)
+    #grid.draw(ggx)
+    ggsave('Outputs/Fig_3_width-152mm_2-row_v1.png',ggx2, width=15.24,height=19, unit = 'cm',dpi=600)
 
 # END
