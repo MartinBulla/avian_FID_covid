@@ -472,7 +472,7 @@
    #ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE)
    #ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE) + facet_wrap(~Country, ncol = 5)
 
-# Figure 1, Syz, Tables
+# Figure 1, S2, Tables S1 & S2
   
   # prepare estimates Period
     # 01a all data, all random slopes - singularity 
@@ -748,8 +748,8 @@
   # Figure 1
     xc = rbind(est_m1d, est_m2b,est_m3b,est_m01c, est_m02c,est_m03c)
     xc = xc[predictor %in% c('scale(Covid)', 'scale(StringencyIndex)')]
-    xc[predictor %in% 'scale(Covid)', predictor := 'a) Period\n    (before/during COVID-19 shutdown)']
-    xc[predictor %in% 'scale(StringencyIndex)', predictor := 'b) Stringency of governmental\n    COVID-19 restrictions']
+    xc[predictor %in% 'scale(Covid)', predictor := 'a) Period - before vs during COVID-19 shutdown)']
+    xc[predictor %in% 'scale(StringencyIndex)', predictor := 'b) Stringency of governmental COVID-19\n    restrictions']
     xc[, N:=c('N = 6369; all data', 'N = 5260; ≥5 observations/species/period', 'N = 5106; ≥10 observations/species/period',
               'N = 3676; all data', 'N = 3573; ≥5 observations/species', 'N = 3425; ≥10 observations/species')]
     xc[, N := factor(N, levels = c('N = 6369; all data', 'N = 5260; ≥5 observations/species/period', 'N = 5106; ≥10 observations/species/period',
@@ -803,9 +803,9 @@
                 axis.title=element_text(size=7)
                 )
     g
-    ggsave(here::here('Outputs/Fig_1_width-92mm.png'),g, width = 9.2, height =6, units = 'cm')   
+    ggsave(here::here('Outputs/Fig_1_width-92mm_test.png'),g, width = 9.2, height =6, units = 'cm')   
 
-  # Figure Syz  
+  # Figure S2  
     # prepare plot for Period
       xs = rbind(est_m1a,est_m1b,est_m1c,est_m1d, est_m2a, est_m2b,est_m3a, est_m3b)
       g = 
@@ -891,7 +891,7 @@
       g0
       #ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
     # combine
-     ggsave(here::here('Outputs/Figure_Syz_.png'),rbind(ggplotGrob(g),ggplotGrob(g0)), width = 30, height =10, units = 'cm') 
+     ggsave(here::here('Outputs/Figure_S2.png'),rbind(ggplotGrob(g),ggplotGrob(g0)), width = 30, height =10, units = 'cm') 
 
   # TABLES
     m1a_ = m_out(name = "Table S1 - 1a", dep = 'Period', model = m1a, nsim = 5000)
@@ -917,10 +917,13 @@
     m03b_ = m_out(name = "Table S2 - 3b", dep = 'Stringency Index',model = m03b, nsim = 5000)
     m03c_ = m_out(name = "Table S2 - 3c", dep = 'Stringency Index',model = m03c, nsim = 5000)
 
-    out = rbind(m1a_, m1b_, m1c_, m1d_, m2a_, m2b_, m3a_, m3b_, m01a_, m01b_, m01c_, m02a_, m02b_, m02c_, m03a_, m03b_, m03c_,fill = TRUE)
-    out[is.na(out)] = ""
+    out1 = rbind(m1a_, m1b_, m1c_, m1d_, m2a_, m2b_, m3a_, m3b_,fill = TRUE)
+    out1[is.na(out1)] = ""
+    fwrite(file = "./Outputs/Table_S1.csv", out1)
 
-    fwrite(file = "./Outputs/Table_S1&2.csv", out)
+    out2 = rbind(m01a_, m01b_, m01c_, m02a_, m02b_, m02c_, m03a_, m03b_, m03c_,fill = TRUE)
+    out2[is.na(out2)] = ""
+    fwrite(file = "./Outputs/Table_S2.csv", out2)
 
   # modelAss
     m_ass(name = "Table S1 - 1a", mo = m1a, fixed = c('SD', 'FlockSize', 'BodyMass', 'rad','rad','Temp','Covid'), trans = c("log","log","log","sin","cos","","") , categ = 'Covid', outdir = 'Outputs/modelAss/')
