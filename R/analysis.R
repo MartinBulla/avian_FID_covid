@@ -1084,7 +1084,7 @@
                                          trim = FALSE)
     # Fig S5 combine
         grid.draw(cbind(cbind(ggx,ggx2 ,  size = "last")))
-        ggsave('Outputs/Fig_Sw1_2_var2.png',cbind(ggx,ggx2 , size = "last"), width=4.5*2,height=4.5,dpi=600)
+        ggsave('Outputs/Fig_S5.png',cbind(ggx,ggx2 , size = "last"), width=4.5*2,height=4.5,dpi=600)
     
     # Fig S5 legend
         # correlation between mean fid and residual fid
@@ -1134,7 +1134,7 @@
         grid.draw(ggx)
         ggsave('Outputs/before_after_Genus_fill.png',ggx, width=4.5,height=4,dpi=600)  
     
-    # S3
+    # Fig S3
       aw[, sp2 := gsub(" ", "\n", Species)]
       ann_text <- data.frame(FID_avg.0 = 8, FID_avg.1 = 10,lab = "Text",
                        Species = factor('Aegithalos caudatus',levels = levels(as.factor(aw$Species))))
