@@ -397,16 +397,17 @@
 # Figure S1
    d[, sin_rad:=sin(rad)]
    d[, cos_rad:=cos(rad)]
+   d[, Period:=Covid]
 
-   dp = d[,c('StringencyIndex','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day')]
+   dp = d[,c('Period', 'StringencyIndex','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day')]
    setnames(dp,old = c('StringencyIndex','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day'), new = c('Stringency\nindex','Starting distance\nln(m)', 'Flock size\nln (m)', 'Body mass\nln(m)', 'Sinus\n of radians', 'Cosinus\nof radians','Temperature\n°C', 'Day'))
    
-   png("Outputs/Fig_S1.png", width =17, height = 17, units = "cm", bg = "transparent", res = 600)
+   png("Outputs/Fig_S1.png", width =19, height = 19, units = "cm", bg = "transparent", res = 600)
    chart.Correlation(dp, histogram=TRUE, pch=19, alpha = 0.5)
    mtext("Single observations", side=3, line=3)
    dev.off()
 
-# Figure Sua - year trend
+# Figure S4 - year trend for >4 observations/site before and during covid
    px = pp[N_during>4 & N_before>4]
    dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
     table(dxx$IDLocality, dxx$Year)
@@ -437,7 +438,7 @@
 
    ggsave(here::here('Outputs/Fig_Su.png'),g, width = 18, height =16, units = 'cm')
 
-# Figure Sub - year trend
+# not used - Figure Sub - year trend for >0 observations/site before and during covid
    px = pp[N_during>0 & N_before>0]
    dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
     table(dxx$IDLocality, dxx$Year)
@@ -599,7 +600,7 @@
       est_m3b = est_out(m3b, '03b) (1|Year) + (1|genus) + (1|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc); >9/species/period')  
   # prepare estimates Stringency 
      m01a=lmer(scale(log(FID))~ 
-        Year+ 
+        scale(Year)+ 
         scale(log(SD))+ 
         scale(log(FlockSize))+ 
         scale(log(BodyMass))+ 
@@ -616,7 +617,7 @@
         # (1|Year) explains nothing - could stay 
      est_m01a = est_out(m01a, '01a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc)')
      m01b=lmer(scale(log(FID))~
-          Year+       
+           scale(Year)+       
           scale(log(SD))+
           scale(log(FlockSize))+
           scale(log(BodyMass))+
@@ -632,7 +633,7 @@
           # (1|Year), (1|genus), (1|sp_day_year), (1|sp_loc),  explain nothing - could stay
      est_m01b = est_out(m01b, '01b) (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc)')  
      m01c=lmer(scale(log(FID))~
-          Year+       
+          scale(Year)+       
           scale(log(SD))+
           scale(log(FlockSize))+
           scale(log(BodyMass))+
@@ -649,7 +650,7 @@
      est_m01c = est_out(m01c, '01c) (1|Country) + (scale(StringencyIndex)|IDLocality)')  
 
      m02a=lmer(scale(log(FID))~ 
-        Year+ 
+         scale(Year)+ 
         scale(log(SD))+ 
         scale(log(FlockSize))+ 
         scale(log(BodyMass))+ 
@@ -666,7 +667,7 @@
         # (1|Year) explains nothing - could stay 
      est_m02a = est_out(m02a, '02a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc);>4/species')   
      m02b=lmer(scale(log(FID))~
-          Year+ 
+          scale(Year)+ 
           scale(log(SD))+
           scale(log(FlockSize))+
           scale(log(BodyMass))+
@@ -681,7 +682,7 @@
           ) 
      est_m02b = est_out(m02b, '02b)  (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc); >4/species') 
      m02c=lmer(scale(log(FID))~
-          Year+ 
+          scale(Year)+ 
           scale(log(SD))+
           scale(log(FlockSize))+
           scale(log(BodyMass))+
@@ -697,7 +698,7 @@
      est_m02c = est_out(m02c, '02c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >4/species') 
      
      m03a=lmer(scale(log(FID))~ 
-        Year+ 
+        scale(Year)+ 
         scale(log(SD))+ 
         scale(log(FlockSize))+ 
         scale(log(BodyMass))+ 
@@ -714,7 +715,7 @@
         # (1|Year) explains nothing - could stay 
      est_m03a = est_out(m03a, '03a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc);>9/species') 
      m03b=lmer(scale(log(FID))~
-          Year+ 
+          scale(Year)+ 
           scale(log(SD))+
           scale(log(FlockSize))+
           scale(log(BodyMass))+
@@ -729,7 +730,7 @@
           ) 
      est_m03b = est_out(m03b, '03b)  (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality)+(1|sp_loc); >9/species') 
      m03c=lmer(scale(log(FID))~
-          Year+ 
+          scale(Year)+ 
           scale(log(SD))+
           scale(log(FlockSize))+
           scale(log(BodyMass))+
