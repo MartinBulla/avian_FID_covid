@@ -19,7 +19,7 @@ https://doi.org/10.17605/OSF.IO/WUZH7.
 
 ---------------------------------------------------------------------------------------
 
-1. data.txt
+1. data.txt 
 the primary tab-delimited table containing data on the avian tolerance towards humans 
 (measured as the flight initiation distance) and a set of predictors in urban birds
 
@@ -40,3 +40,21 @@ SD - the starting distance of observer (m)
 FID - the flight initiation distance (m)
 BodyMass - mean species body mass (g) estimated as the mean of female and male values from EltonTraits 1.0 database (Wilman et al. 2014)
 Observer - the name of the observer
+
+2. model_sim 
+the folder contain output of arm R-package simulations used to derive parameter estimates and their 95%CIs for each model within Table S1 & S2. The file names correspond with the model names from the Tables.
+
+3. Pics 
+the folder contains bird silhouettes from PhyloPic database (http://phylopic.org/) or created by Martin Bulla (see the paper for details) and used in Fig. 1 and S5.
+
+4. phylopic.txt 
+the tab-delimited table containing names and IDs of bird silhouettes in PhyloPic database (http://phylopic.org/) - note that for some genera we used other silhouettes - created by Martin Bulla
+Name - the scientific (Latin) name of the species
+Code - Unique ID of each silhouette in PhyloPic database
+
+5. taxonomy.txt
+the tab-delimited table containing species names and taxonomic ranking of species used
+in this study
+Species -  the scientific (Latin) name of the species as used in the BirdTree project (http://birdtree.org/)
+Family - family affiliation of the species
+Order - order affiliation of th species
