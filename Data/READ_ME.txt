@@ -13,7 +13,7 @@ Piotr Tryjanowski, Tomáš Albrecht
 
 WHEN USING the data, PLEASE CITE both the original paper and this dataset:
 
-Bulla, M. & Mikula, P. (2022). Supporting information for 'Urban birds' flight responses 
+Bulla et al.. (2022). Supporting information for 'Urban birds' flight responses 
 were unaffected by the COVID-19 shutdowns'. Open Science Framework 
 https://doi.org/10.17605/OSF.IO/WUZH7.
 
@@ -58,3 +58,11 @@ in this study
 Species -  the scientific (Latin) name of the species as used in the BirdTree project (http://birdtree.org/)
 Family - family affiliation of the species
 Order - order affiliation of th species
+
+6. DAT_res.Rdata
+contains R data.table d_ with res column containing residuals from Table S1 - 1d model and data.table s_ with residuals from Table S1 - 1c model, used to test for phylogenetic signal in residuals.
+res - residual values
+Species - the scientific (Latin) name of the species as used in the BirdTree project (http://birdtree.org/)
+
+7. trees.tre
+contains 100 randomly sampled phylogenetic trees (Hackett backbone) from the Birdtree project (http://birdtree.org/)
