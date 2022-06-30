@@ -1,4 +1,4 @@
-#' ##### Code to load tools & data
+# Load tools & data
   # packages
     require(arm)
     require(data.table)
@@ -21,7 +21,7 @@
     round_ = 3 # number of decimal places to round model coefficients
     nsim = 5000 # number of simulations to extract estimates and 95%CrI
     ax_lines = "grey60" # defines color of the axis lines
-    colors <- c("#999999", "#E69F00", "#56B4E9") #viridis(3)
+    #colors <- c("#999999", "#E69F00", "#56B4E9") #viridis(3)
     set.seed(42)
   # functions
     # to add images to panels
@@ -335,8 +335,8 @@
     o  =  fread('Data/phylopic.txt')
     setnames(o, old = c('Name', 'Code'), new = c('genus2', 'uid'))
     t = fread(here::here('Data/taxonomy.txt'))
-    d = fread(here::here('Data/data.txt'))
-    # adjust correct assignment of season (Year)
+    d = fread(here::here('Data/data.txt')) #fwrite(d, here::here('Data/data.txt'), sep ='\t')
+    # adjust correct assignment of season (Year) for Australia
     d[Country == 'Australia' & Year == 2020 & Covid == 0, Year:=2019]
     d[Country == 'Australia' & Year == 2021 & Day>139, Year:=2020]
     d[Country == 'Australia' & Year == 2022 & Day>139, Year:=2021]
@@ -392,7 +392,6 @@
     s = d[Covid == 1]
     s[, Nsp := .N, by ='Species']
     s[, sp := gsub('[_]', ' ', Species)]
-#' ## Figures
 
 # Figure S1
    d[, sin_rad:=sin(rad)]
@@ -400,7 +399,7 @@
    d[, Period:=Covid]
 
    dp = d[,c('Period', 'StringencyIndex','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day')]
-   setnames(dp,old = c('StringencyIndex','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day'), new = c('Stringency\nindex','Starting distance\nln(m)', 'Flock size\nln (m)', 'Body mass\nln(m)', 'Sinus\n of radians', 'Cosinus\nof radians','Temperature\n°C', 'Day'))
+   setnames(dp,old = c('StringencyIndex','SD_ln', 'flock_ln', 'body_ln', 'sin_rad', 'cos_rad','Temp', 'Day'), new = c('Stringency\nindex','Starting distance\nln(m)', 'Flock size\nln (m)', 'Body mass\nln(m)', 'Sine\n of radians', 'Cosine\nof radians','Temperature\n°C', 'Day'))
    
    png("Outputs/Fig_S1.png", width =19, height = 19, units = "cm", bg = "transparent", res = 600)
    chart.Correlation(dp, histogram=TRUE, pch=19, alpha = 0.5)
@@ -467,7 +466,7 @@
           axis.text.y=element_text(colour="grey30", size = 6)
           ) 
 
-   ggsave(here::here('Outputs/Fig_Su_atLeast1.png'),g, width = 24, height =30, units = 'cm')
+   #ggsave(here::here('Outputs/Fig_Su_atLeast1.png'),g, width = 24, height =30, units = 'cm')
 
    #ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE)
    #ggplot(d, aes(x = Day, y = FID)) +  geom_smooth(aes(col = as.factor(Year))) + scale_y_continuous(trans = 'log10') +  scale_color_viridis(discrete=TRUE) + facet_wrap(~Country, ncol = 5)
