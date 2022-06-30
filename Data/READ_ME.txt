@@ -23,8 +23,9 @@ https://doi.org/10.17605/OSF.IO/WUZH7.
 the primary tab-delimited table containing data on the avian tolerance towards humans 
 (measured as the flight initiation distance) and a set of predictors in urban birds
 
+IDObs - unique identification of each observation
 Country - the name of the country where the escape distance was collected
-IDLocality - unique ID of sampled site
+IDLocality - unique identification of sampled site
 Lat - latitude of the is (IDLocality) in decimal degrees
 Lon - longitude of the is (IDLocality) in decimal degrees
 Covid - period  of the escape distance collection (0 = before the COVID-19 shutdowns; 1 = during the COVID-19 shutdowns)
