@@ -988,25 +988,25 @@
         aw[, genus2 := factor(genus2, levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos', 'Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other'))]
   
     # Fig 2 & left panel of S5- plot from files
-        anas = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Anas.png')))
-        columba = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Columba.png')))
-        Dendrocopos = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Dendrocopos.png')))
-        Larus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Larus_flip.png')))
-        Picus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Picus.png')))
-        Motacilla = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Motacilla.png')))
-        Erithacus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Erithacus.png')))
-        Phoenicurus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Phoenicurus.png')))
-        Turdus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Turdus.png')))
-        Sylvia = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sylvia.png')))
-        Parus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Parus_flip.png')))
-        Sitta = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sitta.png')))
-        Pica = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Pica.png')))
-        Garrulus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Garrulus.png')))
-        Corvus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Corvus.png')))
-        Sturnus = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Sturnus.png')))
-        Passer = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Passer_flip.png')))
-        Fringilla = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/Fringilla.png')))
-        other = rasterGrob(change_col('#CCCCCC',readPNG('Data/PhyloPic/other.png')))
+        anas = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Anas.png')))
+        columba = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Columba.png')))
+        Dendrocopos = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Dendrocopos.png')))
+        Larus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Larus_flip.png')))
+        Picus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Picus.png')))
+        Motacilla = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Motacilla.png')))
+        Erithacus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Erithacus.png')))
+        Phoenicurus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Phoenicurus.png')))
+        Turdus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Turdus.png')))
+        Sylvia = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Sylvia.png')))
+        Parus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Parus_flip.png')))
+        Sitta = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Sitta.png')))
+        Pica = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Pica.png')))
+        Garrulus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Garrulus.png')))
+        Corvus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Corvus.png')))
+        Sturnus = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Sturnus.png')))
+        Passer = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Passer_flip.png')))
+        Fringilla = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/Fringilla.png')))
+        other = rasterGrob(change_col('#CCCCCC',readPNG('Data/Pics/other_flip.png')))
 
         ann_text <- data.frame(FID_avg.0 = 8, FID_avg.1 = 10,lab = "Text",
                        genus2 = factor('Anas',levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos','Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other')))
@@ -1022,7 +1022,7 @@
           annotation_custom2(Picus, data=o[genus2 == 'Picus'], xmin = 0.05, xmax =0.4, ymax = 2.7)+
           annotation_custom2(Motacilla, data=o[genus2 == 'Motacilla'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
           annotation_custom2(Erithacus, data=o[genus2 == 'Erithacus'], xmin = 0.05, xmax =0.35, ymax = 2.7)+
-          annotation_custom2(Phoenicurus, data=o[genus2 == 'Phoenicurus'], xmin = 0.05, xmax =0.46, ymax = 2.7)+
+          annotation_custom2(Phoenicurus, data=o[genus2 == 'Phoenicurus'], xmin = 0.05, xmax =0.35, ymax = 2.7)+
           annotation_custom2(Turdus, data=o[genus2 == 'Turdus'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
           annotation_custom2(Sylvia, data=o[genus2 == 'Sylvia'], xmin = 0.05, xmax =0.5, ymax = 2.7)+
           annotation_custom2(Parus, data=o[genus2 == 'Parus'], xmin = 0.05, xmax =0.42, ymax = 2.7)+
@@ -1056,7 +1056,7 @@
         ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
                                          trim = FALSE)
         #grid.draw(ggx)
-        ggsave('Outputs/Fig_2.png',ggx, width=4.5,height=4.5,dpi=600) # 11.43cm
+        ggsave('Outputs/Fig_2_width-114mm.png',ggx, width=4.5,height=4.5,dpi=600) # 11.43cm
     
     # Fig S5 right panel
         g2 =     
