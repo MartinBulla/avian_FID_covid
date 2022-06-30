@@ -525,7 +525,6 @@
                   (1|Year) +(1|genus)+(1|Species)+(1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc),
                   data = d, REML = FALSE, control = lmerControl(
                            optimizer ='optimx', optCtrl=list(method='nlminb')))# (Covid|IDLocality) +
-      #d[,res := resid(mf)]
       est_m1d = est_out(m1d, '01d) (1|Year) + (1|genus) + (1|Species) + (1|sp_day_year) + (scale(Covid)|Country) + (1|IDLocality) + (1|sp_loc)')
 
     # 02a) before & during > 4/species - singularity 
@@ -612,7 +611,6 @@
         control = lmerControl( 
             optimizer ='optimx', optCtrl=list(method='nlminb')) 
         )  
-     s[, res := resid(m01a)]
         # (1|Year) explains nothing - could stay 
      est_m01a = est_out(m01a, '01a) (scale(StringencyIndex)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(StringencyIndex)|IDLocality) +(1|sp_loc)')
      m01b=lmer(scale(log(FID))~
@@ -743,7 +741,12 @@
               optimizer ='optimx', optCtrl=list(method='nlminb'))
           ) 
      est_m03c = est_out(m03c, '03c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >9/species') 
-
+  # export dataset with model residuals for test of phylo-signal (Table S1 1d)
+     d[,res := resid(m1d)]
+     s[, res := resid(m01c)]
+     s_ = s[,.(Species,res)]
+     d_ = d[,.(Species,res)]
+     save(file = 'Data/DAT_res.Rdata', d_, s_)
   # Figure 1
     xc = rbind(est_m1d, est_m2b,est_m3b,est_m01c, est_m02c,est_m03c)
     xc = xc[predictor %in% c('scale(Covid)', 'scale(StringencyIndex)')]
