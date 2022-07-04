@@ -66,3 +66,6 @@ Species - the scientific (Latin) name of the species as used in the BirdTree pro
 
 7. trees.tre
 contains 100 randomly sampled phylogenetic trees (Hackett backbone) from the Birdtree project (http://birdtree.org/)
+
+8. DAT_mcmc.Rdata
+contains two MCMCglmm model outputs for Period ('mcmc2') and Stringency index (mcmc1), testing for phylogenetic signal in residuals and two outputs of models on residuals that were not controlled for phylogeny (for Period 'mcmc2_no', Stringency index 'mcmc1_no').
