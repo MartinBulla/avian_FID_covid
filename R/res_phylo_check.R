@@ -42,16 +42,46 @@
     rownames(phyloress) <-rownames(inv.phylo_s$Ainv)
 
 #MCMC phylogenetic models
-mcmc1<-MCMCglmm(res ~ 1, random=~Species, family="gaussian", ginverse=list(Species = inv.phylo_s$Ainv), 
-                verbose=F, nitt=1000000, burnin=20000, thin=100, data=s)
-summary(mcmc1)
-lambda <- mcmc1$VCV[,"Species"] / (mcmc1$VCV[,"Species"] + mcmc1$VCV[,"units"])
-lambda <- posterior.mode(lambda)
-summary(lambda)
+  nitt = 1000000
+  burnin=20000
+  thin=1000
+  n=(nitt-burnin)/thin # number of simulations per tree model
+  p=0 # number of fixed parameters
 
-mcmc2<-MCMCglmm(res ~ 1, random=~Species, family="gaussian", ginverse=list(Species = inv.phylo_d$Ainv), 
-                verbose=F, nitt=1000000, burnin=20000, thin=100, data=d)
-summary(mcmc2)
-lambda2 <- mcmc2$VCV[,"Species"] / (mcmc2$VCV[,"Species"] + mcmc2$VCV[,"units"])
-lambda2 <- posterior.mode(lambda2)
-summary(lambda2)
+  l = list()
+  # stringency index
+    mcmc1<-MCMCglmm(res ~ 1, random=~Species, family="gaussian", ginverse=list(Species = inv.phylo_s$Ainv), 
+                    verbose=F, nitt=nitt, burnin=burnin, thin=thin, data=s)
+    
+    plot(mcmc1$Sol)
+    plot(mcmc1$VCV)
+
+    autocorr(mcmc1$Sol)
+    autocorr.diag(mcmc1$VCV)
+
+    #pr=length(unique(s$animal))+p+1 
+    #sol_r=data.frame(mcmc1$Sol[1:n,(p+2):pr ])
+                  
+    #summary(mcmc1)
+    lambda <- mcmc1$VCV[,"Species"] / (mcmc1$VCV[,"Species"] + mcmc1$VCV[,"units"])
+    #summary(lambda)
+
+    l[['s']] = data.table(model = 'Table S2 - 1c', lambda = posterior.mode(lambda), lwr = HPDinterval(lambda, 0.95)[1], lwr = HPDinterval(lambda, 0.95)[2])
+
+
+  # period
+    mcmc2<-MCMCglmm(res ~ 1, random=~Species, family="gaussian", ginverse=list(Species = inv.phylo_d$Ainv), 
+                    verbose=F, nitt=nitt, burnin=burnin, thin=thin, data=d)
+    
+    plot(mcmc2$Sol)
+    plot(mcmc2$VCV)
+
+    autocorr(mcmc2$Sol)
+    autocorr.diag(mcmc2$VCV)
+
+    #summary(mcmc2)
+    lambda <- mcmc2$VCV[,"Species"] / (mcmc2$VCV[,"Species"] + mcmc2$VCV[,"units"])
+    #summary(lambda2)
+    l[['d']] = data.table(model = 'Table S1 - 1d', lambda = posterior.mode(lambda), lwr = HPDinterval(lambda, 0.95)[1], lwr = HPDinterval(lambda, 0.95)[2])
+
+  do.call(rbind, l)  
