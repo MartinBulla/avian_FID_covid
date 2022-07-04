@@ -409,7 +409,7 @@
 # Figure S4 - year trend for >4 observations/site before and during covid
    px = pp[N_during>4 & N_before>4]
    dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
-    table(dxx$IDLocality, dxx$Year)
+    #table(dxx$IDLocality, dxx$Year)
 
    dxx[, sp_C_loc2 := paste(gsub('[_]', ' ', Species), Country, IDLocality, sep ='\n')]
    dxx[, genus := sub("_.*", "", Species)]
@@ -741,12 +741,54 @@
               optimizer ='optimx', optCtrl=list(method='nlminb'))
           ) 
      est_m03c = est_out(m03c, '03c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >9/species') 
-  # export dataset with model residuals for test of phylo-signal (Table S1 1d)
+  
+  # export dataset with model residuals for test of phylo-signal (key models are Table S1 1d and S2 1c)
      d[,res := resid(m1d)]
+     d_ = d[,.(Species,res)]
      s[, res := resid(m01c)]
      s_ = s[,.(Species,res)]
-     d_ = d[,.(Species,res)]
      save(file = 'Data/DAT_res.Rdata', d_, s_)
+
+     d[,res_m1a := resid(m1a)]
+     d[,res_m1b := resid(m1b)]
+     d[,res_m1c := resid(m1c)]
+     d[,res_m1d := resid(m1d)]
+     
+     dx = dd[N_during>4 & N_before >4]
+     d5 = d[Species %in% dx$Species]
+     d5[,res_m2a := resid(m2a)]
+     d5[,res_m2b := resid(m2b)]
+
+     dx = dd[N_during>9 & N_before >9]
+     d10 = d[Species %in% dx$Species]
+     d10[,res_m3a := resid(m3a)]
+     d10[,res_m3b := resid(m3b)]
+     
+
+     s[, res_m1a := resid(m01a)]
+     s[, res_m1b := resid(m01b)]
+     s[, res_m1c := resid(m01c)]
+
+     s5= s[Nsp>4]
+     s5[, res_m2a := resid(m02a)]
+     s5[, res_m2b := resid(m02b)]
+     s5[, res_m2c := resid(m02c)]
+
+     s10= s[Nsp>9]
+     s10[, res_m3a := resid(m03a)]
+     s10[, res_m3b := resid(m03b)]
+     s10[, res_m3c := resid(m03c)]
+
+     d_ = d[,.(Species,res_m1a, res_m1b, res_m1c, res_m1d)]
+     d5 = d5[.,(Species, res_m2a, res_m2b)]
+     d10 = d10[.,(Species, res_m3a, res_m3c)]
+
+     s_ = s[,.(Species,res_m1a, res_m1b, res_m1c)]
+     s5 = s5[,.(Species,res_m2a, res_m2b,res_m2c)]
+     s10 = s10[,.(Species,res_m3a, res_m3b, res_m3c)]
+
+     #save(file = 'Data/DAT_res.Rdata', d_, s_, d5, d10, s5, s10)
+  
   # Figure 1
     xc = rbind(est_m1d, est_m2b,est_m3b,est_m01c, est_m02c,est_m03c)
     xc = xc[predictor %in% c('scale(Covid)', 'scale(StringencyIndex)')]
@@ -805,7 +847,7 @@
                 axis.title=element_text(size=7)
                 )
     g
-    ggsave(here::here('Outputs/Fig_1_width-92mm_test.png'),g, width = 9.2, height =6, units = 'cm')   
+    ggsave(here::here('Outputs/Fig_1_width-92mm.png'),g, width = 9.2, height =6, units = 'cm')   
 
   # Figure S2  
     # prepare plot for Period
@@ -893,10 +935,10 @@
       g0
       #ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
     # combine
-     ggsave(here::here('Outputs/Figure_S2.png'),rbind(ggplotGrob(g),ggplotGrob(g0)), width = 30, height =10, units = 'cm') 
+     ggsave(here::here('Outputs/Fig_S2.png'),rbind(ggplotGrob(g),ggplotGrob(g0)), width = 30, height =10, units = 'cm') 
 
   # TABLES
-    m1a_ = m_out(name = "Table S1 - 1a", dep = 'Period', model = m1a, nsim = 5000)
+    m1a_ = m_out(name = "Table S1 - 1a", dep = 'Period',model = m1a, nsim = 5000)
     m1b_ = m_out(name = "Table S1 - 1b", dep = 'Period',model = m1b, nsim = 5000)
     m1c_ = m_out(name = "Table S1 - 1c", dep = 'Period',model = m1c, nsim = 5000)
     m1d_ = m_out(name = "Table S1 - 1d", dep = 'Period',model = m1d, nsim = 5000)
@@ -1013,6 +1055,11 @@
 
         ann_text <- data.frame(FID_avg.0 = 8, FID_avg.1 = 10,lab = "Text",
                        genus2 = factor('Anas',levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos','Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other')))
+        ann_text2 <- data.frame(FID_avg.0 = 6, FID_avg.1 = 3,lab = "Text",
+                       genus2 = factor('Larus',levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos','Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other')))
+
+        aw2 = data.frame(FID_avg.0 = c(11.25,11.25), FID_avg.1 = c(3.5,5.8), genus2 = factor('Larus',levels = c('Anas', 'Larus', 'Columba', 'Dendrocopos','Picus', 'Motacilla','Erithacus','Phoenicurus','Turdus', 'Sylvia','Parus','Sitta','Pica','Garrulus','Corvus','Sturnus','Passer','Fringilla','other')))
+
         g = 
         ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
           #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
@@ -1040,26 +1087,29 @@
           geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'white') + 
             #ggtitle ("Sim based")+
           geom_abline(intercept = 0, slope = 1, lty =3, col = "grey80")+
+          geom_line(data = aw2, col = "grey80", lwd = 0.25)+
           geom_text(data = ann_text,label = "No difference", col = "grey80",angle = 45, size = 2) + 
+          geom_text(data = ann_text2,label = "Species mean / site", col = "grey60", size = 2,) +
           facet_wrap(~genus2) +
           #geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
           scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = FALSE))  +
           scale_x_continuous("Before COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
           scale_y_continuous("During COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = 'log10') +
-          labs(title = "Species means per sampling location")+
+          #labs(title = "Species means per sampling location")+
           theme_MB  +
           theme(
                   plot.title = element_text(size=7),
                   strip.background = element_blank(),
                   #panel.spacing = unit(1, "mm"),
                   legend.position = c(1, 0.025),
-                  legend.justification = c(1, 0)
+                  legend.justification = c(1, -0.05)
                   )  
         gg <- ggplotGrob(g) #gg$layout$name
         ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-4"),
                                          trim = FALSE)
         #grid.draw(ggx)
-        ggsave('Outputs/Fig_2_width-114mm.png',ggx, width=4.5,height=4.5,dpi=600) # 11.43cm
+        #ggsave('Outputs/Fig_2_width-114mm.png',ggx, width=4.5,height=4.5,dpi=600) # 11.43cm # with label on top
+        ggsave('Outputs/Fig_2_width-122mm.png',ggx, width=4.8,height=4.5,dpi=600) # 12.2cm # with label inside
     
     # Fig S5 right panel
         g2 =     
@@ -1071,7 +1121,7 @@
           scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
           scale_x_continuous("Before COVID-19 shutdown - residual escape distance", expand = c(0, 0)) +
           scale_y_continuous("During COVID-19 shutdown - residual escape distance", expand = c(0, 0)) +
-          labs(title = "Species means per sampling location")+
+          #labs(title = "Species means per sampling location")+
           theme_MB  +
           theme(
                 plot.title = element_text(size=7),
@@ -1086,7 +1136,7 @@
                                          trim = FALSE)
     # Fig S5 combine
         grid.draw(cbind(cbind(ggx,ggx2 ,  size = "last")))
-        ggsave('Outputs/Fig_S5.png',cbind(ggx,ggx2 , size = "last"), width=4.5*2,height=4.5,dpi=600)
+        ggsave('Outputs/Fig_S5.png',cbind(ggx,ggx2 , size = "last"), width=4.8*2,height=4.5,dpi=600)
     
     # Fig S5 legend
         # correlation between mean fid and residual fid
@@ -1141,7 +1191,7 @@
       ann_text <- data.frame(FID_avg.0 = 8, FID_avg.1 = 10,lab = "Text",
                        Species = factor('Aegithalos caudatus',levels = levels(as.factor(aw$Species))))
       ann_text$sp2 = gsub(" ", "\n", ann_text$Species)
-      g2 = 
+      g3 = 
         ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
           #geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
           #geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
@@ -1164,11 +1214,11 @@
                   legend.position = c(0.96, 0.0),
                   legend.justification = c(1, 0)
                   )  
-        gg2 <- ggplotGrob(g2) #gg2$layout$name
-        ggx2 <- gtable_filter_remove(gg2, name = c(paste0("axis-b-", c(2, 4), "-7"), "axis-b-6-6"),
+        gg3 <- ggplotGrob(g3) #gg2$layout$name
+        ggx3 <- gtable_filter_remove(gg3, name = c(paste0("axis-b-", c(2, 4), "-7"), "axis-b-6-6"),
                                          trim = FALSE)
         #grid.draw(ggx2)
-        ggsave('Outputs/Fig_S3_species.png',ggx2, width=13.5,height=17.5,unit = 'cm', dpi=600) # 11.43cm
+        ggsave('Outputs/Fig_S3_species.png',ggx3, width=13.5,height=17.5,unit = 'cm', dpi=600) # 11.43cm
       # not used S3 version
         g = 
         ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) + 
@@ -1201,7 +1251,8 @@
 # Figure 3
   ss = s[Nsp>9]
   ss[, sp2 := gsub(" ", "\n", sp)]
-  g = 
+  # not used - one row labels
+    g = 
     ggplot(ss, aes(x = StringencyIndex, y = FID)) +
       stat_smooth(se = FALSE, aes(colour = 'Locally weighted\nsmoothing'), lwd = 0.5)+ # show_guide=TRUE
       #stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
@@ -1228,11 +1279,11 @@
           legend.spacing.y = unit(-0.9, "cm")
           ) 
 
-    gg <- ggplotGrob(g) #gg$layout$name
-    ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-9"), trim = FALSE)
-    #grid.draw(ggx)
-    ggsave('Outputs/Fig_3_width-152mm_v3.png',ggx, width=19,height=22.2, unit = 'cm',dpi=600)
-
+      gg <- ggplotGrob(g) #gg$layout$name
+      ggx <- gtable_filter_remove(gg, name = paste0("axis-b-", c(2, 4), "-9"), trim = FALSE)
+      #grid.draw(ggx)
+      ggsave('Outputs/Fig_3_width-152mm_v3.png',ggx, width=19,height=22.2, unit = 'cm',dpi=600)
+  # two rows labels
     g2 = 
     ggplot(ss, aes(x = StringencyIndex, y = FID)) +
       stat_smooth(se = FALSE, aes(colour = 'Locally weighted\nsmoothing'), lwd = 0.5)+ # show_guide=TRUE
