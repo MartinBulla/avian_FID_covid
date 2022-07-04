@@ -3431,7 +3431,7 @@ IDObs	Country	IDLocality	Lat	Lon	Covid	Year	Day	Hour	Temp	StringencyIndex	Specie
 4814	Finland	R2	66.48880481	25.69592773	0	2019	99	11	15	0	Turdus_pilaris	1	29	13	106	Clement_Masse
 4888	Finland	R2	66.48880481	25.69592773	0	2019	102	11	12	0	Motacilla_alba	3	35	9	23.93	Clement_Masse
 4940	Finland	R2	66.48880481	25.69592773	0	2019	93	12	14	0	Motacilla_alba	1	13	7	23.93	Clement_Masse
-4850	Finland	R2	66.48880481	25.69592773	0	2019	99	11	15	0	Motacilla_albA	2	22	10	23.93	Clement_Masse
+4850	Finland	R2	66.48880481	25.69592773	0	2019	99	11	15	0	Motacilla_alba	2	22	10	23.93	Clement_Masse
 4917	Finland	R2	66.48880481	25.69592773	0	2019	102	12	13	0	Turdus_pilaris	1	27	12	106	Clement_Masse
 4934	Finland	R2	66.48880481	25.69592773	0	2019	73	12	11	0	Turdus_pilaris	1	29	10	106	Clement_Masse
 4948	Finland	R2	66.48880481	25.69592773	0	2019	93	13	14	0	Turdus_pilaris	2	18	10	106	Clement_Masse
