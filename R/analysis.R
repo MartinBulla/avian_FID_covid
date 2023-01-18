@@ -331,11 +331,26 @@
        if(PNG==TRUE){dev.off()}
       }
     
+  
   # data
     o  =  fread('Data/phylopic.txt')
     setnames(o, old = c('Name', 'Code'), new = c('genus2', 'uid'))
+    
     t = fread(here::here('Data/taxonomy.txt'))
-    d = fread(here::here('Data/data.txt')) #fwrite(d, here::here('Data/data.txt'), sep ='\t')
+    
+    g = fread(here::here('Data/google_mobility.txt')) #fwrite(d, here::here('Data/data.txt'), sep ='\t')
+    g[country_region == "Czechia",  country_region := 'Czech Republic']
+    g[, Year := as.integer(substring(date, nchar(date)-3, nchar(date)))]
+    g[nchar(date)==9, date:=paste0('0',date)]
+    g[, date_ :=as.POSIXct(date, format = '%d.%m.%y')]
+    g[, Day :=yday(date_)]
+    g[country_region!='Ausstralia', Day := Day-92 +1] # 1 April = start of breeding season (1st day) = 92 day of the year 
+    g[country_region=='Ausstralia', Day := Day-228 +1] # 15 Augusst = start of breeding season (1st day) = 228 day of the year 
+
+    setnames(g, old = 'country_region', new ='Country')
+
+    d = fread(here::here('Data/data_corrected.txt')) #fwrite(d, here::here('Data/data.txt'), sep ='\t')
+  
     # adjust correct assignment of season (Year) for Australia
     d[Country == 'Australia' & Year == 2020 & Covid == 0, Year:=2019]
     d[Country == 'Australia' & Year == 2021 & Day>139, Year:=2020]
@@ -392,6 +407,9 @@
     s = d[Covid == 1]
     s[, Nsp := .N, by ='Species']
     s[, sp := gsub('[_]', ' ', Species)]
+    # add google mobility
+    s = merge(s, g[,.(Country,  Year, Day, parks_percent_change_from_baseline)], all.x = TRUE)
+
 
 # Figure S1
    d[, sin_rad:=sin(rad)]
@@ -405,7 +423,67 @@
    chart.Correlation(dp, histogram=TRUE, pch=19, alpha = 0.5)
    mtext("Single observations", side=3, line=3)
    dev.off()
+# Figure Sx - correlation betwen stringency and google mobility
+   g=
+   ggplot(s, aes(x = StringencyIndex, y = parks_percent_change_from_baseline, col = Country)) + 
+      stat_smooth(method = 'lm', se = FALSE)+
+      stat_cor(method="pearson", size =2)+
+      geom_point() 
+   ggsave(here::here('Outputs/Fig_Sx.png'),g, width = 14, height =12, units = 'cm')
 
+  ggplot(s, aes(x = parks_percent_change_from_baseline)) + 
+      geom_histogram() 
+
+  g2=
+   ggplot(s, aes(x = parks_percent_change_from_baseline, col = Country)) + 
+      geom_histogram() + 
+      facet_wrap(~Country, nrow = 5) +
+      theme(legend.position = 'none')
+    ggsave(here::here('Outputs/Fig_Sx_hist.png'),g2, width = 10, height =14, units = 'cm')   
+# Figure Sy - fid and google mobility
+    gy = 
+    ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline, col = Country)) + 
+      stat_smooth()+
+      #stat_cor(method="pearson", size =2) +
+      scale_y_continuous(trans = 'log')
+    ggsave(here::here('Outputs/Fig_Sy_ln.png'),gy, width = 10, height =14, units = 'cm')   
+  
+    gy2 = 
+    ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline, col = Country)) + 
+      stat_smooth()
+      ggsave(here::here('Outputs/Fig_Sy.png'),gy2, width = 10, height =14, units = 'cm')   
+
+    s[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
+    s[, year_ := as.character(Year)] #table(paste(s$Country, s$Year))   
+    ggplot(s, aes(x = parks_percent_change_from_baseline, col = year_)) + 
+      geom_histogram() + 
+      facet_wrap(~Country, nrow = 5) 
+
+ss = s[!is.na(parks_percent_change_from_baseline), Nsp := .N, by ='sp']
+
+ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline)) + 
+      stat_smooth() +
+     # geom_point(size =0.5, pch = 1) + 
+      facet_wrap(~sp, scales ='free_y')
+
+  ggplot(ss[Nsp>5], aes(y = FID, x = parks_percent_change_from_baseline, groups = sp, col = Country)) + 
+      stat_smooth(method = 'lm', se = FALSE) +
+      labs(subtitle  = "regresions for specis with >5 data points")
+       #theme(legend.position = 'none')
+     # geom_point(size =0.5, pch = 1) + 
+      #facet_wrap(~sp, scales ='free_y')
+       ggsave(here::here('Outputs/Fig_Sy_sp_country.png'),gy2, width = 10, height =14, units = 'cm')   
+
+  ggplot(s, aes(x = parks_percent_change_from_baseline, col = year_)) + 
+      geom_histogram(position = "dodge") + 
+      facet_wrap(~IDLocality) 
+
+    gy3 = 
+    ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline, col = country_year)) + 
+      stat_smooth()
+      ggsave(here::here('Outputs/Fig_Sy.png'),gy2, width = 10, height =14, units = 'cm')   
+
+      
 # Figure S4 - year trend for >4 observations/site before and during covid
    px = pp[N_during>4 & N_before>4]
    dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
@@ -742,6 +820,152 @@
           ) 
      est_m03c = est_out(m03c, '03c)  (1|Country) + (scale(StringencyIndex)|IDLocality); >9/species') 
   
+  # prepare estimates google mobility 
+     mg01a=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+        (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality) +(1|sp_loc),
+        data = s, REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+        # (1|Year) explains nothing - could stay 
+     est_mg01a = est_out(mg01a, 'g01a) (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality) +(1|sp_loc)')
+     mg01b=lmer(scale(log(FID))~
+           scale(Year)+       
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(parks_percent_change_from_baseline)+
+          (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality)+(1|sp_loc),  
+          data = s, REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+          # (1|Year), (1|genus), (1|sp_day_year), (1|sp_loc),  explain nothing - could stay
+     est_mg01b = est_out(mg01b, 'g01b) (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality)+(1|sp_loc)')  
+     mg01c=lmer(scale(log(FID))~
+          scale(Year)+       
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(parks_percent_change_from_baseline)+
+          (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality),  
+          data = s, REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+          # (1|Year), (1|genus), (1|sp_day_year), (1|sp_loc),  explain nothing - could stay
+     est_mg01c = est_out(mg01c, 'g01c) (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality)')  
+
+     mg02a=lmer(scale(log(FID))~ 
+         scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+        (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + 
+        (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality) +(1|sp_loc),   
+        data = s[Nsp>4], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+        # (1|Year) explains nothing - could stay 
+     est_mg02a = est_out(mg02a, 'g02a) (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality) +(1|sp_loc);>4/species')   
+     mg02b=lmer(scale(log(FID))~
+          scale(Year)+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(parks_percent_change_from_baseline)+
+          (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality)+(1|sp_loc),  
+          data = s[Nsp>4], REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+     est_mg02b = est_out(mg02b, 'g02b)  (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality)+(1|sp_loc); >4/species') 
+     mg02c=lmer(scale(log(FID))~
+          scale(Year)+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(parks_percent_change_from_baseline)+
+          (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality),  
+          data = s[Nsp>4], REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+     est_mg02c = est_out(mg02c, 'g02c)  (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality); >4/species') 
+     
+     mg03a=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+        (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + 
+        (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality) +(1|sp_loc),   
+        data = s[Nsp>9], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+        # (1|Year) explains nothing - could stay 
+     est_mg03a = est_out(mg03a, 'g03a) (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality) +(1|sp_loc);>9/species') 
+     mg03b=lmer(scale(log(FID))~
+          scale(Year)+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(parks_percent_change_from_baseline)+
+          (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality)+(1|sp_loc),  
+          data = s[Nsp>9], REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+     est_mg03b = est_out(mg03b, 'g03b)  (1|genus) +(1|Species) + (1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality)+(1|sp_loc); >9/species') 
+     mg03c=lmer(scale(log(FID))~
+          scale(Year)+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(parks_percent_change_from_baseline)+
+          (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality),  
+          data = s[Nsp>9], REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+     est_mg03c = est_out(mg03c, 'g03c)  (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality); >9/species') 
+ 
   # export dataset with model residuals for test of phylo-signal (key models are Table S1 1d and S2 1c)
      d[,res := resid(m1d)]
      d_ = d[,.(Species,res)]
@@ -849,7 +1073,74 @@
     g
     ggsave(here::here('Outputs/Fig_1_width-92mm.png'),g, width = 9.2, height =6, units = 'cm')   
 
-  # Figure S2  
+  # Figure 1 - revision
+    xc = rbind(est_m1d, est_m2b,est_m3b,est_m01c, est_m02c,est_m03c,est_mg01c, est_mg02c,est_mg03c)
+    xc = xc[predictor %in% c('scale(Covid)', 'scale(StringencyIndex)', 'scale(parks_percent_change_from_baseline)')]
+    xc[predictor %in% 'scale(Covid)', predictor := 'a) Period - before vs during COVID-19 shutdown)']
+    xc[predictor %in% 'scale(StringencyIndex)', predictor := 'b) Stringency of governmental COVID-19\n    restrictions']
+    xc[predictor %in% 'scale(parks_percent_change_from_baseline)', predictor := 'c) Google mobilitty for parks given baseline']
+    xc[, N:=c('N = 6369; all data', 'N = 5260; ≥5 observations/species/period', 'N = 5106; ≥10 observations/species/period',
+              'N = 3676; all data', 'N = 3573; ≥5 observations/species', 'N = 3425; ≥10 observations/species',
+              'N = 3644; all data', 'N = 3545; ≥5 observations/species', 'N = 3399; ≥10 observations/species'
+              )]
+    xc[, N := factor(N, levels = c(
+              'N = 6369; all data', 'N = 5260; ≥5 observations/species/period', 'N = 5106; ≥10 observations/species/period',
+              'N = 3676; all data', 'N = 3573; ≥5 observations/species', 'N = 3425; ≥10 observations/species',
+               'N = 3644; all data', 'N = 3545; ≥5 observations/species', 'N = 3399; ≥10 observations/species'))]
+
+    col_ = c(rep(viridis(1, alpha = 1, begin = 0.3, end = 0.3, direction = 1, option = "D"),3),
+              rep(viridis(1, alpha = 1, begin = 0.55, end = 0.55, direction = 1, option = "D"),3),
+              rep(viridis(1, alpha = 1, begin = 0.8, end = 0.8, direction = 1, option = "D"),3))
+    #col_ = c(viridis(3, alpha = 1, begin = 0.25, end = 0.4, direction = 1, option = "D"),viridis(3, alpha = 1, begin = 0.75, end = 0.9, direction = 1, option = "D"))
+      #show_col(viridis(6, alpha = 1, begin = 0, end = 1, direction = 1, option = "D"))
+      #show_col(viridis(1, alpha = 1, begin = 0.8, end = 0.8, direction = 1, option = "D"))
+    g = 
+    ggplot(xc, aes(y = N, x = estimate, col = N)) +
+          geom_vline(xintercept = 0, col = "grey30", lty =3)+
+          geom_errorbar(aes(xmin = lwr, xmax = upr, col = N), width = 0, position = position_dodge(width = 0.01) ) +
+          #ggtitle ("Sim based")+
+          geom_point(position = position_dodge(width = 0.01)) +
+          #scale_colour_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
+          #scale_fill_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
+          #scale_color_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
+          scale_color_manual(values = col_,guide = guide_legend(reverse = TRUE))  +
+          #scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE)) + 
+          scale_fill_manual(values = col_,guide = guide_legend(reverse = TRUE)) + 
+          scale_y_discrete(limits=rev, position = "right")+
+          #coord_fixed(ratio = 0.05)+ #,xlim = c(-0.23, 0.15)
+          #scale_shape(guide = guide_legend(reverse = TRUE)) + 
+          #scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2,2, by = 1), labels = seq(-2,2, by = 1)) +
+          labs(y = NULL ,x = "Standardized effect sizes ") + #title = "a)",Effect of Period (before/during shutdown)
+          #ylim(c(0,100))+
+          #coord_flip()+
+          facet_wrap(~predictor, nrow = 3, scales = 'free_y')+
+          theme_MB +
+          theme( legend.position ="none",
+                plot.title = element_text(size=7),
+                plot.tag = element_text(size=7),
+                legend.title=element_text(size=7), 
+                legend.text=element_text(size=6),
+                ##legend.spacing.y = unit(0.1, 'cm'), 
+                legend.key.height= unit(0.5,"line"),
+                #plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r =0.5, unit =  "pt"),
+                panel.grid = element_blank(),
+                panel.border = element_blank(),
+                panel.background = element_blank(),
+                strip.background = element_blank(),
+                strip.text = element_text(hjust = 0),
+                axis.line = element_line(colour = ax_lines, size = 0.25),
+                axis.line.y = element_blank(),
+                axis.ticks.y = element_blank(),
+                axis.ticks.x= element_line( colour = ax_lines, size = 0.25),
+                axis.ticks.length = unit(1, "pt"),
+                axis.text.x = element_text(colour="grey30", size = 6),
+                axis.text.y=element_text(colour="grey30", size = 6),
+                axis.title=element_text(size=7)
+                )
+    g
+    ggsave(here::here('Outputs/Fig_1_width-92mm_rev.png'),g, width = 9.2, height =9, units = 'cm')   
+
+   # Figure S2  
     # prepare plot for Period
       xs = rbind(est_m1a,est_m1b,est_m1c,est_m1d, est_m2a, est_m2b,est_m3a, est_m3b)
       g = 
@@ -934,8 +1225,50 @@
                 )
       g0
       #ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
+    # prepare plot for Google 
+      xs0 = rbind(est_mg01a,est_mg01b,est_mg01c, est_mg02a, est_mg02b,est_mg02c, est_mg03a, est_mg03b, est_mg03c)
+      gg0=
+      ggplot(xs0[predictor == 'scale(parks_percent_change_from_baseline)'], aes(y = model, x = estimate, col = model)) +
+          geom_vline(xintercept = 0, col = "grey30", lty =3)+
+          geom_errorbar(aes(xmin = lwr, xmax = upr, col = model), width = 0, position = position_dodge(width = 0.01) ) +
+          #ggtitle ("Sim based")+
+          geom_point(position = position_dodge(width = 0.01)) +
+          #scale_colour_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
+          #scale_fill_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
+          scale_color_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE))  +
+          scale_fill_viridis(discrete=TRUE,guide = guide_legend(reverse = TRUE)) + 
+          scale_y_discrete(limits=rev)+
+          coord_fixed(ratio = 0.05, xlim = c(-0.23, 0.15))+
+          #scale_shape(guide = guide_legend(reverse = TRUE)) + 
+          #scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2,2, by = 1), labels = seq(-2,2, by = 1)) +
+          labs(y = NULL ,x = "Shutdown's google mobility in parks\n[standardized effect sizes]",  tag = 'b)')+#title = "b) Effect of ") +
+          #ylim(c(0,100))+
+          #coord_flip()+
+          theme_bw() +
+          theme(legend.position ="none",
+                plot.title = element_text(size=7),
+                plot.tag = element_text(size=7),
+                legend.title=element_text(size=7), 
+                legend.text=element_text(size=6),
+                ##legend.spacing.y = unit(0.1, 'cm'), 
+                legend.key.height= unit(0.5,"line"),
+                #plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r =0.5, unit =  "pt"),
+                panel.grid = element_blank(),
+                panel.border = element_blank(),
+                panel.background = element_blank(),
+                axis.line = element_line(colour = ax_lines, size = 0.25),
+                axis.line.y = element_blank(),
+                axis.ticks.y = element_blank(),
+                axis.ticks.x= element_line( colour = ax_lines, size = 0.25),
+                axis.ticks.length = unit(1, "pt"),
+                axis.text.x = element_text(colour="black", size = 6),
+                axis.text.y=element_text(colour="black", size = 7),
+                axis.title=element_text(size=7)
+                )
+      gg0
+      #ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
     # combine
-     ggsave(here::here('Outputs/Fig_S2.png'),rbind(ggplotGrob(g),ggplotGrob(g0)), width = 30, height =10, units = 'cm') 
+     ggsave(here::here('Outputs/Fig_S2_rev.png'),rbind(ggplotGrob(g),ggplotGrob(g0),ggplotGrob(gg0)), width = 30, height =15, units = 'cm') 
 
   # TABLES
     m1a_ = m_out(name = "Table S1 - 1a", dep = 'Period',model = m1a, nsim = 5000)
@@ -960,6 +1293,9 @@
     m03a_ = m_out(name = "Table S2 - 3a", dep = 'Stringency Index',model = m03a, nsim = 5000)
     m03b_ = m_out(name = "Table S2 - 3b", dep = 'Stringency Index',model = m03b, nsim = 5000)
     m03c_ = m_out(name = "Table S2 - 3c", dep = 'Stringency Index',model = m03c, nsim = 5000)
+
+    mg01a_ = m_out(name = "Table S3 - 1a", dep = 'Stringency Index',model = mg01c, nsim = 5000)
+    
 
     out1 = rbind(m1a_, m1b_, m1c_, m1d_, m2a_, m2b_, m3a_, m3b_,fill = TRUE)
     out1[is.na(out1)] = ""
@@ -1316,4 +1652,39 @@
     #grid.draw(ggx)
     ggsave('Outputs/Fig_3_width-152mm_2-row_v1.png',ggx2, width=15.24,height=19, unit = 'cm',dpi=600)
 
+
+
+# Testing random structure for reviews
+   m=lmer(scale(log(FID))~
+          scale(Year)+ 
+          scale(log(SD))+
+          scale(log(FlockSize))+
+          scale(log(BodyMass))+
+          scale(sin(rad)) + scale(cos(rad)) + 
+          #scale(Day)+
+          scale(Temp)+
+          scale(parks_percent_change_from_baseline)+
+          (scale(parks_percent_change_from_baseline)|Country) + (1|IDLocality),  
+          data = s, REML = FALSE, 
+          control = lmerControl(
+              optimizer ='optimx', optCtrl=list(method='nlminb'))
+          ) 
+    est_m_test = est_out(m, 'test') 
+
+    m=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+        (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + (scale(parks_percent_change_from_baseline)|Country) + (1|IDLocality) +(1|sp_loc),
+        data = s, REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+        # (1|Year) explains nothing - could stay 
+     est_test2 = est_out(m, 'g01a) (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality) +(1|sp_loc)')
 # END
