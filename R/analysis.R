@@ -346,7 +346,6 @@
     g[, Day :=yday(date_)]
     g[country_region!='Ausstralia', Day := Day-92 +1] # 1 April = start of breeding season (1st day) = 92 day of the year 
     g[country_region=='Ausstralia', Day := Day-228 +1] # 15 Augusst = start of breeding season (1st day) = 228 day of the year 
-
     setnames(g, old = 'country_region', new ='Country')
 
     d = fread(here::here('Data/data_corrected.txt')) #fwrite(d, here::here('Data/data.txt'), sep ='\t')
@@ -408,7 +407,10 @@
     s[, Nsp := .N, by ='Species']
     s[, sp := gsub('[_]', ' ', Species)]
     # add google mobility
-    s = merge(s, g[,.(Country,  Year, Day, parks_percent_change_from_baseline)], all.x = TRUE)
+    s = merge(s, g[,.(Country,  Year, date_,Day, parks_percent_change_from_baseline)], all.x = TRUE)
+    s[, year_ := as.character(Year)]  
+    s[, weekday := weekdays(date_)]
+
 
 
 # Figure S1
@@ -460,11 +462,46 @@
       facet_wrap(~Country, nrow = 5) 
 
 ss = s[!is.na(parks_percent_change_from_baseline), Nsp := .N, by ='sp']
+ss[, weekday:=factor(weekday, levels = c('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'))]
 
 ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline)) + 
       stat_smooth() +
      # geom_point(size =0.5, pch = 1) + 
       facet_wrap(~sp, scales ='free_y')
+
+ggplot(ss, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_, pch = year_)) + 
+      geom_point()+
+      stat_smooth(method='rlm', lwd =0.5) +
+      facet_wrap(~weekday, nrow =2)
+ggsave(here::here('Outputs/Fig_Sz_weekdays.png'),width = 20, height =12, units = 'cm')   
+
+ggplot(ss, aes(y = FID, x = parks_percent_change_from_baseline, col = Country, lty = year_, pch = year_)) + 
+      stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=3))+
+      #stat_smooth(method='rlm', lwd =0.5) +
+      facet_wrap(~weekday, nrow =2) + 
+      scale_y_continuous(trans = 'log')
+
+ggsave(here::here('Outputs/Fig_Sz_weekdays_FID.png'),width = 20, height =12, units = 'cm')   
+
+ggplot(ss, aes(y = FID, x = parks_percent_change_from_baseline, lty = year_)) + 
+      stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=5))+
+      #stat_smooth(method='rlm', lwd =0.5) +
+      facet_wrap(~weekday, nrow =7, strip.position="right") + 
+      scale_y_continuous(trans = 'log')
+
+ggsave(here::here('Outputs/Fig_Sz_weekdays_FID_global.png'),width = 10, height =20, units = 'cm')   
+
+ggplot(s, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_)) + 
+      stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=6))
+
+ggplot(s, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_)) + 
+      stat_smooth(method = 'lm') 
+ggsave(here::here('Outputs/Fig_Sz.png'),width = 12, height =10, units = 'cm')   
+
+ggplot(s, aes(x = Day, y = FID, col = Country, lty = year_)) + 
+      stat_smooth(method = 'lm')  +
+      scale_y_continuous(trans = 'log')
+ggsave(here::here('Outputs/Fig_Sz_FID.png'),width = 12, height =10, units = 'cm')   
 
   ggplot(ss[Nsp>5], aes(y = FID, x = parks_percent_change_from_baseline, groups = sp, col = Country)) + 
       stat_smooth(method = 'lm', se = FALSE) +
