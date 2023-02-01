@@ -443,6 +443,11 @@
       theme(legend.position = 'none')
     ggsave(here::here('Outputs/Fig_Sx_hist.png'),g2, width = 10, height =14, units = 'cm')   
 # Figure Sy - fid and google mobility
+    s[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
+    s[, year_ := as.character(Year)] #table(paste(s$Country, s$Year))   
+    ss = s[!is.na(parks_percent_change_from_baseline), Nsp := .N, by ='sp']  
+    ss[, weekday:=factor(weekday, levels = c('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'))]
+
     gy = 
     ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline, col = Country)) + 
       stat_smooth()+
@@ -455,70 +460,69 @@
       stat_smooth()
       ggsave(here::here('Outputs/Fig_Sy.png'),gy2, width = 10, height =14, units = 'cm')   
 
-    s[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
-    s[, year_ := as.character(Year)] #table(paste(s$Country, s$Year))   
+   
     ggplot(s, aes(x = parks_percent_change_from_baseline, col = year_)) + 
       geom_histogram() + 
       facet_wrap(~Country, nrow = 5) 
 
-ss = s[!is.na(parks_percent_change_from_baseline), Nsp := .N, by ='sp']
-ss[, weekday:=factor(weekday, levels = c('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'))]
 
-ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline)) + 
-      stat_smooth() +
-     # geom_point(size =0.5, pch = 1) + 
-      facet_wrap(~sp, scales ='free_y')
 
-ggplot(ss, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_, pch = year_)) + 
-      geom_point()+
-      stat_smooth(method='rlm', lwd =0.5) +
-      facet_wrap(~weekday, nrow =2)
-ggsave(here::here('Outputs/Fig_Sz_weekdays.png'),width = 20, height =12, units = 'cm')   
+  ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline)) + 
+        stat_smooth() +
+      # geom_point(size =0.5, pch = 1) + 
+        facet_wrap(~sp, scales ='free_y')
 
-ggplot(ss, aes(y = FID, x = parks_percent_change_from_baseline, col = Country, lty = year_, pch = year_)) + 
-      stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=3))+
-      #stat_smooth(method='rlm', lwd =0.5) +
-      facet_wrap(~weekday, nrow =2) + 
-      scale_y_continuous(trans = 'log')
+  ggplot(ss, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_, pch = year_)) + 
+        geom_point()+
+        stat_smooth(method='rlm', lwd =0.5) +
+        facet_wrap(~weekday, nrow =2)
+  ggsave(here::here('Outputs/Fig_Sz_weekdays.png'),width = 20, height =12, units = 'cm')   
 
-ggsave(here::here('Outputs/Fig_Sz_weekdays_FID.png'),width = 20, height =12, units = 'cm')   
+  ggplot(ss, aes(y = FID, x = parks_percent_change_from_baseline, col = Country, lty = year_, pch = year_)) + 
+        stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=3))+
+        #stat_smooth(method='rlm', lwd =0.5) +
+        facet_wrap(~weekday, nrow =2) + 
+        scale_y_continuous(trans = 'log')
 
-ggplot(ss, aes(y = FID, x = parks_percent_change_from_baseline, lty = year_)) + 
-      stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=5))+
-      #stat_smooth(method='rlm', lwd =0.5) +
-      facet_wrap(~weekday, nrow =7, strip.position="right") + 
-      scale_y_continuous(trans = 'log')
+  ggsave(here::here('Outputs/Fig_Sz_weekdays_FID.png'),width = 20, height =12, units = 'cm')   
 
-ggsave(here::here('Outputs/Fig_Sz_weekdays_FID_global.png'),width = 10, height =20, units = 'cm')   
+  ggplot(ss, aes(y = FID, x = parks_percent_change_from_baseline, lty = year_)) + 
+        stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=5))+
+        #stat_smooth(method='rlm', lwd =0.5) +
+        facet_wrap(~weekday, nrow =7, strip.position="right") + 
+        scale_y_continuous(trans = 'log')
 
-ggplot(s, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_)) + 
-      stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=6))
+  ggsave(here::here('Outputs/Fig_Sz_weekdays_FID_global.png'),width = 10, height =20, units = 'cm')   
 
-ggplot(s, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_)) + 
-      stat_smooth(method = 'lm') 
-ggsave(here::here('Outputs/Fig_Sz.png'),width = 12, height =10, units = 'cm')   
+  ggplot(s, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_)) + 
+        stat_smooth(method="gam",formula = y ~ s(x, bs = "cs", k=6))
 
-ggplot(s, aes(x = Day, y = FID, col = Country, lty = year_)) + 
-      stat_smooth(method = 'lm')  +
-      scale_y_continuous(trans = 'log')
-ggsave(here::here('Outputs/Fig_Sz_FID.png'),width = 12, height =10, units = 'cm')   
+  ggplot(s, aes(x = Day, y = parks_percent_change_from_baseline, col = Country, lty = year_)) + 
+        stat_smooth(method = 'lm') 
+  ggsave(here::here('Outputs/Fig_Sz.png'),width = 12, height =10, units = 'cm')   
 
-  ggplot(ss[Nsp>5], aes(y = FID, x = parks_percent_change_from_baseline, groups = sp, col = Country)) + 
-      stat_smooth(method = 'lm', se = FALSE) +
-      labs(subtitle  = "regresions for specis with >5 data points")
-       #theme(legend.position = 'none')
-     # geom_point(size =0.5, pch = 1) + 
-      #facet_wrap(~sp, scales ='free_y')
-       ggsave(here::here('Outputs/Fig_Sy_sp_country.png'),gy2, width = 10, height =14, units = 'cm')   
+  ggplot(s, aes(x = Day, y = FID, col = Country, lty = year_)) + 
+        stat_smooth(method = 'lm')  +
+        scale_y_continuous(trans = 'log')
+  ggsave(here::here('Outputs/Fig_Sz_FID.png'),width = 12, height =10, units = 'cm')   
 
-  ggplot(s, aes(x = parks_percent_change_from_baseline, col = year_)) + 
-      geom_histogram(position = "dodge") + 
-      facet_wrap(~IDLocality) 
+  gy2 = 
+    ggplot(ss[Nsp>5], aes(y = FID, x = parks_percent_change_from_baseline, groups = sp, col = Country)) + 
+        stat_smooth(method = 'lm', se = FALSE) +
+        labs(subtitle  = "regresions for specis with >5 data points")
+        #theme(legend.position = 'none')
+      # geom_point(size =0.5, pch = 1) + 
+        #facet_wrap(~sp, scales ='free_y')
+        ggsave(here::here('Outputs/Fig_Sy_sp_country.png'),gy2, width = 10, height =14, units = 'cm')   
 
-    gy3 = 
-    ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline, col = country_year)) + 
-      stat_smooth()
-      ggsave(here::here('Outputs/Fig_Sy.png'),gy2, width = 10, height =14, units = 'cm')   
+    ggplot(s, aes(x = parks_percent_change_from_baseline, col = year_)) + 
+        geom_histogram(position = "dodge") + 
+        facet_wrap(~IDLocality) 
+
+      gy3 = 
+      ggplot(s, aes(y = FID, x = parks_percent_change_from_baseline, col = country_year)) + 
+        stat_smooth()
+        ggsave(here::here('Outputs/Fig_Sy.png'),gy2, width = 10, height =14, units = 'cm')   
 
       
 # Figure S4 - year trend for >4 observations/site before and during covid
@@ -1724,4 +1728,204 @@ ggsave(here::here('Outputs/Fig_Sz_FID.png'),width = 12, height =10, units = 'cm'
         )  
         # (1|Year) explains nothing - could stay 
      est_test2 = est_out(m, 'g01a) (scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + (1|Country) + (scale(parks_percent_change_from_baseline)|IDLocality) +(1|sp_loc)')
+
+# Testing mobility for reviews
+  m=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+        (scale(parks_percent_change_from_baseline)|genus)+ (1|Species)+(1|sp_day_year) + (scale(parks_percent_change_from_baseline)|Country) + (1|IDLocality) +(1|sp_loc),
+        data = s, REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+
+    est_test3 = est_out(m, '(scale(parks_percent_change_from_baseline)|genus)+(1|Species)+(1|sp_day_year) + (scale(parks_percent_change_from_baseline)|Country) + (1|IDLocality) +(1|sp_loc)')    
+
+    mp=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        poly(parks_percent_change_from_baseline,2)+ 
+        (poly(parks_percent_change_from_baseline,2)|genus)+ (1|Species)+(1|sp_day_year) + (poly(parks_percent_change_from_baseline,2)|Country) + (1|IDLocality) +(1|sp_loc),
+        data = s[!is.na(parks_percent_change_from_baseline)], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+      summary(mp)
+      est_out(mp, '')    
+
+  m=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+       (1|genus) + (1|sp_country)+(1|Species)+(1|sp_day_year) + (scale(parks_percent_change_from_baseline)|Country) + (1|IDLocality) +(1|sp_loc),
+        data = s, REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+
+    est_test3 = est_out(m, '(1|genus) + (scale(parks_percent_change_from_baseline)|sp_country)+(1|Species)+(1|sp_day_year) + (scale(parks_percent_change_from_baseline)|Country) + (1|IDLocality) +(1|sp_loc)')       
+
+ mp=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        poly(parks_percent_change_from_baseline,2)+ 
+      (1|Species)+(1|sp_day_year),
+        data = s[Country=='Poland'], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+   est_out(mp, 'test)')  
+
+mh=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+       (1|Species)+(1|sp_day_year) + (1|IDLocality),
+        data = s[Country=='Hungary'], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+summary(mh)
+est_out(mh, 'test)')  
+mh=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        poly(parks_percent_change_from_baseline,2)+ 
+       (1|Species)+(1|sp_day_year) + (1|IDLocality),
+        data = s[Country=='Hungary'], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+summary(mh)
+est_out(mh, 'test)')  
+
+
+mc=lmer(scale(log(FID))~ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+       (1|Species)+(1|sp_day_year) + (1|IDLocality),
+        data = s[Country=='Czech Republic'], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+summary(mc)
+est_out(mc, 'test)')  
+mcp=lmer(scale(log(FID))~ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        poly(parks_percent_change_from_baseline,2)+ 
+       (1|Species)+(1|sp_day_year) + (1|IDLocality),
+        data = s[Country=='Czech Republic'], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+summary(mcp)
+est_out(mcp, 'test)')  
+
+
+ma=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+       (1|Species)+(1|sp_day_year) + (1|IDLocality),
+        data = s[Country=='Australia'], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+summary(ma)
+est_out(ma, 'test)')  
+map=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        poly(parks_percent_change_from_baseline,2)+ 
+       (1|Species)+(1|sp_day_year) + (1|IDLocality),
+        data = s[Country=='Australia'], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+summary(map)
+est_out(map, 'test)')  
+
+mf=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        scale(parks_percent_change_from_baseline)+ 
+       (1|sp_day_year) + (1|IDLocality),
+        data = s[Country=='Finland' & !is.na(parks_percent_change_from_baseline)], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+summary(mf)
+est_out(mf, 'test)')  
+mfp=lmer(scale(log(FID))~ 
+        scale(Year)+ 
+        scale(log(SD))+ 
+        scale(log(FlockSize))+ 
+        scale(log(BodyMass))+ 
+        scale(sin(rad)) + scale(cos(rad)) +  
+        #scale(Day)+ 
+        scale(Temp)+ 
+        poly(parks_percent_change_from_baseline,2)+ 
+      (1|sp_day_year) + (1|IDLocality),
+        data = s[Country=='Finland' & !is.na(parks_percent_change_from_baseline)], REML = FALSE,  
+        control = lmerControl( 
+            optimizer ='optimx', optCtrl=list(method='nlminb')) 
+        )  
+summary(mfp)
+est_out(mfp, 'test)')  
 # END
