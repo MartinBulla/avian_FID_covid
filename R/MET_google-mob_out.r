@@ -12,10 +12,10 @@
 #' ---
 
 #+ r setup, include=FALSE
-knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
 
 #' ###### Code to load tools and data
-#+ start, echo = T, results = 'hide, warning=FALSE
+#+ start, echo = T, results = 'hide', warning=FALSE
  # packages
     require(arm)
     require(data.table)
@@ -354,7 +354,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     
   
  # data
-    o  =  fread('Data/phylopic.txt')
+    o  =  fread(here::here('Data/phylopic.txt'))
     setnames(o, old = c('Name', 'Code'), new = c('genus2', 'uid'))
 
     t = fread(here::here('Data/taxonomy.txt'))
@@ -433,34 +433,71 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     s[, weekday := weekdays(date_)]
 
     ss = s[!is.na(parks_percent_change_from_baseline)]
-# Explore Google Mobility
-  go =
-       ggplot(g, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
+    ss[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
+#' Google Mobility Index uses February baseline values for each city and day of the week and reports % changes for each day of the week. In other words, a 10% increase on Monday may mean differnt human mobility than 10% increase on Sunday and this may differ between cities. We can control for this in the models but it is worth keeping in mind.
+#' ## Distributions'
+#+ hist, fig.width=4, fig.height = 6
+     ggplot(g, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
        geom_histogram(position = "dodge") +
        #scale_y_continuous(trans = 'log')+
        scale_fill_manual(values = c('orange', 'skyblue', 'black')) +
        geom_vline(xintercept = 0, lty = 3, col = 'red')+
        facet_wrap(~Country, nrow = 5) 
-     ggsave(here::here("Outputs/Fig_Google_hist.png"), go, width = 10, height = 12, units = "cm")
-
-  gb =
-       ggplot(g, aes(x = Country, y = parks_percent_change_from_baseline, fill = factor(Year))) +
+#+ box, fig.width=6, fig.height = 3.5 
+    ggplot(g, aes(x = Country, y = parks_percent_change_from_baseline, fill = factor(Year))) +
        geom_boxplot()+
        #scale_y_continuous(trans = 'log')+
        scale_fill_manual(values = c('orange', 'skyblue', 'black'))
-       
-     ggsave(here::here("Outputs/Fig_Google_box.png"), gb, width = 7, height = 7, units = "cm")
-
-  gl =
+#+ line, fig.width=4, fig.height = 6
        ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
        geom_line()+
         facet_wrap(~Country, nrow = 5) +
        #scale_y_continuous(trans = 'log')+
        scale_color_manual(values = c('orange', 'skyblue', 'black'))
-       
-     ggsave(here::here("Outputs/Fig_Google_line.png"), gl, width = 10, height = 12, units = "cm")     
+#+ line_2, fig.width=4, fig.height = 6
+      ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
+       stat_smooth()+
+        facet_wrap(~Country, nrow = 5) +
+        labs(subtitle = 'Loess' )+
+       #scale_y_continuous(trans = 'log')+
+       scale_color_manual(values = c('orange', 'skyblue', 'black'))
+#+ line_3, fig.width=4, fig.height = 7
+      ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
+       stat_smooth(method = 'lm')+
+        facet_wrap(~Country, nrow = 5) +
+         labs(subtitle = 'linear fit' )+
+       #scale_y_continuous(trans = 'log')+
+       scale_color_manual(values = c('orange', 'skyblue', 'black'))
 
+#' **!! Although histograms show slight shift (perhaps decline) in the distribution of human mobility in 2020 (21) in compariison to post covid 2022 and boxplots perhaps confirm it, the day to day variattion in human activity is far greater than the covid vs. post-covid differrences.  Although we cannot be sure because about pre-covid human mobility, the available Google Mobility data indicate that human mobility within the parks might have not changed much during COVID and hence that the relevance of our study might be compromised. **  
+#' <b>
 
+#' ##  Google Mobility vs stringency
+#+ gsfig, fig.width=5, fig.height = 3.5
+   ggplot(s, aes(x = StringencyIndex, y = parks_percent_change_from_baseline, col = Country)) + 
+      stat_smooth(method = 'lm', se = FALSE)+
+      stat_cor(method="pearson", size =2)+
+      geom_point() 
+
+#' ## FID ~ Google Mobility
+#' We are not sure whether the test between FID and Google Mobility is meaningful because it  looks at whether FID is a truly plastic trait that changes according to daily changes in human mobility. Nevertheless,  I have tested for that, in general and for each country separately. Also, as raw data indicated that there might be a quadratic effect, I spedified also quadratic models and models that use only negative Google Mobility index and only positive Google Mobility index values.
+#' ### quick and dirty exploration with ggplot
+#+ wd, fig.width=10, fig.height = 3
+    ss[, Nsp := .N, by ='sp']  
+    ss[, weekday:=factor(weekday, levels = c('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'))]
+    ggplot(ss, aes(x = parks_percent_change_from_baseline, y = FID, col = Country, lty = year_, pch = year_)) +     
+        stat_smooth(method='rlm', lwd =0.5) +
+        facet_wrap(~weekday, nrow =1)
+   
+#+ sp, fig.width=4, fig.height = 6
+    ggplot(ss[Nsp>5], aes(y = FID, x = parks_percent_change_from_baseline, groups = sp, col = Country)) + 
+        stat_smooth(method = 'lm', se = FALSE) +
+        labs(subtitle  = "regresions for specis with >5 data points")
+        #theme(legend.position = 'none')
+      # geom_point(size =0.5, pch = 1) + 
+        #facet_wrap(~sp, scales ='free_y')
+      
+#' ## Model outputs
 # PREDICTIONS
   # full model
      ss[, country_weekday:=paste(Country,weekday)]
@@ -879,20 +916,22 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                     est_ps, est_px, est_psp, est_pxp,
                     est_fs, est_fx, est_fsp, est_fxp)
     save(o, file = here::here('Data/dat_est_rev.Rdata'))
-# AIC
+#' ### compare linear and quadratic model with AIC
     AIC(hs,hsp) 
     AIC(cs,csp) 
     AIC(ps,psp) 
     AIC(as,asp) 
     AIC(fs,fsp) 
-# PLOT estimates
+#' Quadratic  (indicated with 'p' in the model name) is never  better than linear.
+
+#' ### PLOT estimates
+#+ est_1, fig.width=10, fig.height = 5
   load(here::here('Data/dat_est_rev.Rdata'))
   o[predictor%in%c('scale(poly(parks_percent_change_from_baseline, 2))1','scale(parks_percent_change_from_baseline)'), predictor:='google mobility\n(linear)']
   o[predictor%in%'scale(poly(parks_percent_change_from_baseline, 2))2', predictor:='google mobility\n(quadratic)']
   oo = o[predictor %in% c('google mobility\n(linear)', 'google mobility\n(quadratic)')]
   oo[, predictor := factor(predictor, levels = rev(c('google mobility\n(linear)', 'google mobility\n(quadratic)')))]
-  g =
-    ggplot(oo, aes(x = estimate, y = predictor, color = model, shape = control_for_starting_distance)) +
+ ggplot(oo, aes(x = estimate, y = predictor, color = model, shape = control_for_starting_distance)) +
     geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
     geom_errorbarh(aes(xmin = lwr, xmax = upr), height = 0, position = ggstance::position_dodgev(width_)) +
     #geom_point(position = ggstance::position_dodgev(.6)) +
@@ -933,24 +972,14 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.text.y = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 7)
       )
-    #ggtitle("controlled for # elements and innovation models for research effort") +
 
-    # ggpubr::theme_pubr() +
-    # theme( legend.position = 'right') +
-    # scale_colour_scico_d()+
-    # scale_colour_brewer(type = 'qual', palette = 'Paired', name = "Predictors | n-raw")+
-    # labels = legend_label, breaks = as.character(nn$set2)) +
-    # labels = legend_label[12:1], breaks = as.character(nn$set2[12:1]) ) +
-  ggsave(file = "Outputs/Fig_est_rev_v2.png", g, dpi = 600, width = 25, height = 8, units = "cm")
 
-# PLOT estimates - linear model only
+#' ### PLOT estimates for linear models only
+#+ est_2, fig.width=10, fig.height = 4  
   load(here::here('Data/dat_est_rev.Rdata'))
   o[predictor%in%c('poly(parks_percent_change_from_baseline, 2)1','scale(parks_percent_change_from_baseline)'), predictor:='google mobility\n(linear)']
-  
   oo = o[predictor %in% c('google mobility\n(linear)') & !model%in%o[predictor%in%'poly(parks_percent_change_from_baseline, 2)2', unique(model)]]
-
-  g =
-    ggplot(oo, aes(x = estimate, y = model, shape = control_for_starting_distance)) +
+  ggplot(oo, aes(x = estimate, y = model, shape = control_for_starting_distance)) +
     geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
     geom_errorbarh(aes(xmin = lwr, xmax = upr), height = 0, position = ggstance::position_dodgev(width_)) +
     #geom_point(position = ggstance::position_dodgev(.6)) +
@@ -990,233 +1019,222 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.text.y = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 7)
       )
-    #ggtitle("controlled for # elements and innovation models for research effort") +
-
-    # ggpubr::theme_pubr() +
-    # theme( legend.position = 'right') +
-    # scale_colour_scico_d()+
-    # scale_colour_brewer(type = 'qual', palette = 'Paired', name = "Predictors | n-raw")+
-    # labels = legend_label, breaks = as.character(nn$set2)) +
-    # labels = legend_label[12:1], breaks = as.character(nn$set2[12:1]) ) +
-  ggsave(file = "Outputs/Fig_est_rev_lin.png", g, dpi = 600, width = 25, height = 5, units = "cm")
-
-
-# generate predictions for each country 
-   nsim_= 5000
-   ss[, sin_ :=sin(rad)]
-   ss[, cos_ :=cos(rad)]
-   ss[, poly_lin := poly(parks_percent_change_from_baseline,2)[,1]]
-   ss[, poly_qua := poly(parks_percent_change_from_baseline,2)[,2]]
-  # HU, FI
-    p1 = foreach(j = c( 'Finland','Hungary'), .combine = rbind) %do% {
-      # j = 'Finland'
-      ssp = ss[Country == j]
-      psp=lmer(FID_ln~ 
-       Year+ 
-       SD_ln + 
-       flock_ln +
-       body_ln +
-       sin_ + cos_  +
-       Temp+ 
-       poly_lin + poly_qua + 
-        (1|weekday)+(1|Species)+(1|sp_day_year) + (1|IDLocality),
-        data = ssp, REML = FALSE,  
-        control = lmerControl( 
-            optimizer ='optimx', optCtrl=list(method='nlminb')) 
-        )   
-     bsim = sim(psp, n.sim=nsim_)  
-     v = apply(bsim@fixef, 2, quantile, prob=c(0.5)) # coefficients
-     newD=data.frame(
-        Year = mean(ssp$Year),
-        SD_ln = mean(ssp$SD_ln),
-        flock_ln = mean(ssp$flock_ln),
-        body_ln = mean(ssp$body_ln),
-        rad = mean(ssp$rad),
-        Temp = mean(ssp$Temp),
-        parks_percent_change_from_baseline = seq(min(ssp$parks_percent_change_from_baseline), max(ssp$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
-     newD$sin_ = sin(newD$rad)
-     newD$cos_ = cos(newD$rad)
-     newD$poly_lin = poly(newD$parks_percent_change_from_baseline,2)[,1]    
-     newD$poly_qua = poly(newD$parks_percent_change_from_baseline,2)[,2]
     
-     X <- model.matrix(~ 
-       Year+ 
-       SD_ln + 
-       flock_ln +
-       body_ln +
-       sin_ + cos_  +
-       Temp+ 
-       poly_lin + poly_qua 
-      , data=newD) # exactly the model which was used has to be specified here 
-    
-     # calculate predicted values and creditability intervals
-      newD$pred <-X%*%v #newD$fit_b <- plogis(X%*%v) # in case on binomial scaleback
-      predmatrix <- matrix(nrow=nrow(newD), ncol=nsim) 
-			for(i in 1:nsim) predmatrix[,i] <- X%*%bsim@fixef[i,]
-			newD$lwr <- apply(predmatrix, 1, quantile, prob=0.025)
-			newD$upr <- apply(predmatrix, 1, quantile, prob=0.975)
-      newD$Country = j
-      return(newD)
-     }
-  # Poland 
-   ssp = ss[Country=='Poland']
-   psp=lmer(FID_ln~ 
-       Year+ 
-       SD_ln + 
-       flock_ln +
-       body_ln +
-       sin_ + cos_  +
-       Temp+ 
-       poly_lin + poly_qua + 
-        (1|weekday)+(1|Species)+(1|sp_day_year),
-        data = ssp, REML = FALSE,  
-        control = lmerControl( 
-            optimizer ='optimx', optCtrl=list(method='nlminb')) 
-        )   
 
-    bsim = sim(psp, n.sim=nsim_)  
-    v = apply(bsim@fixef, 2, quantile, prob=c(0.5)) # coefficients
-    newD=data.frame(
-        Year = mean(ssp$Year),
-        SD_ln = mean(ssp$SD_ln),
-        flock_ln = mean(ssp$flock_ln),
-        body_ln = mean(ssp$body_ln),
-        rad = mean(ssp$rad),
-        Temp = mean(ssp$Temp),
-        parks_percent_change_from_baseline = seq(min(ssp$parks_percent_change_from_baseline), max(ssp$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
-    newD$sin_ = sin(newD$rad)
-    newD$cos_ = cos(newD$rad)
-    newD$poly_lin = poly(newD$parks_percent_change_from_baseline,2)[,1]    
-    newD$poly_qua = poly(newD$parks_percent_change_from_baseline,2)[,2]
-    
-    X <- model.matrix(~ 
+#' ### SHOW that quadratic models missfit the data
+#+ est_3, fig.width=4, fig.height = 4
+    # generate predictions for each country 
+    nsim_= 5000
+    ss[, sin_ :=sin(rad)]
+    ss[, cos_ :=cos(rad)]
+    ss[, poly_lin := poly(parks_percent_change_from_baseline,2)[,1]]
+    ss[, poly_qua := poly(parks_percent_change_from_baseline,2)[,2]]
+    # HU, FI
+        p1 = foreach(j = c( 'Finland','Hungary'), .combine = rbind) %do% {
+        # j = 'Finland'
+        ssp = ss[Country == j]
+        psp=lmer(FID_ln~ 
         Year+ 
-       SD_ln + 
-       flock_ln +
-       body_ln +
-       sin_ + cos_  +
-      Temp+ 
-       poly_lin + poly_qua 
+        SD_ln + 
+        flock_ln +
+        body_ln +
+        sin_ + cos_  +
+        Temp+ 
+        poly_lin + poly_qua + 
+            (1|weekday)+(1|Species)+(1|sp_day_year) + (1|IDLocality),
+            data = ssp, REML = FALSE,  
+            control = lmerControl( 
+                optimizer ='optimx', optCtrl=list(method='nlminb')) 
+            )   
+        bsim = sim(psp, n.sim=nsim_)  
+        v = apply(bsim@fixef, 2, quantile, prob=c(0.5)) # coefficients
+        newD=data.frame(
+            Year = mean(ssp$Year),
+            SD_ln = mean(ssp$SD_ln),
+            flock_ln = mean(ssp$flock_ln),
+            body_ln = mean(ssp$body_ln),
+            rad = mean(ssp$rad),
+            Temp = mean(ssp$Temp),
+            parks_percent_change_from_baseline = seq(min(ssp$parks_percent_change_from_baseline), max(ssp$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+        newD$sin_ = sin(newD$rad)
+        newD$cos_ = cos(newD$rad)
+        newD$poly_lin = poly(newD$parks_percent_change_from_baseline,2)[,1]    
+        newD$poly_qua = poly(newD$parks_percent_change_from_baseline,2)[,2]
+        
+        X <- model.matrix(~ 
+        Year+ 
+        SD_ln + 
+        flock_ln +
+        body_ln +
+        sin_ + cos_  +
+        Temp+ 
+        poly_lin + poly_qua 
         , data=newD) # exactly the model which was used has to be specified here 
-    
-    # calculate predicted values and creditability intervals
-      newD$pred <-X%*%v #newD$fit_b <- plogis(X%*%v) # in case on binomial scaleback
-      predmatrix <- matrix(nrow=nrow(newD), ncol=nsim) 
-			for(i in 1:nsim) predmatrix[,i] <- X%*%bsim@fixef[i,]
-			newD$lwr <- apply(predmatrix, 1, quantile, prob=0.025)
-			newD$upr <- apply(predmatrix, 1, quantile, prob=0.975)
-      newD$Country = 'Poland'
-     p2 = newD
+        
+        # calculate predicted values and creditability intervals
+        newD$pred <-X%*%v #newD$fit_b <- plogis(X%*%v) # in case on binomial scaleback
+        predmatrix <- matrix(nrow=nrow(newD), ncol=nsim) 
+                for(i in 1:nsim) predmatrix[,i] <- X%*%bsim@fixef[i,]
+                newD$lwr <- apply(predmatrix, 1, quantile, prob=0.025)
+                newD$upr <- apply(predmatrix, 1, quantile, prob=0.975)
+        newD$Country = j
+        return(newD)
+        }
+    # Poland 
+    ssp = ss[Country=='Poland']
+    psp=lmer(FID_ln~ 
+        Year+ 
+        SD_ln + 
+        flock_ln +
+        body_ln +
+        sin_ + cos_  +
+        Temp+ 
+        poly_lin + poly_qua + 
+            (1|weekday)+(1|Species)+(1|sp_day_year),
+            data = ssp, REML = FALSE,  
+            control = lmerControl( 
+                optimizer ='optimx', optCtrl=list(method='nlminb')) 
+            )   
 
-  # CZ 
-   ssp = ss[Country=='Czech Republic']
-   psp=lmer(FID_ln~ 
-       SD_ln + 
-       flock_ln +
-       body_ln +
-       sin_ + cos_  +
-       Temp+ 
-       poly_lin + poly_qua + 
-        (1|weekday)+(1|Species)+(1|sp_day_year)+ (1|IDLocality),,
-        data = ssp, REML = FALSE,  
-        control = lmerControl( 
-            optimizer ='optimx', optCtrl=list(method='nlminb')) 
-        )   
+        bsim = sim(psp, n.sim=nsim_)  
+        v = apply(bsim@fixef, 2, quantile, prob=c(0.5)) # coefficients
+        newD=data.frame(
+            Year = mean(ssp$Year),
+            SD_ln = mean(ssp$SD_ln),
+            flock_ln = mean(ssp$flock_ln),
+            body_ln = mean(ssp$body_ln),
+            rad = mean(ssp$rad),
+            Temp = mean(ssp$Temp),
+            parks_percent_change_from_baseline = seq(min(ssp$parks_percent_change_from_baseline), max(ssp$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+        newD$sin_ = sin(newD$rad)
+        newD$cos_ = cos(newD$rad)
+        newD$poly_lin = poly(newD$parks_percent_change_from_baseline,2)[,1]    
+        newD$poly_qua = poly(newD$parks_percent_change_from_baseline,2)[,2]
+        
+        X <- model.matrix(~ 
+            Year+ 
+        SD_ln + 
+        flock_ln +
+        body_ln +
+        sin_ + cos_  +
+        Temp+ 
+        poly_lin + poly_qua 
+            , data=newD) # exactly the model which was used has to be specified here 
+        
+        # calculate predicted values and creditability intervals
+        newD$pred <-X%*%v #newD$fit_b <- plogis(X%*%v) # in case on binomial scaleback
+        predmatrix <- matrix(nrow=nrow(newD), ncol=nsim) 
+                for(i in 1:nsim) predmatrix[,i] <- X%*%bsim@fixef[i,]
+                newD$lwr <- apply(predmatrix, 1, quantile, prob=0.025)
+                newD$upr <- apply(predmatrix, 1, quantile, prob=0.975)
+        newD$Country = 'Poland'
+        p2 = newD
 
-    bsim = sim(psp, n.sim=nsim_)  
-    v = apply(bsim@fixef, 2, quantile, prob=c(0.5)) # coefficients
-    newD=data.frame(
-        SD_ln = mean(ssp$SD_ln),
-        flock_ln = mean(ssp$flock_ln),
-        body_ln = mean(ssp$body_ln),
-        rad = mean(ssp$rad),
-        Temp = mean(ssp$Temp),
-        parks_percent_change_from_baseline = seq(min(ssp$parks_percent_change_from_baseline), max(ssp$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
-    newD$sin_ = sin(newD$rad)
-    newD$cos_ = cos(newD$rad)
-    newD$poly_lin = poly(newD$parks_percent_change_from_baseline,2)[,1]    
-    newD$poly_qua = poly(newD$parks_percent_change_from_baseline,2)[,2]
-    
-    X <- model.matrix(~ 
-       SD_ln + 
-       flock_ln +
-       body_ln +
-       sin_ + cos_  +
-      Temp+ 
-       poly_lin + poly_qua 
+    # CZ 
+    ssp = ss[Country=='Czech Republic']
+    psp=lmer(FID_ln~ 
+        SD_ln + 
+        flock_ln +
+        body_ln +
+        sin_ + cos_  +
+        Temp+ 
+        poly_lin + poly_qua + 
+            (1|weekday)+(1|Species)+(1|sp_day_year)+ (1|IDLocality),,
+            data = ssp, REML = FALSE,  
+            control = lmerControl( 
+                optimizer ='optimx', optCtrl=list(method='nlminb')) 
+            )   
+
+        bsim = sim(psp, n.sim=nsim_)  
+        v = apply(bsim@fixef, 2, quantile, prob=c(0.5)) # coefficients
+        newD=data.frame(
+            SD_ln = mean(ssp$SD_ln),
+            flock_ln = mean(ssp$flock_ln),
+            body_ln = mean(ssp$body_ln),
+            rad = mean(ssp$rad),
+            Temp = mean(ssp$Temp),
+            parks_percent_change_from_baseline = seq(min(ssp$parks_percent_change_from_baseline), max(ssp$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+        newD$sin_ = sin(newD$rad)
+        newD$cos_ = cos(newD$rad)
+        newD$poly_lin = poly(newD$parks_percent_change_from_baseline,2)[,1]    
+        newD$poly_qua = poly(newD$parks_percent_change_from_baseline,2)[,2]
+        
+        X <- model.matrix(~ 
+        SD_ln + 
+        flock_ln +
+        body_ln +
+        sin_ + cos_  +
+        Temp+ 
+        poly_lin + poly_qua 
+            , data=newD) # exactly the model which was used has to be specified here 
+        
+        # calculate predicted values and creditability intervals
+        newD$pred <-X%*%v #newD$fit_b <- plogis(X%*%v) # in case on binomial scaleback
+        predmatrix <- matrix(nrow=nrow(newD), ncol=nsim) 
+                for(i in 1:nsim) predmatrix[,i] <- X%*%bsim@fixef[i,]
+                newD$lwr <- apply(predmatrix, 1, quantile, prob=0.025)
+                newD$upr <- apply(predmatrix, 1, quantile, prob=0.975)
+        newD$Country = 'Czech Republic'
+        newD$Year = 2021
+        p3= newD
+
+    # AU
+        ssp = ss[Country == 'Australia']
+        psp=lmer(FID_ln~ 
+        Year+ 
+        SD_ln + 
+        flock_ln +
+        body_ln +
+        sin_ + cos_  +
+        Temp+ 
+        poly_lin + poly_qua + 
+        (1|Species)+(1|sp_day_year) + (1|IDLocality),
+            data = ssp, REML = FALSE,  
+            control = lmerControl( 
+                optimizer ='optimx', optCtrl=list(method='nlminb')) 
+            )   
+        bsim = sim(psp, n.sim=nsim_)  
+        v = apply(bsim@fixef, 2, quantile, prob=c(0.5)) # coefficients
+        newD=data.frame(
+            Year = mean(ssp$Year),
+            SD_ln = mean(ssp$SD_ln),
+            flock_ln = mean(ssp$flock_ln),
+            body_ln = mean(ssp$body_ln),
+            rad = mean(ssp$rad),
+            Temp = mean(ssp$Temp),
+            parks_percent_change_from_baseline = seq(min(ssp$parks_percent_change_from_baseline), max(ssp$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+        newD$sin_ = sin(newD$rad)
+        newD$cos_ = cos(newD$rad)
+        newD$poly_lin = poly(newD$parks_percent_change_from_baseline,2)[,1]    
+        newD$poly_qua = poly(newD$parks_percent_change_from_baseline,2)[,2]
+        
+        X <- model.matrix(~ 
+        Year+ 
+        SD_ln + 
+        flock_ln +
+        body_ln +
+        sin_ + cos_  +
+        Temp+ 
+        poly_lin + poly_qua 
         , data=newD) # exactly the model which was used has to be specified here 
+        
+        # calculate predicted values and creditability intervals
+        newD$pred <-X%*%v #newD$fit_b <- plogis(X%*%v) # in case on binomial scaleback
+        predmatrix <- matrix(nrow=nrow(newD), ncol=nsim) 
+                for(i in 1:nsim) predmatrix[,i] <- X%*%bsim@fixef[i,]
+                newD$lwr <- apply(predmatrix, 1, quantile, prob=0.025)
+                newD$upr <- apply(predmatrix, 1, quantile, prob=0.975)
+        newD$Country = 'Australia'
+        p4 = newD
     
-    # calculate predicted values and creditability intervals
-      newD$pred <-X%*%v #newD$fit_b <- plogis(X%*%v) # in case on binomial scaleback
-      predmatrix <- matrix(nrow=nrow(newD), ncol=nsim) 
-			for(i in 1:nsim) predmatrix[,i] <- X%*%bsim@fixef[i,]
-			newD$lwr <- apply(predmatrix, 1, quantile, prob=0.025)
-			newD$upr <- apply(predmatrix, 1, quantile, prob=0.975)
-      newD$Country = 'Czech Republic'
-      newD$Year = 2021
-      p3= newD
-
-
-
-  
-  # AU
-      ssp = ss[Country == 'Australia']
-      psp=lmer(FID_ln~ 
-       Year+ 
-       SD_ln + 
-       flock_ln +
-       body_ln +
-       sin_ + cos_  +
-       Temp+ 
-       poly_lin + poly_qua + 
-       (1|Species)+(1|sp_day_year) + (1|IDLocality),
-        data = ssp, REML = FALSE,  
-        control = lmerControl( 
-            optimizer ='optimx', optCtrl=list(method='nlminb')) 
-        )   
-     bsim = sim(psp, n.sim=nsim_)  
-     v = apply(bsim@fixef, 2, quantile, prob=c(0.5)) # coefficients
-     newD=data.frame(
-        Year = mean(ssp$Year),
-        SD_ln = mean(ssp$SD_ln),
-        flock_ln = mean(ssp$flock_ln),
-        body_ln = mean(ssp$body_ln),
-        rad = mean(ssp$rad),
-        Temp = mean(ssp$Temp),
-        parks_percent_change_from_baseline = seq(min(ssp$parks_percent_change_from_baseline), max(ssp$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
-     newD$sin_ = sin(newD$rad)
-     newD$cos_ = cos(newD$rad)
-     newD$poly_lin = poly(newD$parks_percent_change_from_baseline,2)[,1]    
-     newD$poly_qua = poly(newD$parks_percent_change_from_baseline,2)[,2]
-    
-     X <- model.matrix(~ 
-       Year+ 
-       SD_ln + 
-       flock_ln +
-       body_ln +
-       sin_ + cos_  +
-       Temp+ 
-       poly_lin + poly_qua 
-      , data=newD) # exactly the model which was used has to be specified here 
-    
-     # calculate predicted values and creditability intervals
-      newD$pred <-X%*%v #newD$fit_b <- plogis(X%*%v) # in case on binomial scaleback
-      predmatrix <- matrix(nrow=nrow(newD), ncol=nsim) 
-			for(i in 1:nsim) predmatrix[,i] <- X%*%bsim@fixef[i,]
-			newD$lwr <- apply(predmatrix, 1, quantile, prob=0.025)
-			newD$upr <- apply(predmatrix, 1, quantile, prob=0.975)
-      newD$Country = 'Australia'
-      p4 = newD
-  
-  # combine
-    p = data.table(rbind(p1,p2,p3,p4))
-    p [, FID:=exp(pred)]
-    p [, FID_lwr:=exp(lwr)]
-    p [, FID_upr:=exp(upr)]
-    p[, Google_mobility:=parks_percent_change_from_baseline]  
+    # combine
+        p = data.table(rbind(p1,p2,p3,p4))
+        p [, FID:=exp(pred)]
+        p [, FID_lwr:=exp(lwr)]
+        p [, FID_upr:=exp(upr)]
+        p[, Google_mobility:=parks_percent_change_from_baseline]  
 
   # plot
-    gg = 
     ggplot(p, aes(x = Google_mobility, y = pred, col = Country, fill = Country)) + 
       geom_ribbon(aes(ymin=lwr, ymax=upr, x=Google_mobility, fill = Country),  alpha = 0.2, show.legend = NA, colour = NA) +
       geom_line(aes(Google_mobility, y = pred, col = Country)) +
@@ -1229,9 +1247,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       theme(  
             legend.text=element_text(size=5),
             legend.title=element_text(size=6, hjust = 0.5)
-            )
-       ggsave(file = "Outputs/Fig_Country-pred_rev.png", gg, dpi = 600, width = 8, height = 7, units = "cm")       
-# generate prediictions foo full model
+            )  
+# ' ### Global quadratic model
+#+ est_2a, fig.width=3, fig.height = 3
+ # generate predictions foo full model
    nsim_= 5000
    ss[, sin_ :=sin(rad)]
    ss[, cos_ :=cos(rad)]
@@ -1288,7 +1307,6 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       p [, FID_upr:=exp(upr)]
       p[, Google_mobility:=parks_percent_change_from_baseline]  
    # plot
-    gg_ln = 
     ggplot(p, aes(x = Google_mobility, y = pred)) + 
       geom_ribbon(aes(ymin=lwr, ymax=upr, x=Google_mobility),  alpha = 0.2, show.legend = NA, colour = NA) +
       geom_line(aes(Google_mobility, y = pred)) +
@@ -1298,9 +1316,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       #coord_cartesian(xlim = c(30,61), clip = 'off') + 
       #labs(tag = "(c)") +
       theme_MB
-      
-      ggsave(file = "Outputs/Fig_pred-full_ln_rev.png", gg_ln, dpi = 600, width = 7, height = 7, units = "cm")    
-    gg = 
+#+ est_2b, fig.width=3, fig.height = 3
     ggplot(p, aes(x = Google_mobility, y = FID)) + 
       geom_ribbon(aes(ymin=FID_lwr, ymax=FID_upr, x=Google_mobility),  alpha = 0.2, show.legend = NA, colour = NA) +
       geom_line(aes(Google_mobility, y = FID)) +
@@ -1311,9 +1327,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       #labs(tag = "(c)") +
       theme_MB
       
-       ggsave(file = "Outputs/Fig_pred-full_rev.png", gg, dpi = 600, width = 7, height = 7, units = "cm")         
-
-# PLOT - species specific regressions
+#' ### SPECIES-specific regressions
+#+ est_4, fig.width=4, fig.height = 3.5 
  # predictions 
   ssc <- ss[, sp_country_N := .N, by = sp_country]
   ssc = ssc[sp_country_N>=15]
@@ -1356,8 +1371,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     newD$sp_country = as.character(i)
     newD$Species= as.character(ssci$sp[1])
     newD$Country = as.character(ssci$Country[1])
-    print(i)
-    
+    #print(i)
     v = data.frame(v)  
     names(v) = 'estimate'
     v$predictor =c('intercept','log_sd','google_mobiliity')
@@ -1371,10 +1385,6 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
   u = data.table(u)
   vvv =  do.call(rbind, vv) 
   u[, FID:=exp(pred)] 
- # summary
-    summary(vvv)
- # plotting 
-  gu =
   ggplot(u, aes(x = parks_percent_change_from_baseline, y = FID, col = Country, group = sp_country)) +
     geom_line() +
     labs(x = 'Google mobility index\n[% change from baseline]', y = 'Escape distance [m]', title = 'For species with N ≥ 15') +
@@ -1403,9 +1413,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.text = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 8)
       )
-  ggsave(file = "Outputs/Fig_sp-est_rev.png", gu, dpi = 600, width = 10, height = 8, units = "cm")
 
-# PLOT - species specific regressions for before and after zero google index
+#' ### SPECIES- specific' regressions for - and +  google index
+#+ est_5, fig.width=5, fig.height = 3.5  
  # predictions 
   ss[parks_percent_change_from_baseline<0, google := 'before_zero']
   ss[parks_percent_change_from_baseline>0, google := 'after_zero']
@@ -1453,7 +1463,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     newD$Species = as.character(ssgi$sp[1])
     newD$Country = as.character(ssgi$Country[1])
     newD$google = as.character(ssgi$google[1])
-    print(i)
+    #print(i)
     v = data.frame(v)  
     names(v) = 'estimate'
     v$predictor =c('intercept','log_sd','google_mobiliity')
@@ -1469,11 +1479,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     }
   bav =  do.call(rbind, ba) 
   uu[, FID:=exp(pred)]
- # summary
-  summary(bav[google=='before_zero'])
-  summary(bav[google=='after_zero'])
+
  # plotting 
-  guu =
   ggplot(uu, aes(x = parks_percent_change_from_baseline, y = FID, col = Country, group = sp_country_google)) +
     geom_line() +
     labs(x = 'Google mobility index\n[% change from baseline]', y = 'Escape distance [m]', title = 'For species with N ≥ 15 per period') +
@@ -1502,14 +1509,12 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.text = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 8)
       )
-  ggsave(file = "Outputs/Fig_sp-zero-est_rev.png", guu, dpi = 600, width = 10, height = 8, units = "cm")
 
-
-
-# PLOT - before and after predictions
+#' ### Global mode estimates for - & + index 
+#+ pred_g, fig.width=10, fig.height = 4  
  # model before
     ssb = ss[google == 'before_zero']
-    summary(factor(ssb$Country))
+    #summary(factor(ssb$Country))
     mbs=lmer(scale(log(FID))~ 
         scale(Year)+ 
         scale(log(SD))+ 
@@ -1661,8 +1666,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
   oab[predictor%in%'scale(poly(parks_percent_change_from_baseline, 2))2', predictor:='google mobility\n(quadratic)']
   ooab = oab[predictor %in% c('google mobility\n(linear)', 'google mobility\n(quadratic)')]
   ooab[, predictor := factor(predictor, levels = rev(c('google mobility\n(linear)', 'google mobility\n(quadratic)')))]
-  gab =
-    ggplot(ooab, aes(x = estimate, y = predictor, color = model, shape = control_for_starting_distance)) +
+  ggplot(ooab, aes(x = estimate, y = predictor, color = model, shape = control_for_starting_distance)) +
     geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
     geom_errorbarh(aes(xmin = lwr, xmax = upr), height = 0, position = ggstance::position_dodgev(width_)) +
     #geom_point(position = ggstance::position_dodgev(.6)) +
@@ -1703,13 +1707,15 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.text.y = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 7)
       )
-  ggsave(file = "Outputs/Fig_est_bef-aft_rev_v1.png", gab, dpi = 600, width = 25, height = 7, units = "cm")
-# Figure 3 - google alternative
+
+#' ### Figure 3 - google alternative
+#+ fig3_g, fig.width=12, fig.height = 12  
   ss[, NspC := .N, by ='sp_country']
   ssc = ss[NspC>9]
   ssc[, sp2 := gsub(" ", "\n", sp)]
   ssc[, Google_mobility:=parks_percent_change_from_baseline]
-# two rows labels
+ 
+ # two rows labels
     g2 = 
     ggplot(ssc, aes(x = Google_mobility, y = FID,)) +
       #stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
@@ -1741,8 +1747,5 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 
     gg2 <- ggplotGrob(g2) #gg$layout$name
     ggx2 <- gtable_filter_remove(gg2, name = c('axis-b-2-9','axis-b-5-8'), trim = FALSE)# paste0("axis-b-", c(2, 4), "-9")
-    #grid.draw(ggx)
-    ggsave('Outputs/Fig_3_Google_width-152mm_2-row_v1.png',ggx2, width=15.24,height=19, unit = 'cm',dpi=600)
-
-
+    grid.draw(ggx2)
 # END
