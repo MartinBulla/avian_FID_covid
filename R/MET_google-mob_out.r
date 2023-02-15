@@ -481,6 +481,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
 
 #' ## FID ~ Google Mobility
 #' We are not sure whether the test between FID and Google Mobility is meaningful because it  looks at whether FID is a truly plastic trait that changes according to daily changes in human mobility. Nevertheless,  I have tested for that, in general and for each country separately. Also, as raw data indicated that there might be a quadratic effect, I spedified also quadratic models and models that use only negative Google Mobility index and only positive Google Mobility index values.
+#' <b>
+
 #' ### quick and dirty exploration with ggplot
 #+ wd, fig.width=10, fig.height = 3
     ss[, Nsp := .N, by ='sp']  
@@ -489,7 +491,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
         stat_smooth(method='rlm', lwd =0.5) +
         facet_wrap(~weekday, nrow =1)
    
-#+ sp, fig.width=4, fig.height = 6
+#+ sp, fig.width=6, fig.height = 4
     ggplot(ss[Nsp>5], aes(y = FID, x = parks_percent_change_from_baseline, groups = sp, col = Country)) + 
         stat_smooth(method = 'lm', se = FALSE) +
         labs(subtitle  = "regresions for specis with >5 data points")
@@ -975,7 +977,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
 
 
 #' ### PLOT estimates for linear models only
-#+ est_2, fig.width=10, fig.height = 4  
+#+ est_2, fig.width=10, fig.height = 3  
   load(here::here('Data/dat_est_rev.Rdata'))
   o[predictor%in%c('poly(parks_percent_change_from_baseline, 2)1','scale(parks_percent_change_from_baseline)'), predictor:='google mobility\n(linear)']
   oo = o[predictor %in% c('google mobility\n(linear)') & !model%in%o[predictor%in%'poly(parks_percent_change_from_baseline, 2)2', unique(model)]]
@@ -1022,7 +1024,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
     
 
 #' ### SHOW that quadratic models missfit the data
-#+ est_3, fig.width=4, fig.height = 4
+#+ est_3, fig.width=4, fig.height = 3
     # generate predictions for each country 
     nsim_= 5000
     ss[, sin_ :=sin(rad)]
@@ -1415,7 +1417,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
       )
 
 #' ### SPECIES- specific' regressions for - and +  google index
-#+ est_5, fig.width=5, fig.height = 3.5  
+#+ est_5, fig.width=5, fig.height = 3  
  # predictions 
   ss[parks_percent_change_from_baseline<0, google := 'before_zero']
   ss[parks_percent_change_from_baseline>0, google := 'after_zero']
@@ -1748,4 +1750,3 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
     gg2 <- ggplotGrob(g2) #gg$layout$name
     ggx2 <- gtable_filter_remove(gg2, name = c('axis-b-2-9','axis-b-5-8'), trim = FALSE)# paste0("axis-b-", c(2, 4), "-9")
     grid.draw(ggx2)
-# END
