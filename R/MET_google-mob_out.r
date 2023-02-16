@@ -435,8 +435,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     ss = s[!is.na(parks_percent_change_from_baseline)]
     ss[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
 #' Google Mobility Index uses February baseline values for each city and day of the week and reports % changes for each day of the week. In other words, a 10% increase on Monday may mean differnt human mobility than 10% increase on Sunday and this may differ between cities. We can control for this in the models but it is worth keeping in mind.
-#'<b>  
-
+#'  
 #' ## Distributions
 #+ hist, fig.width=4, fig.height = 6
      ggplot(g, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
@@ -472,8 +471,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
        scale_color_manual(values = c('orange', 'skyblue', 'black'))
 
 #' **!! Although histograms show slight shift (perhaps decline) in the distribution of human mobility in 2020 (21) in compariison to post covid 2022 and boxplots perhaps confirm it, the day to day variattion in human activity is far greater than the covid vs. post-covid differrences.  Although we cannot be sure because about pre-covid human mobility, the available Google Mobility data indicate that human mobility within the parks might have not changed much during COVID and hence that the relevance of our study might be compromised. **  
-#' <b>  
-
+#'  
 #' ##  Google Mobility vs stringency
 #+ gsfig, fig.width=5, fig.height = 3.5
    ggplot(s, aes(x = StringencyIndex, y = parks_percent_change_from_baseline, col = Country)) + 
@@ -481,10 +479,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       stat_cor(method="pearson", size =2)+
       geom_point() 
 
+#'  
 #' ## FID ~ Google Mobility
 #' We are not sure whether the test between FID and Google Mobility is meaningful because it  looks at whether FID is a truly plastic trait that changes according to daily changes in human mobility. Nevertheless,  I have tested for that, in general and for each country separately. Also, as raw data indicated that there might be a quadratic effect, I spedified also quadratic models and models that use only negative Google Mobility index and only positive Google Mobility index values.
-#' <b>  
-
+#'   
 #' ### Quick and dirty exploration with ggplot
 #+ wd, fig.width=10, fig.height = 3
     ss[, Nsp := .N, by ='sp']  
@@ -501,7 +499,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       # geom_point(size =0.5, pch = 1) + 
         #facet_wrap(~sp, scales ='free_y')  
         
-#' ## Model outputs
+#'  
+#' ## Model based outputs
 # PREDICTIONS
   # full model
      ss[, country_weekday:=paste(Country,weekday)]
@@ -921,15 +920,16 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                     est_fs, est_fx, est_fsp, est_fxp)
     save(o, file = here::here('Data/dat_est_rev.Rdata'))
   
+#'  
 #' ### compare linear and quadratic model with AIC
+#' Quadratic  (indicated with 'p' in the model name) is never  better than linear.      
     AIC(hs,hsp) 
     AIC(cs,csp) 
     AIC(ps,psp) 
     AIC(as,asp) 
     AIC(fs,fsp) 
-#' Quadratic  (indicated with 'p' in the model name) is never  better than linear.  
-
-#' ### PLOT estimates
+#'  
+#' ### Model estimates
 #+ est_1, fig.width=10, fig.height = 5
   load(here::here('Data/dat_est_rev.Rdata'))
   o[predictor%in%c('scale(poly(parks_percent_change_from_baseline, 2))1','scale(parks_percent_change_from_baseline)'), predictor:='google mobility\n(linear)']
@@ -978,8 +978,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.title = element_text(size = 7)
       )
   
-#' ### PLOT estimates for linear models only
-#+ est_2, fig.width=10, fig.height = 3  
+#'  
+#' ### Model estimates for linear models only
+#+ est_2, fig.width=10, fig.height = 2.5  
   load(here::here('Data/dat_est_rev.Rdata'))
   o[predictor%in%c('poly(parks_percent_change_from_baseline, 2)1','scale(parks_percent_change_from_baseline)'), predictor:='google mobility\n(linear)']
   oo = o[predictor %in% c('google mobility\n(linear)') & !model%in%o[predictor%in%'poly(parks_percent_change_from_baseline, 2)2', unique(model)]]
@@ -1024,7 +1025,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.title = element_text(size = 7)
       )
   
-#' ### SHOW that quadratic models missfit the data
+#'  
+#' ### Quadratic models missfit the data
 #+ est_3, fig.width=4, fig.height = 3
     # generate predictions for each country 
     nsim_= 5000
@@ -1252,6 +1254,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
             legend.title=element_text(size=6, hjust = 0.5)
             )  
   
+#'  
 # ' ### Global quadratic model
 #+ est_2a, fig.width=3, fig.height = 3
  # generate predictions foo full model
@@ -1331,7 +1334,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       #labs(tag = "(c)") +
       theme_MB
 
-#' ### SPECIES-specific regressions
+#'  
+#' ### Species-specific regressions 
+#' (based on species-specific mixed models)
 #+ est_4, fig.width=4, fig.height = 3.5 
  # predictions 
   ssc <- ss[, sp_country_N := .N, by = sp_country]
@@ -1418,7 +1423,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.title = element_text(size = 8)
       )
 
-#' ### SPECIES- specific' regressions for - and +  google index
+#'  
+#' ### Species- specific' regressions for - and +  google index
+#' (based on species-specific mixed models)
 #+ est_5, fig.width=5, fig.height = 3  
  # predictions 
   ss[parks_percent_change_from_baseline<0, google := 'before_zero']
@@ -1515,7 +1522,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       )
   
   #' ### Global mode estimates for - & + index 
-#+ pred_g, fig.width=10, fig.height = 4  
+#+ pred_g, fig.width=10, fig.height = 3  
  # model before
     ssb = ss[google == 'before_zero']
     #summary(factor(ssb$Country))
@@ -1712,8 +1719,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         axis.title = element_text(size = 7)
       )
   
+#'  
 #' ### Figure 3 - google alternative
-#+ fig3_g, fig.width=12, fig.height = 12  
+#+ fig3_g, fig.width=11, fig.height = 11 
   ss[, NspC := .N, by ='sp_country']
   ssc = ss[NspC>9]
   ssc[, sp2 := gsub(" ", "\n", sp)]
