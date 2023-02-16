@@ -14,13 +14,15 @@
 !/Outputs/
 !/Reports/
 
-# Ignore everything in freeze (even if in Except)
+# Ignore everything in these folders(even if in Except)
 freeze/
 .DS_Store
 .Rproj.user
 model_sim/
 Obrazky - phylopic/
 for_Peto.Rdata
+*_cache/
+*_files/
 
 rep_analysis_cache/
 vis_cache/

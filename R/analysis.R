@@ -525,10 +525,16 @@
         ggsave(here::here('Outputs/Fig_Sy.png'),gy2, width = 10, height =14, units = 'cm')   
 
       
+# Figure Sz - hour distritributiion of observations
+   ggplot(d, aes(x = Hour)) + geom_histogram()
+      
 # Figure S4 - year trend for >4 observations/site before and during covid
    px = pp[N_during>4 & N_before>4]
    dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
     #table(dxx$IDLocality, dxx$Year)
+    length(unique(px$IDLocality))  
+    length(unique(px$Species)) 
+    sum(px$N_during) + sum(px$N_before)
 
    dxx[, sp_C_loc2 := paste(gsub('[_]', ' ', Species), Country, IDLocality, sep ='\n')]
    dxx[, genus := sub("_.*", "", Species)]
