@@ -434,6 +434,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 
     ss = s[!is.na(parks_percent_change_from_baseline)]
     ss[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
+    ss[parks_percent_change_from_baseline<0, google := 'before_zero']
+    ss[parks_percent_change_from_baseline>0, google := 'after_zero']
+    ss[, sp_country_google:= paste(sp_country, google)]
 #' Google Mobility Index uses February baseline values for each city and day of the week and reports % changes for each day of the week. In other words, a 10% increase on Monday may mean differnt human mobility than 10% increase on Sunday and this may differ between cities. We can control for this in the models but it is worth keeping in mind.
 #'  
 #' ## Distributions
@@ -500,7 +503,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
         #facet_wrap(~sp, scales ='free_y')  
         
 #'  
-#' ## Model based outputs
+#' ### Model based outputs
 # PREDICTIONS
   # full model
      ss[, country_weekday:=paste(Country,weekday)]
@@ -921,7 +924,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     save(o, file = here::here('Data/dat_est_rev.Rdata'))
   
 #'  
-#' ### compare linear and quadratic model with AIC
+#' #### compare linear and quadratic model with AIC
 #' Quadratic  (indicated with 'p' in the model name) is never  better than linear.      
     AIC(hs,hsp) 
     AIC(cs,csp) 
@@ -929,7 +932,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     AIC(as,asp) 
     AIC(fs,fsp) 
 #'  
-#' ### Model estimates
+#' #### Model estimates
 #+ est_1, fig.width=10, fig.height = 5
   load(here::here('Data/dat_est_rev.Rdata'))
   o[predictor%in%c('scale(poly(parks_percent_change_from_baseline, 2))1','scale(parks_percent_change_from_baseline)'), predictor:='google mobility\n(linear)']
@@ -979,7 +982,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       )
   
 #'  
-#' ### Model estimates for linear models only
+#' #### Model estimates for linear models only
 #+ est_2, fig.width=10, fig.height = 2.5  
   load(here::here('Data/dat_est_rev.Rdata'))
   o[predictor%in%c('poly(parks_percent_change_from_baseline, 2)1','scale(parks_percent_change_from_baseline)'), predictor:='google mobility\n(linear)']
@@ -1026,7 +1029,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       )
   
 #'  
-#' ### Quadratic models missfit the data
+#' #### Quadratic models missfit the data
 #+ est_3, fig.width=4, fig.height = 3
     # generate predictions for each country 
     nsim_= 5000
@@ -1255,7 +1258,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
             )  
   
 #'  
-# ' ### Global quadratic model
+# ' #### Global quadratic model
 #+ est_2a, fig.width=3, fig.height = 3
  # generate predictions foo full model
    nsim_= 5000
@@ -1335,7 +1338,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       theme_MB
 
 #'  
-#' ### Species-specific regressions 
+#' #### Species-specific regressions 
 #' (based on species-specific mixed models)
 #+ est_4, fig.width=4, fig.height = 3.5 
  # predictions 
@@ -1424,13 +1427,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       )
 
 #'  
-#' ### Species- specific' regressions for - and +  google index
+#' #### Species-specific regressions for - and +  google index
 #' (based on species-specific mixed models)
 #+ est_5, fig.width=5, fig.height = 3  
- # predictions 
-  ss[parks_percent_change_from_baseline<0, google := 'before_zero']
-  ss[parks_percent_change_from_baseline>0, google := 'after_zero']
-  ss[, sp_country_google:= paste(sp_country, google)]
+ # predictions
   ssg <- ss[, sp_country_google_N := .N, by = sp_country_google]
   ssg = ssg[sp_country_google_N >= 15]
   ssg[, log_FID := log(FID)]
@@ -1721,7 +1721,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
   
 #'  
 #' ### Figure 3 - google alternative
-#+ fig3_g, fig.width=11, fig.height = 11 
+#+ fig3_g, fig.width=10, fig.height = 10 
   ss[, NspC := .N, by ='sp_country']
   ssc = ss[NspC>9]
   ssc[, sp2 := gsub(" ", "\n", sp)]
