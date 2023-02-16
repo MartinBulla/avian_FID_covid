@@ -12,7 +12,7 @@
 #' ---
 
 #+ r setup, include=FALSE
-knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 
 #' ###### Code to load tools and data
 #+ start, echo = T, results = 'hide', warning=FALSE
@@ -437,7 +437,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
 #' Google Mobility Index uses February baseline values for each city and day of the week and reports % changes for each day of the week. In other words, a 10% increase on Monday may mean differnt human mobility than 10% increase on Sunday and this may differ between cities. We can control for this in the models but it is worth keeping in mind.
 #'<b>  
 
-#' ## Distributions'
+#' ## Distributions
 #+ hist, fig.width=4, fig.height = 6
      ggplot(g, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
        geom_histogram(position = "dodge") +
@@ -483,9 +483,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
 
 #' ## FID ~ Google Mobility
 #' We are not sure whether the test between FID and Google Mobility is meaningful because it  looks at whether FID is a truly plastic trait that changes according to daily changes in human mobility. Nevertheless,  I have tested for that, in general and for each country separately. Also, as raw data indicated that there might be a quadratic effect, I spedified also quadratic models and models that use only negative Google Mobility index and only positive Google Mobility index values.
-#' <b>
+#' <b>  
 
-#' ### quick and dirty exploration with ggplot
+#' ### Quick and dirty exploration with ggplot
 #+ wd, fig.width=10, fig.height = 3
     ss[, Nsp := .N, by ='sp']  
     ss[, weekday:=factor(weekday, levels = c('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'))]
@@ -499,8 +499,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
         labs(subtitle  = "regresions for specis with >5 data points")
         #theme(legend.position = 'none')
       # geom_point(size =0.5, pch = 1) + 
-        #facet_wrap(~sp, scales ='free_y')
-      
+        #facet_wrap(~sp, scales ='free_y')  
+        
 #' ## Model outputs
 # PREDICTIONS
   # full model
@@ -920,13 +920,14 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
                     est_ps, est_px, est_psp, est_pxp,
                     est_fs, est_fx, est_fsp, est_fxp)
     save(o, file = here::here('Data/dat_est_rev.Rdata'))
+  
 #' ### compare linear and quadratic model with AIC
     AIC(hs,hsp) 
     AIC(cs,csp) 
     AIC(ps,psp) 
     AIC(as,asp) 
     AIC(fs,fsp) 
-#' Quadratic  (indicated with 'p' in the model name) is never  better than linear.
+#' Quadratic  (indicated with 'p' in the model name) is never  better than linear.  
 
 #' ### PLOT estimates
 #+ est_1, fig.width=10, fig.height = 5
@@ -976,8 +977,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
         axis.text.y = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 7)
       )
-
-
+  
 #' ### PLOT estimates for linear models only
 #+ est_2, fig.width=10, fig.height = 3  
   load(here::here('Data/dat_est_rev.Rdata'))
@@ -1023,8 +1023,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
         axis.text.y = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 7)
       )
-    
-
+  
 #' ### SHOW that quadratic models missfit the data
 #+ est_3, fig.width=4, fig.height = 3
     # generate predictions for each country 
@@ -1252,6 +1251,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
             legend.text=element_text(size=5),
             legend.title=element_text(size=6, hjust = 0.5)
             )  
+  
 # ' ### Global quadratic model
 #+ est_2a, fig.width=3, fig.height = 3
  # generate predictions foo full model
@@ -1330,7 +1330,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
       #coord_cartesian(xlim = c(30,61), clip = 'off') + 
       #labs(tag = "(c)") +
       theme_MB
-      
+
 #' ### SPECIES-specific regressions
 #+ est_4, fig.width=4, fig.height = 3.5 
  # predictions 
@@ -1513,8 +1513,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
         axis.text = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 8)
       )
-
-#' ### Global mode estimates for - & + index 
+  
+  #' ### Global mode estimates for - & + index 
 #+ pred_g, fig.width=10, fig.height = 4  
  # model before
     ssb = ss[google == 'before_zero']
@@ -1711,7 +1711,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
         axis.text.y = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 7)
       )
-
+  
 #' ### Figure 3 - google alternative
 #+ fig3_g, fig.width=12, fig.height = 12  
   ss[, NspC := .N, by ='sp_country']
