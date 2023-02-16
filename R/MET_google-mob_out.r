@@ -435,6 +435,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
     ss = s[!is.na(parks_percent_change_from_baseline)]
     ss[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
 #' Google Mobility Index uses February baseline values for each city and day of the week and reports % changes for each day of the week. In other words, a 10% increase on Monday may mean differnt human mobility than 10% increase on Sunday and this may differ between cities. We can control for this in the models but it is worth keeping in mind.
+#'<b>  
+
 #' ## Distributions'
 #+ hist, fig.width=4, fig.height = 6
      ggplot(g, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
@@ -470,7 +472,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
        scale_color_manual(values = c('orange', 'skyblue', 'black'))
 
 #' **!! Although histograms show slight shift (perhaps decline) in the distribution of human mobility in 2020 (21) in compariison to post covid 2022 and boxplots perhaps confirm it, the day to day variattion in human activity is far greater than the covid vs. post-covid differrences.  Although we cannot be sure because about pre-covid human mobility, the available Google Mobility data indicate that human mobility within the parks might have not changed much during COVID and hence that the relevance of our study might be compromised. **  
-#' <b>
+#' <b>  
 
 #' ##  Google Mobility vs stringency
 #+ gsfig, fig.width=5, fig.height = 3.5
