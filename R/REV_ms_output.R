@@ -766,9 +766,9 @@ ggplot(oo, aes(x = estimate, y = Country, col = Country, shape = control_for_sta
 #col_ = unique(gg$data[[3]]["colour"])$colour
 #show_col(col_)
 
-#' **Fig. 1 | The effect size with 95%CIs of Period (0 – before, 1 – during shutdowns) on flight initiation distance (ln-transformed).**  The general model on all data was controlled for starting distance (ln-transformed; filled circles) or not (empty circles), flock size (ln-transformed), temperature (also a proxy for a day within the breeding season: r Pearson = 0.48; Fig. S1) and time of day. To account for circular properties of time, time was transformed into radians (2 × time × π/24) and fitted as sine and cosine of radians (Bulla et al. 2016). All continuous variables were standardised by subtracting the mean and dividing by the standard deviation. The multicollinearity was small as correlations between predictors were  weak (r<XX, Fig. S1). To account for the non-independence of data points (Schielzeth & Forstmeier 2009; Barr et al. 2013), we attempted to fit random intercepts of year, weekday, genus, species, species at a given day and year, country, site, and species within a site, while fitting Period as random slope within site. Note that fitting Period as random slope at other random intercepts produces similar results (see Fig Sxx). We used this approach with a full dataset with all observations (n = 6369), as well as with conservative datasets, one with at least five observations per species and Period (i.e. at least five observations before and five during the COVID-19 shutdowns; n = 5260), the other with at least 10 observations per species and each Period (n = 5106). In other words, conservative datasets included species sampled in the both Periods. Albeit random structure of the full model accounts for the potential country specific effect (country accounted for xx% of variance, Table xx), depicted are also estimates from country specific models, with same predictors and random structure as the full model (excluding the random intercept of country and in case of Poland also site, as specific sites were not noted in Poland). Using meta.summaries function from rmeta R-package we used the country estimates, their standard deviation, and sample size per country to estimate the meta-analytical mean, which reflects the results based on the full mixed effect model. Also, albeit the response of humans to shutdowns were likely country specific and presence of humans in parks might have increased in some countries, decreased in others or did not change, the escape distances do not reflect such changes. In other words, the birds are either inflexible or the change in human behavior due to shutdowns was not strong enought, which might have been the case - see Fig. YY and ZZ- decide what to show in this figure (I think 2020-2022 changes in Google Mobility for each country including the fits and refering to supplementary figure)
+#' **Fig. 1 | The effect size with 95%CIs of Period (0 – before, 1 – during shutdowns) on flight initiation distance (ln-transformed).**  The general model on all data was controlled for starting distance (ln-transformed; filled circles) or not (empty circles), flock size (ln-transformed), temperature (also a proxy for a day within the breeding season: r Pearson = 0.48; Fig. S1) and time of day. To account for circular properties of time, time was transformed into radians (2 × time × π/24) and fitted as sine and cosine of radians (Bulla et al. 2016). All continuous variables were standardised by subtracting the mean and dividing by the standard deviation. The multicollinearity was small as correlations between predictors were  weak (r<XX, Fig. S1). To account for the non-independence of data points (Schielzeth & Forstmeier 2009; Barr et al. 2013), we attempted to fit random intercepts of year, weekday, genus, species, species at a given day and year, country, site, and species within a site, while fitting Period as random slope within site. Note that fitting Period as random slope at other random intercepts produces similar results (see Fig Sxx). We used this approach with a full dataset with all observations (n = 6369), as well as with conservative datasets, one with at least five observations per species and Period (i.e. at least five observations before and five during the COVID-19 shutdowns; n = 5260), the other with at least 10 observations per species and each Period (n = 5106). In other words, conservative datasets included species sampled in the both Periods. Albeit random structure of the full model accounts for the potential country specific effect (country accounted for xx% of variance, Table xx), depicted are also estimates from country specific models, with same predictors and random structure as the full model (excluding the random intercept of country and in case of Poland also site, as specific sites were not noted in Poland). Using meta.summaries function from rmeta R-package we used the country estimates, their standard deviation, and sample size per country to estimate the meta-analytical mean, which reflects the results based on the full mixed effect model. Also, albeit the response of humans to shutdowns were likely country specific and presence of humans in parks might have increased in some countries, decreased in others or did not change, the escape distances do not reflect such changes. In other words, the birds are either inflexible or the change in human behavior due to shutdowns was not strong enought, which might have been the case - see Fig. ZZ - decide what to show in this figure (I think 2020-2022 changes in Google Mobility for each country including the fits and refering to supplementary figure)
 #' 
-#+ line, fig.width=4, fig.height = 6
+#+ line, fig.width=10, fig.height = 6
 g0 = ggplot(g, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
   geom_histogram(position = "dodge") +
   # scale_y_continuous(trans = 'log')+
@@ -801,19 +801,18 @@ g2 = ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor
     ncol = 3, widths = c(1, 1, 1.1)
   )
 #'
-#' **Fig. ZZ | Changes in human presence (Google Mobility) in parks across year and between years.** Left plots represent the raw data, right plots LOESS smoothed curves. Google Mobility is absent for years before COVID-19. Nevertheless, 2022 was a year without shutdowns in the studied countries. Assuming that human activities levels might have been similar to pre-COVID-19 years (which may not be the case), human acctivity in the shutdown years (2020 and 2021) decreased. However, such decrease might be irrelevant for birds as the day-to-day variatioin in human presence seems larger than the general decrease in activity.
+#' **Fig. ZZ | Changes in human presence (Google Mobility) in parks across year and between years.** Left plots represent the raw data, right plots LOESS smoothed curves. Google Mobility is absent for years before COVID-19. Nevertheless, 2022 was a year without shutdowns in the studied countries. Assuming that human activities levels might have been similar to pre-COVID-19 years (which may not be the case), human acctivity in the shutdown years (2020 and 2021) decreased. However, such decrease might be irrelevant for birds as the day-to-day variatioin in human presence seems larger than the general decrease in activity. For weekday specific plot see Fig. S_ZZ
 #'
-#' ##  Google Mobility vs Stringency
-#+ gsfig, fig.width=4.5, fig.height = 3.5
-col2_ = c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
-col2__ = col2_[3:7]
-ggplot(s, aes(x = StringencyIndex, y = parks_percent_change_from_baseline, col = Country)) +
-    stat_smooth(method = "lm") +
-    stat_cor(method = "pearson", size = 2) +
-    geom_point()+
-    scale_color_manual(values = col2__) +
-    labs(subtitle = "simple lm & Pearson's R")
+#+ gm_week_year, fig.width=8, fig.height = 6
+g[, weekday := factor(weekday, levels = (c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))]
 
+ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
+    geom_line() +
+    facet_grid(rows = vars(Country), cols = vars(weekday)) +
+    # scale_y_continuous(trans = 'log')+
+    scale_color_manual(values = c("orange", "skyblue", "black"))
+#' **Fig. S_ZZ | Changes in human presence (Google Mobility) in parks across weekdays and years.** Depicted are  raw data.
+#' ##  Google Mobility vs Stringency
 #+ gsfig_mod, fig.width=3, fig.height = 2.5
 # Predictions 
 l = list()
@@ -981,29 +980,3 @@ ggplot(sp, aes(x = StringencyIndex, y = pred, col = Country)) +
 #ggsave("Outputs/Fig_G-S_rev_width_CustomLocusZoom_year-weekday.png", width = 7, height = 6, unit = "cm", dpi = 600)
 
 #' **Fig. 2 | Relationship betweeen Google Mobility and Stringency Index.** Lines with shaded areas represent predicted relationships from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and Stringency Index as a random slope. Dots represent raw data, jittered to increase visibility. Colors indicate country. The predictions reveal generally negative and week relationship between Gooble Mobility (human activity) in parks and seveareness of governmental restrictions. 
-
-#+ gsfig_day, fig.width=5, fig.height = 8
-ggplot(s, aes(x = StringencyIndex, y = parks_percent_change_from_baseline, col = weekday)) +
-    facet_wrap(~Country, nrow = 5, scales = "free_y") +
-    geom_jitter(width = 2, height = 1, pch = 21, alpha = 0.5) +
-    stat_smooth(method = "lm", se = FALSE) +
-    stat_cor(method = "pearson", size = 2)+
-    labs(subtitle = "simple lm & Pearson's R")
-
-#+ gm_week_year, fig.width=8, fig.height = 6
-  g[, weekday := factor(weekday, levels = (c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))]
-  
-  ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
-         geom_line() +
-         facet_grid(rows = vars(Country), cols = vars(weekday)) +
-         # scale_y_continuous(trans = 'log')+
-         scale_color_manual(values = c("orange", "skyblue", "black"))
-#'
-#+ str_weekday, fig.width=2.5, fig.height = 3
-s[, weekday := factor(weekday, levels = (c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))]
-ggplot(s, aes(y = StringencyIndex, x = weekday)) +
-  geom_boxplot()
-#'
-#+ str_weekday_2, fig.width=2.5, fig.height = 3.5
-ggplot(s, aes(y = StringencyIndex, x = weekday, fill = year_)) +
-    geom_boxplot()
