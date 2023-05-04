@@ -475,13 +475,26 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 
 #' **!! Although histograms show slight shift (perhaps decline) in the distribution of human mobility in 2020 (21) in compariison to post covid 2022 and boxplots perhaps confirm it, the day to day variattion in human activity is far greater than the covid vs. post-covid differrences.  Although we cannot be sure because about pre-covid human mobility, the available Google Mobility data indicate that human mobility within the parks might have not changed much during COVID and hence that the relevance of our study might be compromised. **  
 #'  
-#' ##  Google Mobility vs stringency
+
+#' ##  Google Mobility vs Stringency
 #+ gsfig, fig.width=5, fig.height = 3.5
    ggplot(s, aes(x = StringencyIndex, y = parks_percent_change_from_baseline, col = Country)) + 
       stat_smooth(method = 'lm', se = FALSE)+
       stat_cor(method="pearson", size =2)+
       geom_point() 
 
+#+ gsfig_day, fig.width=4, fig.height = 6
+ ggplot(s, aes(x = StringencyIndex, y = parks_percent_change_from_baseline, col = weekday)) +
+  facet_wrap(~Country, nrow = 5, scales = "free_y") + 
+  geom_jitter(width = 2, pch = 21, alpha = 0.5)+
+  stat_smooth(method = "lm", se = FALSE) +
+  stat_cor(method = "pearson", size = 2)
+#'
+#' ## Distribution of Google Mobility & Stringency during sampled days
+#+ s_hist, fig.width=3, fig.height = 2.5
+  ggplot(s, aes(x=x=StringencyIndex)) +geom_histogram()
+#+ g_hist, fig.width=3, fig.height = 2.5
+  ggplot(s, aes(x=parks_percent_change_from_baseline)) +geom_histogram()
 #'  
 #' ## FID ~ Google Mobility
 #' We are not sure whether the test between FID and Google Mobility is meaningful because it  looks at whether FID is a truly plastic trait that changes according to daily changes in human mobility. Nevertheless,  I have tested for that, in general and for each country separately. Also, as raw data indicated that there might be a quadratic effect, I spedified also quadratic models and models that use only negative Google Mobility index and only positive Google Mobility index values.

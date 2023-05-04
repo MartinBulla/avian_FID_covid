@@ -538,12 +538,15 @@
 
    dxx[, sp_C_loc2 := paste(gsub('[_]', ' ', Species), Country, IDLocality, sep ='\n')]
    dxx[, genus := sub("_.*", "", Species)]
+   dxx[Covid == 0 , period := 'before COVID-19']
+   dxx[Covid == 1 , period := 'during COVID-19']
    g = 
-   ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Year)) + 
+   ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Year, fill = period)) + 
     geom_boxplot() + facet_wrap(~sp_C_loc2) + 
     scale_y_continuous("Flight initiation distance [m]", trans = 'log10') + 
     scale_x_discrete("Year", guide = guide_axis(angle = 45)) +
     scale_color_continuous()+
+    scale_fill_manual(values = c('white', 'lightgrey'))+
     theme_MB  +
     theme(
           plot.title = element_text(size=7),
@@ -560,7 +563,7 @@
           axis.text.y=element_text(colour="grey30", size = 6)
           ) 
 
-   ggsave(here::here('Outputs/Fig_S4.png'),g, width = 18, height =16, units = 'cm')
+   ggsave(here::here('Outputs/Fig_S4_rev.png'),g, width = 18, height =16, units = 'cm')
 
 # not used - Figure Sub - year trend for >0 observations/site before and during covid
    px = pp[N_during>0 & N_before>0]
