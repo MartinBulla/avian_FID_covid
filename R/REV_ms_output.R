@@ -359,8 +359,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
     
   
  # data
-    o  =  fread(here::here('Data/phylopic.txt'))
-    setnames(o, old = c('Name', 'Code'), new = c('genus2', 'uid'))
+    ph  =  fread(here::here('Data/phylopic.txt'))
+    setnames(ph, old = c('Name', 'Code'), new = c('genus2', 'uid'))
 
     t = fread(here::here('Data/taxonomy.txt'))
     
@@ -769,18 +769,27 @@ ggplot(oo, aes(x = estimate, y = Country, col = Country, shape = control_for_sta
 #' **Fig. 1 | The effect size with 95%CIs of Period (0 – before, 1 – during shutdowns) on flight initiation distance (ln-transformed).**  The general model on all data was controlled for starting distance (ln-transformed; filled circles) or not (empty circles), flock size (ln-transformed), temperature (also a proxy for a day within the breeding season: r Pearson = 0.48; Fig. S1) and time of day. To account for circular properties of time, time was transformed into radians (2 × time × π/24) and fitted as sine and cosine of radians (Bulla et al. 2016). All continuous variables were standardised by subtracting the mean and dividing by the standard deviation. The multicollinearity was small as correlations between predictors were  weak (r<XX, Fig. S1). To account for the non-independence of data points (Schielzeth & Forstmeier 2009; Barr et al. 2013), we attempted to fit random intercepts of year, weekday, genus, species, species at a given day and year, country, site, and species within a site, while fitting Period as random slope within site. Note that fitting Period as random slope at other random intercepts produces similar results (see Fig Sxx). We used this approach with a full dataset with all observations (n = 6369), as well as with conservative datasets, one with at least five observations per species and Period (i.e. at least five observations before and five during the COVID-19 shutdowns; n = 5260), the other with at least 10 observations per species and each Period (n = 5106). In other words, conservative datasets included species sampled in the both Periods. Albeit random structure of the full model accounts for the potential country specific effect (country accounted for xx% of variance, Table xx), depicted are also estimates from country specific models, with same predictors and random structure as the full model (excluding the random intercept of country and in case of Poland also site, as specific sites were not noted in Poland). Using meta.summaries function from rmeta R-package we used the country estimates, their standard deviation, and sample size per country to estimate the meta-analytical mean, which reflects the results based on the full mixed effect model. Also, albeit the response of humans to shutdowns were likely country specific and presence of humans in parks might have increased in some countries, decreased in others or did not change, the escape distances do not reflect such changes. In other words, the birds are either inflexible or the change in human behavior due to shutdowns was not strong enought, which might have been the case - see Fig. ZZ - decide what to show in this figure (I think 2020-2022 changes in Google Mobility for each country including the fits and refering to supplementary figure)
 #' 
 #+ line, fig.width=10, fig.height = 6
+g <- fread(here::here("Data/google_mobility.txt")) # fwrite(d, here::here('Data/data.txt'), sep ='\t')
+g[, Year := as.integer(substring(date, nchar(date) - 3, nchar(date)))]
+g[nchar(date) == 9, date := paste0("0", date)]
+g[, date_ := as.Date(date, format = "%d.%m.%Y")]
+g[, Day := yday(date_)]
+setnames(g, old = "country_region", new = "Country")
+
 g0 = ggplot(g, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
   geom_histogram(position = "dodge") +
   # scale_y_continuous(trans = 'log')+
   scale_fill_manual(values = c("orange", "skyblue", "black"), guide = 'none') +
   geom_vline(xintercept = 0, lty = 3, col = "red") +
   labs(subtitle = "Distribution") +
+  xlab( 'Google Mobility\n[% change in human presence]') +
+  ylab( 'Count') +
   facet_wrap(~Country, nrow = 5)
 
 g1 = ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
   geom_line() +
   facet_wrap(~Country, nrow = 5) +
-  labs(subtitle = "Raw data") +
+  labs(subtitle = "Raw data", xlab = 'Day\n ', y = 'Google Mobility\n[% change in human presence]') +
   # scale_y_continuous(trans = 'log')+
   coord_cartesian(ylim = c(-100, 300))+
   scale_color_manual(values = c("orange", "skyblue", "black"), guide = 'none')
@@ -788,19 +797,20 @@ g1 = ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor
 g2 = ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
      stat_smooth() +
      facet_wrap(~Country, nrow = 5) +
-     labs(subtitle = "Loess") +
+     labs(subtitle = "Loess", xlab = 'Day\n ') +
      # scale_y_continuous(trans = 'log')+
      coord_cartesian(ylim = c(-100, 300))+
-     scale_color_manual(values = c("orange", "skyblue", "black"))+
+     scale_color_manual(values = c("orange", "skyblue", "black"), name = 'Year')+
       theme(
          axis.text.y = element_blank(),
          axis.title.y = element_blank()
        )
   ggarrange(
     g0, g1, g2,
-    ncol = 3, widths = c(1, 1, 1.1)
+    ncol = 3, widths = c(0.9, 1, 1.1)
   )
-#'
+# ggsave("Outputs/Fig_ZZ.png", width = 8*2.54, height = 5*2.54, unit = "cm", dpi = 600)
+
 #' **Fig. ZZ | Changes in human presence (Google Mobility) in parks across year and between years.** Left plots represent the raw data, right plots LOESS smoothed curves. Google Mobility is absent for years before COVID-19. Nevertheless, 2022 was a year without shutdowns in the studied countries. Assuming that human activities levels might have been similar to pre-COVID-19 years (which may not be the case), human acctivity in the shutdown years (2020 and 2021) decreased. However, such decrease might be irrelevant for birds as the day-to-day variatioin in human presence seems larger than the general decrease in activity. For weekday specific plot see Fig. S_ZZ
 #'
 #+ gm_week_year, fig.width=8, fig.height = 6
@@ -1602,3 +1612,138 @@ ggsave("Outputs/Fig_Google_rev_width_CustomLocusZoom_v2.png", width = 8, height 
 
 #' **Fig. S_Google | The effect size with 95%CIs of Google Mobility on flight initiation distance (ln-transformed).**  The general model on all data was controlled for year, starting distance (ln-transformed; filled circles) or not (empty circles), flock size (ln-transformed), temperature (also a proxy for a day within the breeding season: r Pearson = 0.48; Fig. S1) and time of day. To account for circular properties of time, time was transformed into radians (2 × time × π/24) and fitted as sine and cosine of radians (Bulla et al. 2016). All continuous variables were standardised by subtracting the mean and dividing by the standard deviation. The multicollinearity was small as correlations between predictors were  weak (r<XX, Fig. S1). To account for the non-independence of data points (Schielzeth & Forstmeier 2009; Barr et al. 2013), we fitted random intercepts of genus, species, species at a given day and year, site, and species within a site and in the full model also random slope of Google Mobility within genus and country.  Note that in the full model, fitting Google Mobility as random slope at other random intercepts produces similar results (see Fig Sxx). We used this approach with a full dataset with all observations (n = xx), as well as with conservative datasets, one with at least five observations per species  , the other with at least 10 observations per species. Albeit random structure of the full model accounts for the potential country specific effect (country accounted for xx% of variance, Table xx), depicted are also estimates from country specific models, with same predictors and random structure as the full model (excluding the random slopes and also random intercepts of country and in case of Poland  site, as specific sites were not noted in Poland). Using meta.summaries function from rmeta R-package we used the country estimates, their standard deviation, and sample size per country to estimate the meta-analytical mean, which reflects the results based on the full mixed effect model. Importantly, the models test for within year changes in esccape distancces due to changes in human presence, i.e.  day to day changes in Google Mobility.  In other words, the models investigate whether birds flexibly adjust their fear response on a day to day basis (regardless of COVID-19 restrictions), a test different to the one intended in this study. The effect sizes are small, mostly close to zero, and hihgly uncertain. 
 #'
+#' 
+#+ genus, fig.width=8, fig.height = 8
+# Figure 2, S3, S5
+# prepare data
+dxx <- d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species)]
+# length(dxx[, unique(paste(sp_loc, Covid))])
+m <- lm(log(FID) ~ log(SD), dxx)
+dxx[, resid_FID := resid(m)]
+a <- dxx[, .(mean(resid_FID), sd(resid_FID), mean(FID), .N), by = .(Country, IDLocality, genus, Species, sp_loc, Covid)]
+setnames(a, old = c("V1", "V2", "V3"), new = c("resid_FID_avg", "SD", "FID_avg"))
+a[is.na(SD), SD := 0]
+
+aw <- reshape(a, idvar = c("Country", "IDLocality", "genus", "Species", "sp_loc"), timevar = "Covid", direction = "wide")
+aw[, Species := gsub("[_]", " ", Species)]
+aw <- merge(aw, t, all.x = TRUE)
+table(aw$Family)
+
+x <- aw[, .N, by = Species]
+x[order(Species)]
+aw[, genus2 := genus]
+aw[Species %in% x[N %in% c(1, 2), Species], genus2 := "other"]
+
+aw[genus2 == "Phoenicurus", unique(Species)]
+
+ph[genus2 == "Motacilla" | uid %in% c("67a9ecfd-58ba-44a4-9986-243b6e610419"), uid := "cf522e02-35cc-44f5-841c-0e642987c2e4"]
+ph[genus2 == "Sylvia", uid := "67a9ecfd-58ba-44a4-9986-243b6e610419"]
+
+ph[, size := 0.2]
+ph[genus2 %in% c("Anas", "Columba", "Dendrocopos", "Sturnus"), size := c(0.25, 0.25, 0.15, 0.1)]
+ph[, FID_avg.0 := 1.5]
+ph[, FID_avg.1 := 20]
+ph[genus2 %in% c("Anas", "Columba"), FID_avg.0 := c(1.7, 1.7)]
+
+ph[, resid_FID_avg.0 := -1.7]
+ph[, resid_FID_avg.1 := 0.7]
+ph[genus2 %in% c("Anas", "Columba"), resid_FID_avg.0 := c(-1.6, -1.6)]
+
+ph[, genus2 := factor(genus2, levels = c("Anas", "Larus", "Columba", "Dendrocopos", "Picus", "Motacilla", "Erithacus", "Phoenicurus", "Turdus", "Sylvia", "Parus", "Sitta", "Pica", "Garrulus", "Corvus", "Sturnus", "Passer", "Fringilla", "other"))]
+
+aw[, genus2 := factor(genus2, levels = c("Anas", "Larus", "Columba", "Dendrocopos", "Picus", "Motacilla", "Erithacus", "Phoenicurus", "Turdus", "Sylvia", "Parus", "Sitta", "Pica", "Garrulus", "Corvus", "Sturnus", "Passer", "Fringilla", "other"))]
+
+aw[, genus2 := factor(genus2, levels = c("Anas", "Larus", "Columba", "Dendrocopos", "Picus", "Motacilla", "Erithacus", "Phoenicurus", "Turdus", "Sylvia", "Parus", "Sitta", "Pica", "Garrulus", "Corvus", "Sturnus", "Passer", "Fringilla", "other"))]
+
+# Fig 2 & left panel of S5- plot from files
+anas <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Anas.png")))
+columba <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Columba.png")))
+Dendrocopos <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Dendrocopos.png")))
+Larus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Larus_flip.png")))
+Picus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Picus.png")))
+Motacilla <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Motacilla.png")))
+Erithacus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Erithacus.png")))
+Phoenicurus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Phoenicurus.png")))
+Turdus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Turdus.png")))
+Sylvia <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Sylvia.png")))
+Parus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Parus_flip.png")))
+Sitta <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Sitta.png")))
+Pica <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Pica.png")))
+Garrulus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Garrulus.png")))
+Corvus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Corvus.png")))
+Sturnus <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Sturnus.png")))
+Passer <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Passer_flip.png")))
+Fringilla <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/Fringilla.png")))
+other <- rasterGrob(change_col("#CCCCCC", readPNG("Data/Pics/other_flip.png")))
+
+ann_text <- data.frame(
+  FID_avg.0 = 8, FID_avg.1 = 10, lab = "Text",
+  genus2 = factor("Anas", levels = c("Anas", "Larus", "Columba", "Dendrocopos", "Picus", "Motacilla", "Erithacus", "Phoenicurus", "Turdus", "Sylvia", "Parus", "Sitta", "Pica", "Garrulus", "Corvus", "Sturnus", "Passer", "Fringilla", "other"))
+)
+ann_text2 <- data.frame(
+  FID_avg.0 = 6, FID_avg.1 = 3, lab = "Text",
+  genus2 = factor("Larus", levels = c("Anas", "Larus", "Columba", "Dendrocopos", "Picus", "Motacilla", "Erithacus", "Phoenicurus", "Turdus", "Sylvia", "Parus", "Sitta", "Pica", "Garrulus", "Corvus", "Sturnus", "Passer", "Fringilla", "other"))
+)
+
+aw2 <- data.frame(FID_avg.0 = c(11.25, 11.25), FID_avg.1 = c(3.5, 5.8), genus2 = factor("Larus", levels = c("Anas", "Larus", "Columba", "Dendrocopos", "Picus", "Motacilla", "Erithacus", "Phoenicurus", "Turdus", "Sylvia", "Parus", "Sitta", "Pica", "Garrulus", "Corvus", "Sturnus", "Passer", "Fringilla", "other")))
+
+col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
+col3__ <- col3_[3:7]
+
+aw[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia")))]
+
+g <-
+  ggplot(aw, aes(x = FID_avg.0, y = FID_avg.1)) +
+  # geom_errorbar(aes(ymin = FID_avg.1-SD.1, ymax = FID_avg.1+SD.1, col = Country), width = 0) +
+  # geom_errorbar(aes(xmin = FID_avg.0-SD.0, xmax = FID_avg.0+SD.0, col = Country), width = 0) +
+  # geom_point(pch = 21, alpha = 0.7, aes(col = Country)) +
+  annotation_custom2(anas, data = ph[genus2 == "Anas"], xmin = 0.05, xmax = 0.5, ymax = 2.6) +
+  annotation_custom2(Larus, data = ph[genus2 == "Larus"], xmin = 0.05, xmax = 0.5, ymax = 2.6) +
+  annotation_custom2(columba, data = ph[genus2 == "Columba"], xmin = 0.05, xmax = 0.4, ymax = 2.7) +
+  annotation_custom2(Dendrocopos, data = ph[genus2 == "Dendrocopos"], xmin = 0.05, xmax = 0.25, ymax = 2.6) +
+  annotation_custom2(Picus, data = ph[genus2 == "Picus"], xmin = 0.05, xmax = 0.4, ymax = 2.7) +
+  annotation_custom2(Motacilla, data = ph[genus2 == "Motacilla"], xmin = 0.05, xmax = 0.5, ymax = 2.7) +
+  annotation_custom2(Erithacus, data = ph[genus2 == "Erithacus"], xmin = 0.05, xmax = 0.35, ymax = 2.7) +
+  annotation_custom2(Phoenicurus, data = ph[genus2 == "Phoenicurus"], xmin = 0.05, xmax = 0.35, ymax = 2.7) +
+  annotation_custom2(Turdus, data = ph[genus2 == "Turdus"], xmin = 0.05, xmax = 0.5, ymax = 2.7) +
+  annotation_custom2(Sylvia, data = ph[genus2 == "Sylvia"], xmin = 0.05, xmax = 0.5, ymax = 2.7) +
+  annotation_custom2(Parus, data = ph[genus2 == "Parus"], xmin = 0.05, xmax = 0.42, ymax = 2.7) +
+  annotation_custom2(Sitta, data = ph[genus2 == "Sitta"], xmin = 0.05, xmax = 0.5, ymax = 2.7) +
+  annotation_custom2(Pica, data = ph[genus2 == "Pica"], xmin = 0.05, xmax = 0.5, ymax = 2.5) +
+  annotation_custom2(Garrulus, data = ph[genus2 == "Garrulus"], xmin = 0.05, xmax = 0.6, ymax = 2.7) +
+  annotation_custom2(Corvus, data = ph[genus2 == "Corvus"], xmin = 0.05, xmax = 0.4, ymax = 2.55) +
+  annotation_custom2(Sturnus, data = ph[genus2 == "Sturnus"], xmin = 0.05, xmax = 0.24, ymax = 2.65) +
+  annotation_custom2(Passer, data = ph[genus2 == "Passer"], xmin = 0.05, xmax = 0.36, ymax = 2.65) +
+  annotation_custom2(Fringilla, data = ph[genus2 == "Fringilla"], xmin = 0.05, xmax = 0.5, ymax = 2.7) +
+  annotation_custom2(other, data = ph[genus2 == "other"], xmin = 0.05, xmax = 0.45, ymax = 2.4) +
+  geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = 'grey20', alpha =0.8)+#col = "white") +
+  # ggtitle ("Sim based")+
+  geom_abline(intercept = 0, slope = 1, lty = 3, col = "grey80") +
+  geom_line(data = aw2, col = "grey80", lwd = 0.25) +
+  geom_text(data = ann_text, label = "No difference", col = "grey80", angle = 45, size = 2) +
+  geom_text(data = ann_text2, label = "Species mean / site", col = "grey60", size = 2, ) +
+  facet_wrap(~genus2) +
+  # geom_phylopic(data = o, aes(image = uid),  color = "grey80", size = o$size) + # ,
+  #scale_fill_viridis(discrete = TRUE, guide = guide_legend(reverse = FALSE)) +
+  scale_fill_manual(values = col3__,guide = guide_legend(reverse = TRUE)) +
+  scale_x_continuous("Before COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
+  scale_y_continuous("During COVID-19 shutdown - flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
+  # labs(title = "Species means per sampling location")+
+  theme_MB +
+  theme(
+    plot.title = element_text(size = 7),
+    strip.background = element_blank(),
+    # panel.spacing = unit(1, "mm"),
+    legend.position = c(1, 0.025),
+    legend.justification = c(1, -0.05)
+  )
+gg <- ggplotGrob(g) # gg$layout$name
+ggx <- gtable_filter_remove(gg,
+  name = paste0("axis-b-", c(2, 4), "-4"),
+  trim = FALSE
+)
+# grid.draw(ggx)
+# ggsave('Outputs/Fig_2_width-114mm.png',ggx, width=4.5,height=4.5,dpi=600) # 11.43cm # with label on top
+ggsave("Outputs/Fig_2_width-122mm_col_grey.png", ggx, width = 4.8, height = 4.5, dpi = 600) # 12.2cm # with label inside
+
+#

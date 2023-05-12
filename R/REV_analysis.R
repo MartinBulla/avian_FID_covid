@@ -451,7 +451,53 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
 
     g[, weekday := weekdays(date_)]
 
-#' ## Title: Urban birds' flight responses were largely unaffected by the COVID-19 shutdowns
+#' #### Title: Urban birds' flight responses were largely unaffected by the COVID-19 shutdowns
+
+#' ## disstribution of FID ~ year
+#+ fid_yr, fig.width=8, fig.height = 6
+px = pp[N_during > 4 & N_before > 4]
+dxx = d[paste(IDLocality, Species) %in% paste(px$IDLocality, px$Species)]
+# table(dxx$IDLocality, dxx$Year)
+length(unique(px$IDLocality))
+length(unique(px$Species))
+sum(px$N_during) + sum(px$N_before)
+
+dxx[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia")))]
+dxx[, sp_C_loc2 := paste(gsub("[_]", " ", Species), Country, IDLocality, sep = "\n")]
+dxx[, genus := sub("_.*", "", Species)]
+dxx[Covid == 0, period := "before COVID-19"]
+dxx[Covid == 1, period := "during COVID-19"]
+
+col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
+col3__ <- col3_[3:7]
+g =
+  ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country, fill = period)) +
+  geom_boxplot(outlier.size = 0.5) +
+  facet_wrap(~sp_C_loc2) +
+  scale_y_continuous("Flight initiation distance [m]", trans = "log10") +
+  scale_x_discrete("Year", guide = guide_axis(angle = 45)) +
+  #scale_color_continuous() +
+  scale_colour_manual(values = col3__, guide = guide_legend(reverse = TRUE))+
+  scale_fill_manual(values = c("white", "lightgrey")) +
+  theme_MB +
+  theme(
+    plot.title = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 5, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
+    # panel.spacing = unit(1, "mm"),
+    legend.position = "none", # c(1, 0.01),
+    legend.justification = c(1, 0),
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(-0.78, "cm")
+    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+    legend.spacing.y = unit(-0.9, "cm"),
+    axis.text.x = element_text(colour = "grey30", size = 6),
+    axis.text.y = element_text(colour = "grey30", size = 6)
+  )
+
+ggsave(here::here("Outputs/Fig_2_rev_v2.png"), g, width = 18, height = 16, units = "cm")
+
+#' **Figure 2 | Temporal and variation in the flight initiation distance across species.** Each heading denotes the scientific name of the species, country and unique site ID within each country (city). Boxplots outline colour highlights country, fill colour indicates Period (white: pre-COVID-19, grey: during COVID-19). Boxplots depict median (horizontal line inside the box), the 25th and 75th percentiles (box), the 25th and 75th percentiles ±1.5 times the interquartile range or the minimum/maximum value, whichever is smaller (bars), and the outliers (dots). Included are only species-site combinations with ≥5 observations per period. Note the log-scale in y-axis and the lack of consistent shutdown effects within and between species as well as within and between the countries.
 
 #' ## prediction for FID ~ Period
 # predictions
@@ -939,7 +985,7 @@ ggplot(sp, aes(x = StringencyIndex, y = pred, col = Country)) +
   geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
   geom_jitter(aes(y = parks_percent_change_from_baseline, fill = Country), data = s, pch = 21, col = 'grey20', width = 0.7, height = 3, alpha = 0.5) +
   geom_line(lwd = 1) +
-  labs(subtitle = "Mixed model per country predicitons", y = "Google Mobiligy\n[% change from baseline]", x = "Stringency Index") +
+  labs(subtitle = "Mixed model per country predicitons", y = "Google Mobility\n[% change from baseline]", x = "Stringency index") +
    # scale_color_locuszoom()+
    # scale_fill_locuszoom(guide = "none")
   scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
@@ -978,7 +1024,55 @@ ggplot(sp, aes(x = StringencyIndex, y = pred, col = Country)) +
     axis.title = element_text(size = 7)
   )
 
-#ggsave("Outputs/Fig_G-S_rev_width_CustomLocusZoom_year-weekday.png", width = 7, height = 6, unit = "cm", dpi = 600)
+# for export
+p <-
+  ggplot(sp, aes(x = StringencyIndex, y = pred, col = Country)) +
+  geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
+  geom_jitter(aes(y = parks_percent_change_from_baseline, fill = Country), data = s, pch = 21, col = "grey20", width = 0.7, height = 3, alpha = 0.5) +
+  geom_line(lwd = 1) +
+  labs( y = "Google Mobility\n[% change from baseline]", x = "Stringency index") +
+  # scale_color_locuszoom()+
+  # scale_fill_locuszoom(guide = "none")
+  scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
+  scale_y_continuous(breaks = round(seq(-100, 200, by = 50), 1)) +
+  # scale_y_continuous(breaks = round(seq(-100, 175, by = 25), 1)) +
+  scale_colour_manual(
+    values = col3__, guide = guide_legend(reverse = TRUE, override.aes = list(size = 0)),
+    labels = paste(
+      "<span style='color:",
+      col3__,
+      "'>",
+      levels(sp$Country),
+      "</span>"
+    )
+  ) +
+  scale_fill_manual(values = col3__, guide = "none") +
+  theme_bw() +
+  theme(
+    legend.text = element_markdown(size = 6),
+    # legend.position = "right",
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(0.1, 'cm'),
+    legend.key.height = unit(0.5, "line"),
+    legend.key.size = unit(0, "line"),
+    legend.margin = margin(0, 0, 0, 0),
+    legend.box.margin = margin(-10, 1, -10, -10),
+    # legend.position=c(0.5,1.6),
+    plot.title = element_text(color = "grey", size = 7),
+    plot.subtitle = element_text(color = "grey60", size = 6),
+    plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 0.5, unit = "pt"),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = ax_lines, size = 0.25),
+    axis.ticks = element_line(colour = ax_lines, size = 0.25),
+    # axis.text.x = element_text()
+    axis.ticks.length = unit(1, "pt"),
+    axis.text = element_text(, size = 6),
+    axis.title = element_text(size = 7)
+  )
+
+ggsave("Outputs/Fig_G-S_rev_width_CustomLocusZoom_year-weekday_v2.png", p, width = 8, height = 6, unit = "cm", dpi = 600)
 
 #' **Fig. 2 | Relationship betweeen Google Mobility and Stringency Index.** Lines with shaded areas represent predicted relationships from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and Stringency Index as a random slope. Dots represent raw data, jittered to increase visibility. Colors indicate country. The predictions reveal generally negative and week relationship between Gooble Mobility (human activity) in parks and seveareness of governmental restrictions. 
 
@@ -1007,3 +1101,4 @@ ggplot(s, aes(y = StringencyIndex, x = weekday)) +
 #+ str_weekday_2, fig.width=2.5, fig.height = 3.5
 ggplot(s, aes(y = StringencyIndex, x = weekday, fill = year_)) +
     geom_boxplot()
+    
