@@ -381,6 +381,11 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
     d =  merge(d, x[, .(IDObs, date_, weekday)], by = "IDObs")
     #d[, date_ := as.Date(Day, origin = paste0(Year, '-01-01'))]
 
+    # perch height
+    y = fread(here::here("Data/perch_height.txt"))
+    ggplot(y, aes(x = Height)) + geom_histogram()
+    nrow(y[Height ==0])/nrow(y)
+    
     # adjust correct assignment of season (Year) for Australia
     d[Country == 'Australia' & Year == 2020 & Covid == 0, Year:=2019]
     d[Country == 'Australia' & Year == 2021 & Day>139, Year:=2020]
