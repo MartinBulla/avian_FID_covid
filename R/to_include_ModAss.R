@@ -1,0 +1,21 @@
+m_ass(name = "Table S1 - 1a", mo = m1a, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), categ = "Covid", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S1 - 1b", mo = m1b, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), categ = "Covid", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S1 - 1c", mo = m1c, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), categ = "Covid", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S1 - 1d", mo = m1d, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), categ = "Covid", outdir = "Outputs/modelAss/")
+
+     m_ass(name = "Table S1 - 2a", mo = m2a, dat = d[Species %in% dd[N_during > 4 & N_before > 4, Species]], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), categ = "Covid", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S1 - 2b", mo = m2b, dat = d[Species %in% dd[N_during > 4 & N_before > 4, Species]], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), categ = "Covid", outdir = "Outputs/modelAss/")
+
+     m_ass(name = "Table S1 - 3a", mo = m3a, dat = d[Species %in% dd[N_during > 9 & N_before > 9, Species]], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), categ = "Covid", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S1 - 3b", mo = m3b, dat = d[Species %in% dd[N_during > 9 & N_before > 9, Species]], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), categ = "Covid", outdir = "Outputs/modelAss/")
+
+     m_ass(name = "Table S2 - 1a", mo = m01a, dat = s, fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S2 - 1b", mo = m01b, dat = s, fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S2 - 1c", mo = m01c, dat = s, fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")
+
+     m_ass(name = "Table S2 - 2a", mo = m02a, dat = s[Nsp > 4], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S2 - 2b", mo = m02b, dat = s[Nsp > 4], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S2 - 2c", mo = m02c, dat = s[Nsp > 4], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S2 - 3a", mo = m03a, dat = s[Nsp > 9], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S2 - 3b", mo = m03b, dat = s[Nsp > 9], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")
+     m_ass(name = "Table S2 - 3c", mo = m03c, dat = s[Nsp > 9], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), categ = "Year", outdir = "Outputs/modelAss/")

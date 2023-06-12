@@ -1,0 +1,151 @@
+model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
+Table S3 - 1a,Googl Mobility,Gaussian,3644,fixed,(Intercept),0.025,-0.094,0.147
+"","","","",fixed,scale(Year),0.018,-0.022,0.059
+"","","","",fixed,scale(log(SD)),0.499,0.467,0.53
+"","","","",fixed,scale(log(FlockSize)),-0.002,-0.029,0.026
+"","","","",fixed,scale(log(BodyMass)),0.023,-0.042,0.093
+"","","","",fixed,scale(sin(rad)),-0.01,-0.051,0.032
+"","","","",fixed,scale(cos(rad)),0.011,-0.023,0.044
+"","","","",fixed,scale(Temp),0.021,-0.016,0.059
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.101,-0.229,0.028
+"","","","",random %,sp_day_year (Intercept),6%,5%,6%
+"","","","",random %,sp_loc (Intercept),5%,4%,5%
+"","","","",random %,Species (Intercept),7%,7%,8%
+"","","","",random %,IDLocality (Intercept),9%,8%,10%
+"","","","",random %,genus (Intercept),3%,3%,4%
+"","","","",random %,weekday (Intercept),0%,0%,0%
+"","","","",random %,Country (Intercept),1%,-3%,4%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),1%,-3%,4%
+"","","","",random %,Residual,68%,61%,78%
+Table S3 - 1b,Googl Mobility,Gaussian,3644,fixed,(Intercept),0.024,-0.098,0.142
+"","","","",fixed,scale(Year),0.018,-0.023,0.059
+"","","","",fixed,scale(log(SD)),0.499,0.467,0.53
+"","","","",fixed,scale(log(FlockSize)),-0.002,-0.026,0.024
+"","","","",fixed,scale(log(BodyMass)),0.027,-0.04,0.092
+"","","","",fixed,scale(sin(rad)),-0.009,-0.05,0.031
+"","","","",fixed,scale(cos(rad)),0.01,-0.024,0.044
+"","","","",fixed,scale(Temp),0.022,-0.017,0.061
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.102,-0.229,0.032
+"","","","",random %,sp_day_year (Intercept),6%,5%,6%
+"","","","",random %,sp_loc (Intercept),5%,4%,5%
+"","","","",random %,Species (Intercept),7%,6%,7%
+"","","","",random %,IDLocality (Intercept),9%,9%,9%
+"","","","",random %,genus (Intercept),0%,-1%,4%
+"","","","",random %,genus scale(parks_percent_change_from_baseline),0%,-1%,4%
+"","","","",random %,weekday (Intercept),0%,0%,0%
+"","","","",random %,Country (Intercept),1%,-4%,4%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),1%,-4%,4%
+"","","","",random %,Residual,71%,59%,81%
+Table S3 - 1c,Googl Mobility,Gaussian,3644,fixed,(Intercept),-0.057,-0.141,0.026
+"","","","",fixed,scale(Year),0.013,-0.026,0.05
+"","","","",fixed,scale(log(SD)),0.558,0.527,0.591
+"","","","",fixed,scale(log(FlockSize)),-0.022,-0.049,0.004
+"","","","",fixed,scale(log(BodyMass)),-0.023,-0.052,0.006
+"","","","",fixed,scale(sin(rad)),-0.033,-0.073,0.007
+"","","","",fixed,scale(cos(rad)),0.02,-0.015,0.055
+"","","","",fixed,scale(Temp),0.031,-0.006,0.069
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.086,-0.203,0.036
+"","","","",random %,IDLocality (Intercept),11%,10%,12%
+"","","","",random %,Country (Intercept),0%,-1%,2%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),0%,-1%,2%
+"","","","",random %,Residual,88%,83%,92%
+Table S3 - 2a,Googl Mobility,Gaussian,3545,fixed,(Intercept),-0.029,-0.166,0.106
+"","","","",fixed,scale(Year),0.019,-0.024,0.061
+"","","","",fixed,scale(log(SD)),0.491,0.458,0.523
+"","","","",fixed,scale(log(FlockSize)),0.004,-0.023,0.031
+"","","","",fixed,scale(log(BodyMass)),-0.02,-0.095,0.053
+"","","","",fixed,scale(sin(rad)),-0.01,-0.05,0.032
+"","","","",fixed,scale(cos(rad)),0.009,-0.026,0.044
+"","","","",fixed,scale(Temp),0.02,-0.018,0.06
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.098,-0.23,0.032
+"","","","",random %,sp_day_year (Intercept),6%,5%,6%
+"","","","",random %,sp_loc (Intercept),4%,4%,5%
+"","","","",random %,IDLocality (Intercept),9%,8%,9%
+"","","","",random %,Species (Intercept),10%,9%,11%
+"","","","",random %,genus (Intercept),2%,1%,2%
+"","","","",random %,weekday (Intercept),0%,0%,0%
+"","","","",random %,Country (Intercept),0%,-5%,5%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),0%,-5%,5%
+"","","","",random %,Residual,69%,59%,80%
+Table S3 - 2b,Googl Mobility,Gaussian,3545,fixed,(Intercept),-0.036,-0.169,0.093
+"","","","",fixed,scale(Year),0.019,-0.025,0.062
+"","","","",fixed,scale(log(SD)),0.49,0.457,0.521
+"","","","",fixed,scale(log(FlockSize)),0.005,-0.023,0.03
+"","","","",fixed,scale(log(BodyMass)),-0.032,-0.1,0.038
+"","","","",fixed,scale(sin(rad)),-0.011,-0.052,0.033
+"","","","",fixed,scale(cos(rad)),0.009,-0.026,0.043
+"","","","",fixed,scale(Temp),0.02,-0.018,0.06
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.093,-0.227,0.04
+"","","","",random %,sp_day_year (Intercept),5%,5%,6%
+"","","","",random %,sp_loc (Intercept),4%,4%,5%
+"","","","",random %,IDLocality (Intercept),8%,8%,8%
+"","","","",random %,Species (Intercept),16%,15%,18%
+"","","","",random %,genus (Intercept),0%,0%,0%
+"","","","",random %,genus scale(parks_percent_change_from_baseline),0%,0%,0%
+"","","","",random %,weekday (Intercept),0%,0%,0%
+"","","","",random %,Country (Intercept),0%,-5%,4%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),0%,-5%,4%
+"","","","",random %,Residual,66%,56%,77%
+Table S3 - 2c,Googl Mobility,Gaussian,3545,fixed,(Intercept),-0.057,-0.142,0.029
+"","","","",fixed,scale(Year),0.014,-0.026,0.055
+"","","","",fixed,scale(log(SD)),0.551,0.519,0.583
+"","","","",fixed,scale(log(FlockSize)),-0.017,-0.044,0.01
+"","","","",fixed,scale(log(BodyMass)),-0.026,-0.056,0.003
+"","","","",fixed,scale(sin(rad)),-0.033,-0.077,0.009
+"","","","",fixed,scale(cos(rad)),0.017,-0.018,0.053
+"","","","",fixed,scale(Temp),0.03,-0.007,0.068
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.083,-0.207,0.039
+"","","","",random %,IDLocality (Intercept),11%,9%,12%
+"","","","",random %,Country (Intercept),0%,-1%,2%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),0%,-1%,2%
+"","","","",random %,Residual,88%,84%,93%
+Table S3 - 3a,Googl Mobility,Gaussian,3399,fixed,(Intercept),-0.019,-0.174,0.134
+"","","","",fixed,scale(Year),0.028,-0.017,0.071
+"","","","",fixed,scale(log(SD)),0.487,0.454,0.52
+"","","","",fixed,scale(log(FlockSize)),0.003,-0.025,0.029
+"","","","",fixed,scale(log(BodyMass)),0.025,-0.059,0.109
+"","","","",fixed,scale(sin(rad)),0.001,-0.042,0.043
+"","","","",fixed,scale(cos(rad)),0.007,-0.027,0.043
+"","","","",fixed,scale(Temp),0.022,-0.017,0.061
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.11,-0.238,0.017
+"","","","",random %,sp_day_year (Intercept),6%,5%,6%
+"","","","",random %,sp_loc (Intercept),4%,4%,5%
+"","","","",random %,IDLocality (Intercept),9%,8%,9%
+"","","","",random %,Species (Intercept),7%,6%,9%
+"","","","",random %,genus (Intercept),3%,3%,4%
+"","","","",random %,weekday (Intercept),0%,0%,0%
+"","","","",random %,Country (Intercept),0%,-5%,4%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),0%,-5%,4%
+"","","","",random %,Residual,70%,60%,81%
+Table S3 - 3b,Googl Mobility,Gaussian,3399,fixed,(Intercept),-0.01,-0.137,0.114
+"","","","",fixed,scale(Year),0.031,-0.011,0.073
+"","","","",fixed,scale(log(SD)),0.486,0.454,0.52
+"","","","",fixed,scale(log(FlockSize)),0.003,-0.024,0.029
+"","","","",fixed,scale(log(BodyMass)),0.037,-0.047,0.119
+"","","","",fixed,scale(sin(rad)),-0.002,-0.043,0.039
+"","","","",fixed,scale(cos(rad)),0.008,-0.027,0.042
+"","","","",fixed,scale(Temp),0.024,-0.014,0.062
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.126,-0.255,0.005
+"","","","",random %,sp_day_year (Intercept),6%,5%,6%
+"","","","",random %,sp_loc (Intercept),4%,4%,5%
+"","","","",random %,IDLocality (Intercept),9%,9%,10%
+"","","","",random %,Species (Intercept),8%,7%,9%
+"","","","",random %,genus (Intercept),0%,-1%,4%
+"","","","",random %,genus scale(parks_percent_change_from_baseline),0%,-1%,4%
+"","","","",random %,weekday (Intercept),0%,0%,0%
+"","","","",random %,Country (Intercept),1%,-2%,4%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),1%,-2%,4%
+"","","","",random %,Residual,69%,58%,79%
+Table S3 - 3c,Googl Mobility,Gaussian,3399,fixed,(Intercept),-0.068,-0.155,0.019
+"","","","",fixed,scale(Year),0.022,-0.02,0.063
+"","","","",fixed,scale(log(SD)),0.549,0.516,0.582
+"","","","",fixed,scale(log(FlockSize)),-0.019,-0.047,0.009
+"","","","",fixed,scale(log(BodyMass)),-0.018,-0.048,0.013
+"","","","",fixed,scale(sin(rad)),-0.024,-0.064,0.019
+"","","","",fixed,scale(cos(rad)),0.015,-0.02,0.051
+"","","","",fixed,scale(Temp),0.03,-0.011,0.07
+"","","","",fixed,scale(parks_percent_change_from_baseline),-0.09,-0.203,0.026
+"","","","",random %,IDLocality (Intercept),11%,10%,13%
+"","","","",random %,Country (Intercept),0%,0%,2%
+"","","","",random %,Country scale(parks_percent_change_from_baseline),0%,0%,2%
+"","","","",random %,Residual,88%,83%,91%

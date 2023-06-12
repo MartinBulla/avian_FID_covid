@@ -407,6 +407,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE)
     d[, flock_ln := log(FlockSize)]
     d[, weekday := weekdays(date_)]
     #d[Country == 'Australia', Day_:= abs(Day - 189)]
+    ggplot(d, aes())
+    table(d$weekday)
     
     d1 = d[Covid == 1, .N, by = Species]
     d2 = d[Covid == 0, .N, by = Species]
@@ -742,6 +744,10 @@ oo[, N:=as.numeric(sub('.*N = ', '', model))]
     
 oo[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(metanalytical)", "All\n(mixed model)")))]
 
+# prepare for adding N
+oo[control_for_starting_distance == 'no' | is.na(N), N :=""]
+oo[, n_pos:=1.1]
+
 width_ <- .5 # spacing between error bars
 
 #col_ <- c(brewer.pal(n = 12, name = "Paired"), "grey30", "grey80")
@@ -768,13 +774,13 @@ ggplot(oo, aes(x = estimate, y = Country, col = Country, shape = control_for_sta
     # scale_fill_viridis(discrete=TRUE, begin=0, end = 0.5) +
     # geom_text( aes(x = n_pos,label = N), vjust = 0, size = 1.75, position = ggstance::position_dodgev(width_))+ # 3 positions for 3 bars
     # annotate("text", x=log10(3), y=85, label= "Used", col = "grey30", size = 2.5)+
-
+    geom_text( aes(x = n_pos,label = N), vjust = 1, size = 1.75, position = ggstance::position_dodgev(width_))+ #
     scale_shape_manual(name = "Controlled for\nstarting distance", guide = guide_legend(reverse = TRUE), values = c(21, 19)) +
     #scale_color_jama(guide = "none")+ #, palette = 'light'
     scale_color_manual(guide = "none", values = col_) + #guide_legend(reverse = TRUE)
     scale_x_continuous(breaks = round(seq(-0.6, 1.2, by = 0.3), 1)) +
     ylab("") +
-    xlab("Standardized effect size of period\n[on flight initiation distance]") +
+    xlab("Standardized effect size of Period\n[on flight initiation distance]") +
     # coord_cartesian(xlim = c(-.15, .15)) +
     # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
     theme_bw() +
@@ -802,7 +808,7 @@ ggplot(oo, aes(x = estimate, y = Country, col = Country, shape = control_for_sta
         axis.title = element_text(size = 7)
     )
 
-#ggsave("Outputs/Fig_rev_width_CustomLocusZoom_v2.png", width = 8, height = 6, unit = "cm", dpi = 600)
+#ggsave("Outputs/Fig_rev_width_CustomLocusZoom_v3_n.png", width = 8, height = 6.5, unit = "cm", dpi = 600)
 #ggsave("Outputs/Fig_rev_width_CustomJAMAv1.png", width = 8, height = 6, unit = "cm", dpi = 600)
 #ggsave("Outputs/Fig_rev_width_Okabe_v2.png", width = 8, height = 6, unit = "cm", dpi = 600)
 #ggsave("Outputs/Fig_rev_width_UChicago_v3.png", width = 8, height = 6, unit = "cm", dpi = 600)
