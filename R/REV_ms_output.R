@@ -826,7 +826,7 @@ g2 = ggplot(g_, aes(x = Day, y = parks_percent_change_from_baseline, col = facto
 
 #' **Fig. ZZ | Changes in human presence (Google Mobility) in parks across year and between years.** Left plots represent the raw data, right plots LOESS smoothed curves. Google Mobility is absent for years before COVID-19. Nevertheless, 2022 was a year without shutdowns in the studied countries. Assuming that human activities levels might have been similar to pre-COVID-19 years (which may not be the case), human acctivity in the shutdown years (2020 and 2021) decreased. However, such decrease might be irrelevant for birds as the day-to-day variatioin in human presence seems larger than the general decrease in activity. For weekday specific plot see Fig. S_ZZ
 #'
-#+ gm_week_year, fig.width=8, fig.height = 6
+#+ gm_week_year, fig.width=8, fig.height=6
 g[, weekday := factor(weekday, levels = (c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))]
 
 ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
@@ -836,7 +836,7 @@ ggplot(g, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year
     scale_color_manual(values = c("orange", "skyblue", "black"))
 #' **Fig. S_ZZ | Changes in human presence (Google Mobility) in parks across weekdays and years.** Depicted are  raw data.
 #' ##  Google Mobility vs Stringency
-#+ gsfig_mod, fig.width=3, fig.height = 2.5
+#+ gsfig_pred, fig.width=4, fig.height = 3.5
 # Predictions 
 l = list()
 ll = list()
@@ -962,7 +962,6 @@ out_g_s = data.table(do.call(rbind, ll))
 sp = data.table(do.call(rbind,l))
 sp[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia")))]
 
-#+ gsfig_pred, fig.width=4, fig.height = 3.5
 col3_ = c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
 col3__ = col3_[3:7]
 #p = 
