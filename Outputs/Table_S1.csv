@@ -1,153 +1,160 @@
-model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r,R2_mar,R2_con
-Table S1 - 1a,Period,Gaussian,6369,fixed,(Intercept),0.066,-0.179,0.31,"",""
-"","","","",fixed,scale(log(SD)),0.478,0.454,0.502,"",""
-"","","","",fixed,scale(log(FlockSize)),-0.007,-0.026,0.012,"",""
-"","","","",fixed,scale(log(BodyMass)),0.046,-0.02,0.115,"",""
-"","","","",fixed,scale(sin(rad)),0.019,-0.008,0.046,"",""
-"","","","",fixed,scale(cos(rad)),0.029,0.005,0.05,"",""
-"","","","",fixed,scale(Temp),-0.001,-0.03,0.028,"",""
-"","","","",fixed,scale(Covid),-0.053,-0.235,0.12,"",""
-"","","","",random %,sp_day_year (Intercept),12%,7%,15%,"",""
-"","","","",random %,sp_loc (Intercept),0%,-1%,1%,"",""
-"","","","",random %,sp_loc scale(Covid),0%,-1%,1%,"",""
-"","","","",random %,IDLocality (Intercept),2%,0%,4%,"",""
-"","","","",random %,IDLocality scale(Covid),2%,0%,4%,"",""
-"","","","",random %,Species (Intercept),0%,-1%,7%,"",""
-"","","","",random %,Species scale(Covid),0%,-1%,7%,"",""
-"","","","",random %,genus (Intercept),0%,0%,5%,"",""
-"","","","",random %,genus scale(Covid),0%,0%,5%,"",""
-"","","","",random %,Country (Intercept),1%,-7%,8%,"",""
-"","","","",random %,Country scale(Covid),1%,-7%,8%,"",""
-"","","","",random %,Year (Intercept),4%,2%,4%,"",""
-"","","","",random %,Residual,79%,40%,99%,"",""
-Table S1 - 1b,Period,Gaussian,6369,fixed,(Intercept),0.018,-0.138,0.176,"",""
-"","","","",fixed,scale(log(SD)),0.493,0.469,0.517,"",""
-"","","","",fixed,scale(log(FlockSize)),-0.018,-0.037,0,"",""
-"","","","",fixed,scale(log(BodyMass)),0.024,-0.006,0.055,"",""
-"","","","",fixed,scale(sin(rad)),0.011,-0.017,0.04,"",""
-"","","","",fixed,scale(cos(rad)),0.028,0.004,0.05,"",""
-"","","","",fixed,scale(Temp),-0.004,-0.033,0.025,"",""
-"","","","",fixed,scale(Covid),-0.045,-0.22,0.123,"",""
-"","","","",random %,sp_day_year (Intercept),13%,8%,14%,"",""
-"","","","",random %,sp_loc (Intercept),1%,0%,12%,"",""
-"","","","",random %,sp_loc scale(Covid),1%,0%,12%,"",""
-"","","","",random %,IDLocality (Intercept),2%,1%,5%,"",""
-"","","","",random %,IDLocality scale(Covid),2%,1%,5%,"",""
-"","","","",random %,Species scale(Covid),1%,1%,1%,"",""
-"","","","",random %,genus scale(Covid),0%,0%,0%,"",""
-"","","","",random %,Country (Intercept),1%,-3%,4%,"",""
-"","","","",random %,Country scale(Covid),1%,-3%,4%,"",""
-"","","","",random %,Year (Intercept),3%,2%,4%,"",""
-"","","","",random %,Residual,77%,46%,88%,"",""
-Table S1 - 1c,Period,Gaussian,6369,fixed,(Intercept),0.083,-0.122,0.288,"",""
-"","","","",fixed,scale(log(SD)),0.476,0.452,0.5,"",""
-"","","","",fixed,scale(log(FlockSize)),-0.008,-0.027,0.01,"",""
-"","","","",fixed,scale(log(BodyMass)),0.047,-0.021,0.115,"",""
-"","","","",fixed,scale(sin(rad)),0.019,-0.008,0.046,"",""
-"","","","",fixed,scale(cos(rad)),0.029,0.007,0.051,"",""
-"","","","",fixed,scale(Temp),-0.001,-0.029,0.028,"",""
-"","","","",fixed,scale(Covid),-0.035,-0.199,0.124,"",""
-"","","","",random %,sp_day_year (Intercept),8%,6%,9%,"",""
-"","","","",random %,sp_loc (Intercept),0%,0%,4%,"",""
-"","","","",random %,sp_loc scale(Covid),0%,0%,4%,"",""
-"","","","",random %,IDLocality (Intercept),1%,0%,4%,"",""
-"","","","",random %,IDLocality scale(Covid),1%,0%,4%,"",""
-"","","","",random %,Species (Intercept),10%,9%,10%,"",""
-"","","","",random %,genus (Intercept),7%,6%,6%,"",""
-"","","","",random %,Country (Intercept),1%,-4%,5%,"",""
-"","","","",random %,Country scale(Covid),1%,-4%,5%,"",""
-"","","","",random %,Year (Intercept),3%,2%,4%,"",""
-"","","","",random %,Residual,67%,49%,80%,"",""
-Table S1 - 1d,Period,Gaussian,6369,fixed,(Intercept),0.077,-0.133,0.282,0.257301505495068,0.555583862986064
-"","","","",fixed,scale(log(SD)),0.478,0.454,0.503,"",""
-"","","","",fixed,scale(log(FlockSize)),-0.008,-0.027,0.011,"",""
-"","","","",fixed,scale(log(BodyMass)),0.046,-0.022,0.112,"",""
-"","","","",fixed,scale(sin(rad)),0.019,-0.008,0.047,"",""
-"","","","",fixed,scale(cos(rad)),0.025,0.003,0.048,"",""
-"","","","",fixed,scale(Temp),-0.006,-0.035,0.022,"",""
-"","","","",fixed,scale(Covid),-0.032,-0.204,0.136,"",""
-"","","","",random %,sp_day_year (Intercept),8%,7%,9%,"",""
-"","","","",random %,sp_loc (Intercept),4%,4%,5%,"",""
-"","","","",random %,IDLocality (Intercept),6%,6%,6%,"",""
-"","","","",random %,Species (Intercept),9%,8%,9%,"",""
-"","","","",random %,genus (Intercept),6%,6%,7%,"",""
-"","","","",random %,Country (Intercept),1%,-4%,5%,"",""
-"","","","",random %,Country scale(Covid),1%,-4%,5%,"",""
-"","","","",random %,Year (Intercept),2%,1%,4%,"",""
-"","","","",random %,Residual,62%,53%,73%,"",""
-Table S1 - 2a,Period,Gaussian,5261,fixed,(Intercept),0.167,-0.192,0.489,"",""
-"","","","",fixed,scale(log(SD)),0.462,0.435,0.489,"",""
-"","","","",fixed,scale(log(FlockSize)),-0.01,-0.03,0.01,"",""
-"","","","",fixed,scale(log(BodyMass)),-0.013,-0.121,0.099,"",""
-"","","","",fixed,scale(sin(rad)),0.028,-0.001,0.056,"",""
-"","","","",fixed,scale(cos(rad)),0.036,0.012,0.06,"",""
-"","","","",fixed,scale(Temp),-0.004,-0.038,0.026,"",""
-"","","","",fixed,scale(Covid),-0.037,-0.212,0.134,"",""
-"","","","",random %,sp_day_year (Intercept),9%,4%,12%,"",""
-"","","","",random %,sp_loc (Intercept),0%,0%,2%,"",""
-"","","","",random %,sp_loc scale(Covid),0%,0%,2%,"",""
-"","","","",random %,IDLocality (Intercept),1%,-1%,2%,"",""
-"","","","",random %,IDLocality scale(Covid),1%,-1%,2%,"",""
-"","","","",random %,Species (Intercept),0%,-1%,5%,"",""
-"","","","",random %,Species scale(Covid),0%,-1%,5%,"",""
-"","","","",random %,genus (Intercept),0%,0%,5%,"",""
-"","","","",random %,genus scale(Covid),0%,0%,5%,"",""
-"","","","",random %,Country (Intercept),3%,-8%,17%,"",""
-"","","","",random %,Country scale(Covid),3%,-8%,17%,"",""
-"","","","",random %,Year (Intercept),4%,2%,3%,"",""
-"","","","",random %,Residual,78%,31%,104%,"",""
-Table S1 - 2b,Period,Gaussian,5261,fixed,(Intercept),0.158,-0.191,0.507,0.224369679244578,0.577311481442151
-"","","","",fixed,scale(log(SD)),0.465,0.438,0.491,"",""
-"","","","",fixed,scale(log(FlockSize)),-0.01,-0.031,0.011,"",""
-"","","","",fixed,scale(log(BodyMass)),-0.009,-0.122,0.103,"",""
-"","","","",fixed,scale(sin(rad)),0.028,0,0.058,"",""
-"","","","",fixed,scale(cos(rad)),0.031,0.007,0.055,"",""
-"","","","",fixed,scale(Temp),-0.012,-0.042,0.02,"",""
-"","","","",fixed,scale(Covid),-0.034,-0.21,0.145,"",""
-"","","","",random %,sp_day_year (Intercept),8%,5%,10%,"",""
-"","","","",random %,sp_loc (Intercept),3%,2%,4%,"",""
-"","","","",random %,IDLocality (Intercept),4%,3%,4%,"",""
-"","","","",random %,Species (Intercept),8%,7%,7%,"",""
-"","","","",random %,genus (Intercept),6%,5%,6%,"",""
-"","","","",random %,Country (Intercept),2%,-7%,18%,"",""
-"","","","",random %,Country scale(Covid),2%,-7%,18%,"",""
-"","","","",random %,Year (Intercept),3%,2%,4%,"",""
-"","","","",random %,Residual,63%,38%,81%,"",""
-Table S1 - 3a,Period,Gaussian,5107,fixed,(Intercept),0.147,-0.194,0.482,"",""
-"","","","",fixed,scale(log(SD)),0.461,0.435,0.488,"",""
-"","","","",fixed,scale(log(FlockSize)),-0.01,-0.031,0.01,"",""
-"","","","",fixed,scale(log(BodyMass)),0.012,-0.105,0.125,"",""
-"","","","",fixed,scale(sin(rad)),0.028,-0.001,0.058,"",""
-"","","","",fixed,scale(cos(rad)),0.034,0.008,0.06,"",""
-"","","","",fixed,scale(Temp),-0.005,-0.039,0.026,"",""
-"","","","",fixed,scale(Covid),-0.033,-0.207,0.142,"",""
-"","","","",random %,sp_day_year (Intercept),9%,3%,12%,"",""
-"","","","",random %,sp_loc (Intercept),0%,0%,2%,"",""
-"","","","",random %,sp_loc scale(Covid),0%,0%,2%,"",""
-"","","","",random %,IDLocality (Intercept),1%,-1%,2%,"",""
-"","","","",random %,IDLocality scale(Covid),1%,-1%,2%,"",""
-"","","","",random %,Species (Intercept),0%,-1%,10%,"",""
-"","","","",random %,Species scale(Covid),0%,-1%,10%,"",""
-"","","","",random %,genus (Intercept),0%,0%,3%,"",""
-"","","","",random %,genus scale(Covid),0%,0%,3%,"",""
-"","","","",random %,Country (Intercept),3%,-7%,16%,"",""
-"","","","",random %,Country scale(Covid),3%,-7%,16%,"",""
-"","","","",random %,Year (Intercept),4%,2%,3%,"",""
-"","","","",random %,Residual,78%,28%,103%,"",""
-Table S1 - 3b,Period,Gaussian,5107,fixed,(Intercept),0.13,-0.239,0.481,"",""
-"","","","",fixed,scale(log(SD)),0.464,0.437,0.491,"",""
-"","","","",fixed,scale(log(FlockSize)),-0.01,-0.031,0.01,"",""
-"","","","",fixed,scale(log(BodyMass)),0.006,-0.108,0.118,"",""
-"","","","",fixed,scale(sin(rad)),0.028,-0.001,0.057,"",""
-"","","","",fixed,scale(cos(rad)),0.028,0.003,0.053,"",""
-"","","","",fixed,scale(Temp),-0.014,-0.047,0.018,"",""
-"","","","",fixed,scale(Covid),-0.033,-0.206,0.145,"",""
-"","","","",random %,sp_day_year (Intercept),8%,5%,9%,"",""
-"","","","",random %,sp_loc (Intercept),3%,2%,4%,"",""
-"","","","",random %,IDLocality (Intercept),4%,3%,4%,"",""
-"","","","",random %,Species (Intercept),15%,11%,15%,"",""
-"","","","",random %,genus (Intercept),0%,0%,0%,"",""
-"","","","",random %,Country (Intercept),2%,-7%,18%,"",""
-"","","","",random %,Country scale(Covid),2%,-7%,18%,"",""
-"","","","",random %,Year (Intercept),3%,2%,4%,"",""
-"","","","",random %,Residual,62%,38%,78%,"",""
+model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
+Table S1 - FI a,Escape distance,Gaussian,1019,fixed,(Intercept),-0.035,-0.321,0.231
+"","","","",fixed,starting distance (ln),0.282,0.228,0.336
+"","","","",fixed,flock size (ln),-0.049,-0.101,0.001
+"","","","",fixed,body mass (ln),0.091,-0.066,0.24
+"","","","",fixed,time (sine of radians),0.085,0.022,0.147
+"","","","",fixed,time (cosine of radians),0.031,-0.028,0.088
+"","","","",fixed,temperaturre,-0.079,-0.148,-0.009
+"","","","",fixed,Periiod,-0.15,-0.337,0.031
+"","","","",random,species within day & year (Intercept),10%,9%,11%
+"","","","",random,species within site (Intercept),6%,5%,7%
+"","","","",random,site (Intercept),1%,0%,3%
+"","","","",random,site Periiod,1%,0%,3%
+"","","","",random,species (Intercept),4%,3%,5%
+"","","","",random,genus (Intercept),10%,7%,14%
+"","","","",random,weekday (Intercept),0%,0%,1%
+"","","","",random,Year (Intercept),5%,1%,11%
+"","","","",random,Residual,61%,50%,72%
+Table S1 - FI b,Escape distance,Gaussian,1019,fixed,(Intercept),-0.125,-0.468,0.221
+"","","","",fixed,flock size (ln),-0.018,-0.07,0.034
+"","","","",fixed,body mass (ln),0.2,0.03,0.375
+"","","","",fixed,time (sine of radians),0.093,0.026,0.161
+"","","","",fixed,time (cosine of radians),0.029,-0.032,0.089
+"","","","",fixed,temperaturre,-0.076,-0.148,-0.005
+"","","","",fixed,Periiod,-0.132,-0.366,0.101
+"","","","",random,species within day & year (Intercept),9%,7%,10%
+"","","","",random,species within site (Intercept),7%,6%,7%
+"","","","",random,site (Intercept),1%,1%,2%
+"","","","",random,site Periiod,1%,1%,2%
+"","","","",random,species (Intercept),7%,5%,8%
+"","","","",random,genus (Intercept),10%,7%,13%
+"","","","",random,weekday (Intercept),1%,0%,1%
+"","","","",random,Year (Intercept),9%,2%,16%
+"","","","",random,Residual,56%,44%,68%
+Table S1 - PL a,Escape distance,Gaussian,762,fixed,(Intercept),0.145,-0.115,0.404
+"","","","",fixed,starting distance (ln),0.479,0.419,0.538
+"","","","",fixed,flock size (ln),0.012,-0.042,0.066
+"","","","",fixed,body mass (ln),-0.07,-0.172,0.031
+"","","","",fixed,time (sine of radians),-0.035,-0.117,0.05
+"","","","",fixed,time (cosine of radians),-0.012,-0.101,0.078
+"","","","",fixed,temperaturre,-0.111,-0.182,-0.04
+"","","","",fixed,Periiod,0.119,-0.112,0.353
+"","","","",random,species within day & year (Intercept),8%,8%,8%
+"","","","",random,species (Intercept),15%,12%,17%
+"","","","",random,genus (Intercept),0%,0%,0%
+"","","","",random,weekday (Intercept),0%,0%,1%
+"","","","",random,Year (Intercept),11%,7%,17%
+"","","","",random,Residual,66%,57%,72%
+Table S1 - PL b,Escape distance,Gaussian,762,fixed,(Intercept),0.246,-0.075,0.558
+"","","","",fixed,flock size (ln),0.054,-0.009,0.117
+"","","","",fixed,body mass (ln),0.046,-0.097,0.19
+"","","","",fixed,time (sine of radians),-0.014,-0.112,0.077
+"","","","",fixed,time (cosine of radians),-0.001,-0.104,0.099
+"","","","",fixed,temperaturre,-0.104,-0.187,-0.02
+"","","","",fixed,Periiod,0.245,0.001,0.498
+"","","","",random,species within day & year (Intercept),11%,10%,11%
+"","","","",random,species (Intercept),26%,22%,29%
+"","","","",random,genus (Intercept),1%,1%,2%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Year (Intercept),8%,5%,14%
+"","","","",random,Residual,53%,46%,60%
+Table S1 - CZ a,Escape distancey,Gaussian,2013,fixed,(Intercept),0.111,-0.257,0.481
+"","","","",fixed,starting distance (ln),0.392,0.351,0.437
+"","","","",fixed,flock size (ln),0.005,-0.03,0.037
+"","","","",fixed,body mass (ln),0.17,0.038,0.308
+"","","","",fixed,time (sine of radians),0.05,0.002,0.099
+"","","","",fixed,time (cosine of radians),0.054,0.009,0.097
+"","","","",fixed,temperaturre,0.043,-0.008,0.093
+"","","","",fixed,Periiod,0.036,-0.294,0.361
+"","","","",random,species within day & year (Intercept),3%,2%,3%
+"","","","",random,species within site (Intercept),3%,2%,3%
+"","","","",random,species (Intercept),13%,12%,13%
+"","","","",random,site (Intercept),2%,0%,3%
+"","","","",random,site Periiod,2%,0%,3%
+"","","","",random,genus (Intercept),12%,11%,11%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Year (Intercept),15%,1%,33%
+"","","","",random,Residual,52%,34%,70%
+Table S1 - CZ b,Escape distance,Gaussian,2013,fixed,(Intercept),-0.043,-0.969,0.867
+"","","","",fixed,flock size (ln),0.005,-0.031,0.04
+"","","","",fixed,body mass (ln),0.231,0.078,0.382
+"","","","",fixed,time (sine of radians),0.14,0.086,0.195
+"","","","",fixed,time (cosine of radians),0.123,0.075,0.172
+"","","","",fixed,temperaturre,0.035,-0.027,0.098
+"","","","",fixed,Periiod,0.223,-0.642,1.1
+"","","","",random,species within day & year (Intercept),2%,1%,5%
+"","","","",random,species within site (Intercept),1%,1%,2%
+"","","","",random,species (Intercept),6%,4%,10%
+"","","","",random,site (Intercept),1%,-1%,1%
+"","","","",random,site Periiod,1%,-1%,1%
+"","","","",random,genus (Intercept),8%,5%,11%
+"","","","",random,weekday (Intercept),1%,0%,1%
+"","","","",random,Year (Intercept),54%,17%,73%
+"","","","",random,Residual,26%,13%,57%
+Table S1 - HU a,Escape distance,Gaussian,1456,fixed,(Intercept),0.097,-0.174,0.384
+"","","","",fixed,starting distance (ln),0.485,0.438,0.531
+"","","","",fixed,flock size (ln),-0.012,-0.051,0.031
+"","","","",fixed,body mass (ln),-0.065,-0.184,0.059
+"","","","",fixed,time (sine of radians),-0.077,-0.133,-0.019
+"","","","",fixed,time (cosine of radians),-0.011,-0.06,0.037
+"","","","",fixed,temperaturre,-0.023,-0.083,0.037
+"","","","",fixed,Periiod,-0.091,-0.271,0.097
+"","","","",random,species within day & year (Intercept),5%,4%,5%
+"","","","",random,species within site (Intercept),0%,0%,0%
+"","","","",random,species (Intercept),3%,2%,3%
+"","","","",random,genus (Intercept),7%,5%,8%
+"","","","",random,site (Intercept),2%,0%,8%
+"","","","",random,site Periiod,2%,0%,8%
+"","","","",random,weekday (Intercept),1%,0%,1%
+"","","","",random,Year (Intercept),5%,2%,8%
+"","","","",random,Residual,76%,59%,84%
+Table S1 - HU b,Escape distance,Gaussian,1456,fixed,(Intercept),0.078,-0.336,0.494
+"","","","",fixed,flock size (ln),-0.011,-0.057,0.035
+"","","","",fixed,body mass (ln),0.187,0.006,0.376
+"","","","",fixed,time (sine of radians),-0.111,-0.18,-0.044
+"","","","",fixed,time (cosine of radians),-0.007,-0.06,0.05
+"","","","",fixed,temperaturre,-0.025,-0.095,0.043
+"","","","",fixed,Periiod,-0.105,-0.307,0.109
+"","","","",random,species within day & year (Intercept),7%,5%,8%
+"","","","",random,species within site (Intercept),0%,0%,0%
+"","","","",random,species (Intercept),2%,2%,2%
+"","","","",random,genus (Intercept),18%,13%,18%
+"","","","",random,site (Intercept),1%,0%,12%
+"","","","",random,site Periiod,1%,0%,12%
+"","","","",random,weekday (Intercept),1%,0%,1%
+"","","","",random,Year (Intercept),5%,3%,7%
+"","","","",random,Residual,63%,42%,74%
+Table S1 - AU a,Escape distance,Gaussian,1119,fixed,(Intercept),-0.064,-0.202,0.081
+"","","","",fixed,starting distance (ln),0.502,0.452,0.553
+"","","","",fixed,flock size (ln),0.02,-0.026,0.068
+"","","","",fixed,body mass (ln),-0.066,-0.163,0.029
+"","","","",fixed,time (sine of radians),-0.032,-0.099,0.036
+"","","","",fixed,time (cosine of radians),-0.026,-0.093,0.041
+"","","","",fixed,temperaturre,0.009,-0.045,0.063
+"","","","",fixed,Periiod,-0.009,-0.08,0.062
+"","","","",random,species within day & year (Intercept),7%,6%,7%
+"","","","",random,species within site (Intercept),13%,11%,13%
+"","","","",random,species (Intercept),14%,11%,14%
+"","","","",random,genus (Intercept),2%,1%,2%
+"","","","",random,site (Intercept),0%,-1%,8%
+"","","","",random,site Periiod,0%,-1%,8%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Year (Intercept),0%,0%,0%
+"","","","",random,Residual,64%,51%,68%
+Table S1 - AU b,Escape distance,Gaussian,1119,fixed,(Intercept),-0.18,-0.432,0.058
+"","","","",fixed,flock size (ln),0.051,-0.002,0.104
+"","","","",fixed,body mass (ln),0.055,-0.073,0.184
+"","","","",fixed,time (sine of radians),-0.017,-0.098,0.063
+"","","","",fixed,time (cosine of radians),-0.006,-0.08,0.069
+"","","","",fixed,temperaturre,0.004,-0.058,0.067
+"","","","",fixed,Periiod,0.156,-0.007,0.331
+"","","","",random,species within day & year (Intercept),8%,5%,10%
+"","","","",random,species within site (Intercept),12%,8%,15%
+"","","","",random,species (Intercept),17%,14%,17%
+"","","","",random,genus (Intercept),5%,4%,5%
+"","","","",random,site (Intercept),1%,-10%,15%
+"","","","",random,site Periiod,1%,-10%,15%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Year (Intercept),1%,0%,2%
+"","","","",random,Residual,55%,36%,73%

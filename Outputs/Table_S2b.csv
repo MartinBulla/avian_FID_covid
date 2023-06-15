@@ -1,0 +1,151 @@
+model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
+Table S2b - 1a,Escape distance,Gaussian,3676,fixed,(Intercept),-0.074,-0.345,0.173
+"","","","",fixed,year,0.02,-0.028,0.068
+"","","","",fixed,starting distance (ln),0.492,0.46,0.524
+"","","","",fixed,flock size (ln),-0.003,-0.03,0.023
+"","","","",fixed,body mass (ln),0.021,-0.046,0.091
+"","","","",fixed,time (sine of radians),-0.02,-0.061,0.022
+"","","","",fixed,time (cosine of radians),-0.005,-0.04,0.032
+"","","","",fixed,temperaturre,-0.007,-0.049,0.036
+"","","","",fixed,stringency index,0.018,-0.157,0.182
+"","","","",random,species within day & year (Intercept),5%,3%,7%
+"","","","",random,species within site (Intercept),5%,3%,6%
+"","","","",random,species (Intercept),7%,6%,9%
+"","","","",random,site (Intercept),8%,7%,9%
+"","","","",random,genus (Intercept),4%,4%,4%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Country (Intercept),2%,-16%,16%
+"","","","",random,stringency index (slope) | Country,2%,-16%,16%
+"","","","",random,Residual,67%,45%,96%
+Table S2b - 1b,Escape distance,Gaussian,3676,fixed,(Intercept),-0.073,-0.319,0.173
+"","","","",fixed,year,0.019,-0.028,0.065
+"","","","",fixed,starting distance (ln),0.493,0.462,0.525
+"","","","",fixed,flock size (ln),-0.003,-0.029,0.023
+"","","","",fixed,body mass (ln),0.017,-0.052,0.085
+"","","","",fixed,time (sine of radians),-0.02,-0.061,0.021
+"","","","",fixed,time (cosine of radians),-0.004,-0.039,0.03
+"","","","",fixed,temperaturre,-0.008,-0.049,0.033
+"","","","",fixed,stringency index,0.006,-0.16,0.174
+"","","","",random,species within day & year (Intercept),5%,3%,7%
+"","","","",random,species within site (Intercept),5%,3%,7%
+"","","","",random,species (Intercept),7%,5%,8%
+"","","","",random,site (Intercept),8%,6%,10%
+"","","","",random,genus (Intercept),0%,-1%,4%
+"","","","",random,stringency index (slope) | genus,0%,-1%,4%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Country (Intercept),2%,-16%,15%
+"","","","",random,stringency index (slope) | Country,2%,-16%,15%
+"","","","",random,Residual,70%,44%,100%
+Table S2b - 1c,Escape distance,Gaussian,3676,fixed,(Intercept),-0.103,-0.278,0.066
+"","","","",fixed,year,-0.003,-0.05,0.044
+"","","","",fixed,starting distance (ln),0.549,0.518,0.581
+"","","","",fixed,flock size (ln),-0.023,-0.05,0.003
+"","","","",fixed,body mass (ln),-0.024,-0.053,0.005
+"","","","",fixed,time (sine of radians),-0.039,-0.081,0.002
+"","","","",fixed,time (cosine of radians),0.005,-0.031,0.043
+"","","","",fixed,temperaturre,0.003,-0.039,0.045
+"","","","",fixed,stringency index,0.021,-0.14,0.181
+"","","","",random,site (Intercept),10%,10%,10%
+"","","","",random,Country (Intercept),1%,-7%,8%
+"","","","",random,stringency index (slope) | Country,1%,-7%,8%
+"","","","",random,Residual,88%,74%,103%
+Table S2b - 2a,Escape distance,Gaussian,3573,fixed,(Intercept),-0.154,-0.455,0.133
+"","","","",fixed,year,0.022,-0.025,0.071
+"","","","",fixed,starting distance (ln),0.483,0.451,0.516
+"","","","",fixed,flock size (ln),0.003,-0.023,0.029
+"","","","",fixed,body mass (ln),-0.024,-0.1,0.052
+"","","","",fixed,time (sine of radians),-0.02,-0.061,0.022
+"","","","",fixed,time (cosine of radians),-0.008,-0.043,0.029
+"","","","",fixed,temperaturre,-0.008,-0.05,0.034
+"","","","",fixed,stringency index,0.024,-0.153,0.191
+"","","","",random,species within day & year (Intercept),5%,3%,7%
+"","","","",random,species within site (Intercept),4%,3%,7%
+"","","","",random,site (Intercept),7%,5%,9%
+"","","","",random,species (Intercept),11%,8%,13%
+"","","","",random,genus (Intercept),2%,2%,2%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Country (Intercept),3%,-20%,20%
+"","","","",random,stringency index (slope) | Country,3%,-20%,20%
+"","","","",random,Residual,65%,39%,103%
+Table S2b - 2b,Escape distance,Gaussian,3573,fixed,(Intercept),-0.151,-0.441,0.146
+"","","","",fixed,year,0.021,-0.029,0.07
+"","","","",fixed,starting distance (ln),0.484,0.452,0.517
+"","","","",fixed,flock size (ln),0.003,-0.023,0.03
+"","","","",fixed,body mass (ln),-0.03,-0.107,0.044
+"","","","",fixed,time (sine of radians),-0.02,-0.06,0.021
+"","","","",fixed,time (cosine of radians),-0.007,-0.043,0.03
+"","","","",fixed,temperaturre,-0.008,-0.051,0.034
+"","","","",fixed,stringency index,0.015,-0.159,0.189
+"","","","",random,species within day & year (Intercept),5%,3%,8%
+"","","","",random,species within site (Intercept),4%,3%,7%
+"","","","",random,site (Intercept),7%,5%,9%
+"","","","",random,species (Intercept),11%,8%,13%
+"","","","",random,genus (Intercept),0%,-1%,2%
+"","","","",random,stringency index (slope) | genus,0%,-1%,2%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Country (Intercept),3%,-21%,19%
+"","","","",random,stringency index (slope) | Country,3%,-21%,19%
+"","","","",random,Residual,67%,39%,106%
+Table S2b - 2c,Escape distance,Gaussian,3573,fixed,(Intercept),-0.109,-0.286,0.064
+"","","","",fixed,year,-0.001,-0.049,0.048
+"","","","",fixed,starting distance (ln),0.543,0.511,0.576
+"","","","",fixed,flock size (ln),-0.018,-0.045,0.009
+"","","","",fixed,body mass (ln),-0.027,-0.055,0.003
+"","","","",fixed,time (sine of radians),-0.038,-0.08,0.003
+"","","","",fixed,time (cosine of radians),0.002,-0.036,0.039
+"","","","",fixed,temperaturre,0.002,-0.04,0.047
+"","","","",fixed,stringency index,0.023,-0.136,0.19
+"","","","",random,site (Intercept),10%,10%,10%
+"","","","",random,Country (Intercept),1%,-8%,8%
+"","","","",random,stringency index (slope) | Country,1%,-8%,8%
+"","","","",random,Residual,88%,74%,105%
+Table S2b - 3a,Escape distance,Gaussian,3425,fixed,(Intercept),-0.137,-0.459,0.173
+"","","","",fixed,year,0.026,-0.023,0.077
+"","","","",fixed,starting distance (ln),0.48,0.448,0.512
+"","","","",fixed,flock size (ln),0.001,-0.027,0.028
+"","","","",fixed,body mass (ln),0.023,-0.061,0.11
+"","","","",fixed,time (sine of radians),-0.012,-0.054,0.03
+"","","","",fixed,time (cosine of radians),-0.009,-0.046,0.027
+"","","","",fixed,temperaturre,-0.011,-0.054,0.032
+"","","","",fixed,stringency index,0.02,-0.153,0.187
+"","","","",random,species within day & year (Intercept),5%,3%,7%
+"","","","",random,species within site (Intercept),5%,3%,7%
+"","","","",random,site (Intercept),8%,5%,10%
+"","","","",random,species (Intercept),9%,7%,10%
+"","","","",random,genus (Intercept),3%,3%,3%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Country (Intercept),2%,-21%,20%
+"","","","",random,stringency index (slope) | Country,2%,-21%,20%
+"","","","",random,Residual,67%,39%,105%
+Table S2b - 3b,Escape distance,Gaussian,3425,fixed,(Intercept),-0.14,-0.456,0.181
+"","","","",fixed,year,0.027,-0.022,0.075
+"","","","",fixed,starting distance (ln),0.482,0.449,0.514
+"","","","",fixed,flock size (ln),0.001,-0.026,0.029
+"","","","",fixed,body mass (ln),0.019,-0.067,0.106
+"","","","",fixed,time (sine of radians),-0.011,-0.053,0.032
+"","","","",fixed,time (cosine of radians),-0.009,-0.045,0.028
+"","","","",fixed,temperaturre,-0.012,-0.055,0.033
+"","","","",fixed,stringency index,0.013,-0.155,0.189
+"","","","",random,species within day & year (Intercept),5%,3%,7%
+"","","","",random,species within site (Intercept),4%,3%,7%
+"","","","",random,site (Intercept),8%,5%,11%
+"","","","",random,species (Intercept),10%,7%,11%
+"","","","",random,genus (Intercept),0%,0%,2%
+"","","","",random,stringency index (slope) | genus,0%,0%,2%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,Country (Intercept),3%,-23%,21%
+"","","","",random,stringency index (slope) | Country,3%,-23%,21%
+"","","","",random,Residual,67%,36%,110%
+Table S2b - 3c,Escape distance,Gaussian,3425,fixed,(Intercept),-0.107,-0.288,0.076
+"","","","",fixed,year,0.005,-0.045,0.054
+"","","","",fixed,starting distance (ln),0.541,0.508,0.574
+"","","","",fixed,flock size (ln),-0.02,-0.047,0.007
+"","","","",fixed,body mass (ln),-0.02,-0.048,0.01
+"","","","",fixed,time (sine of radians),-0.03,-0.073,0.012
+"","","","",fixed,time (cosine of radians),-0.001,-0.038,0.037
+"","","","",fixed,temperaturre,-0.002,-0.045,0.042
+"","","","",fixed,stringency index,0.023,-0.137,0.183
+"","","","",random,site (Intercept),11%,11%,11%
+"","","","",random,Country (Intercept),1%,-8%,8%
+"","","","",random,stringency index (slope) | Country,1%,-8%,8%
+"","","","",random,Residual,87%,73%,105%

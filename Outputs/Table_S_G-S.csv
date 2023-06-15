@@ -1,0 +1,30 @@
+model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
+Table S_g-s - FI,Google Mobility,Gaussian,322,fixed,(Intercept),-0.268,-1.064,0.503
+"","","","",fixed,year,0.939,0.459,1.424
+"","","","",fixed,stringency index,-0.259,-1.004,0.494
+"","","","",random %,weekday within year (Intercept),22%,47%,54%
+"","","","",random %,weekday within year stringency index,22%,47%,54%
+"","","","",random %,Residual,55%,-7%,5%
+Table S_g-s - PL,Google Mobility,Gaussian,329,fixed,(Intercept),0.013,-0.605,0.637
+"","","","",fixed,year,0.78,0.011,1.535
+"","","","",fixed,stringency index,0.025,-0.362,0.412
+"","","","",random %,weekday within year (Intercept),47%,44%,49%
+"","","","",random %,weekday within year stringency index,47%,44%,49%
+"","","","",random %,Residual,6%,2%,13%
+Table S_g-s - CZ,Google Mobility,Gaussian,1054,fixed,(Intercept),0.006,-0.526,0.536
+"","","","",fixed,stringency index,-0.219,-0.635,0.189
+"","","","",random %,weekday (Intercept),23%,-184%,40%
+"","","","",random %,weekday stringency index,23%,-184%,40%
+"","","","",random %,Residual,54%,21%,469%
+Table S_g-s - HU,Google Mobility,Gaussian,874,fixed,(Intercept),0.255,-0.272,0.737
+"","","","",fixed,year,0.007,-0.457,0.466
+"","","","",fixed,stringency index,-1.264,-1.946,-0.566
+"","","","",random %,weekday within year (Intercept),48%,2%,49%
+"","","","",random %,weekday within year stringency index,48%,2%,49%
+"","","","",random %,Residual,4%,2%,95%
+Table S_g-s - AU,Google Mobility,Gaussian,1065,fixed,(Intercept),0.528,-0.01,1.074
+"","","","",fixed,year,0.441,0.245,0.638
+"","","","",fixed,stringency index,-0.54,-0.855,-0.22
+"","","","",random %,weekday within year (Intercept),-31%,44%,65%
+"","","","",random %,weekday within year stringency index,-31%,44%,65%
+"","","","",random %,Residual,162%,-30%,13%
