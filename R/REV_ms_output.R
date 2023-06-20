@@ -3013,5 +3013,7 @@ ggsave(here::here("Outputs/Fig_S7_width-152mm_Google.png"), gtgx2, width = 15.24
 #' - Hale T., Angrist N., Goldszmidt R., Kira B., Petherick A., Phillips T., Webster S., Cameron-Blake E., Hallas L., Majumdar S., Tatlow H. (2021). A global panel database of pandemic policies (Oxford COVID-19 Government Response Tracker). Nature Human Behaviour 2021 5:4 5:529–538. https://doi.org/10.1038/s41562-021-01079-8.
 #' - Peterson, B. G., & Carl, P. (2020). PerformanceAnalytics: Econometric Tools for Performance and Risk Analysis. R package version 2.0.4. https://CRAN.R-project.org/package=PerformanceAnalytics
 #' - Wickham, H. (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag, New York.
-
+#'
+#' ### Session info
+  sessionInfo()
 # END
