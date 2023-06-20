@@ -14,7 +14,7 @@ Table S1 - FI a,Escape distance,Gaussian,1019,fixed,(Intercept),-0.035,-0.321,0.
 "","","","",random,species (Intercept),4%,3%,5%
 "","","","",random,genus (Intercept),10%,7%,14%
 "","","","",random,weekday (Intercept),0%,0%,1%
-"","","","",random,Year (Intercept),5%,1%,11%
+"","","","",random,year (Intercept),5%,1%,11%
 "","","","",random,Residual,61%,50%,72%
 Table S1 - FI b,Escape distance,Gaussian,1019,fixed,(Intercept),-0.125,-0.468,0.221
 "","","","",fixed,flock size (ln),-0.018,-0.07,0.034
@@ -30,7 +30,7 @@ Table S1 - FI b,Escape distance,Gaussian,1019,fixed,(Intercept),-0.125,-0.468,0.
 "","","","",random,species (Intercept),7%,5%,8%
 "","","","",random,genus (Intercept),10%,7%,13%
 "","","","",random,weekday (Intercept),1%,0%,1%
-"","","","",random,Year (Intercept),9%,2%,16%
+"","","","",random,year (Intercept),9%,2%,16%
 "","","","",random,Residual,56%,44%,68%
 Table S1 - PL a,Escape distance,Gaussian,762,fixed,(Intercept),0.145,-0.115,0.404
 "","","","",fixed,starting distance (ln),0.479,0.419,0.538
@@ -44,7 +44,7 @@ Table S1 - PL a,Escape distance,Gaussian,762,fixed,(Intercept),0.145,-0.115,0.40
 "","","","",random,species (Intercept),15%,12%,17%
 "","","","",random,genus (Intercept),0%,0%,0%
 "","","","",random,weekday (Intercept),0%,0%,1%
-"","","","",random,Year (Intercept),11%,7%,17%
+"","","","",random,year (Intercept),11%,7%,17%
 "","","","",random,Residual,66%,57%,72%
 Table S1 - PL b,Escape distance,Gaussian,762,fixed,(Intercept),0.246,-0.075,0.558
 "","","","",fixed,flock size (ln),0.054,-0.009,0.117
@@ -57,7 +57,7 @@ Table S1 - PL b,Escape distance,Gaussian,762,fixed,(Intercept),0.246,-0.075,0.55
 "","","","",random,species (Intercept),26%,22%,29%
 "","","","",random,genus (Intercept),1%,1%,2%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,Year (Intercept),8%,5%,14%
+"","","","",random,year (Intercept),8%,5%,14%
 "","","","",random,Residual,53%,46%,60%
 Table S1 - CZ a,Escape distancey,Gaussian,2013,fixed,(Intercept),0.111,-0.257,0.481
 "","","","",fixed,starting distance (ln),0.392,0.351,0.437
@@ -74,7 +74,7 @@ Table S1 - CZ a,Escape distancey,Gaussian,2013,fixed,(Intercept),0.111,-0.257,0.
 "","","","",random,Period (slope) | site,2%,0%,3%
 "","","","",random,genus (Intercept),12%,11%,11%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,Year (Intercept),15%,1%,33%
+"","","","",random,year (Intercept),15%,1%,33%
 "","","","",random,Residual,52%,34%,70%
 Table S1 - CZ b,Escape distance,Gaussian,2013,fixed,(Intercept),-0.043,-0.969,0.867
 "","","","",fixed,flock size (ln),0.005,-0.031,0.04
@@ -90,7 +90,7 @@ Table S1 - CZ b,Escape distance,Gaussian,2013,fixed,(Intercept),-0.043,-0.969,0.
 "","","","",random,Period (slope) | site,1%,-1%,1%
 "","","","",random,genus (Intercept),8%,5%,11%
 "","","","",random,weekday (Intercept),1%,0%,1%
-"","","","",random,Year (Intercept),54%,17%,73%
+"","","","",random,year (Intercept),54%,17%,73%
 "","","","",random,Residual,26%,13%,57%
 Table S1 - HU a,Escape distance,Gaussian,1456,fixed,(Intercept),0.097,-0.174,0.384
 "","","","",fixed,starting distance (ln),0.485,0.438,0.531
@@ -107,7 +107,7 @@ Table S1 - HU a,Escape distance,Gaussian,1456,fixed,(Intercept),0.097,-0.174,0.3
 "","","","",random,site (Intercept),2%,0%,8%
 "","","","",random,Period (slope) | site,2%,0%,8%
 "","","","",random,weekday (Intercept),1%,0%,1%
-"","","","",random,Year (Intercept),5%,2%,8%
+"","","","",random,year (Intercept),5%,2%,8%
 "","","","",random,Residual,76%,59%,84%
 Table S1 - HU b,Escape distance,Gaussian,1456,fixed,(Intercept),0.078,-0.336,0.494
 "","","","",fixed,flock size (ln),-0.011,-0.057,0.035
@@ -123,7 +123,7 @@ Table S1 - HU b,Escape distance,Gaussian,1456,fixed,(Intercept),0.078,-0.336,0.4
 "","","","",random,site (Intercept),1%,0%,12%
 "","","","",random,Period (slope) | site,1%,0%,12%
 "","","","",random,weekday (Intercept),1%,0%,1%
-"","","","",random,Year (Intercept),5%,3%,7%
+"","","","",random,year (Intercept),5%,3%,7%
 "","","","",random,Residual,63%,42%,74%
 Table S1 - AU a,Escape distance,Gaussian,1119,fixed,(Intercept),-0.064,-0.202,0.081
 "","","","",fixed,starting distance (ln),0.502,0.452,0.553
@@ -140,7 +140,7 @@ Table S1 - AU a,Escape distance,Gaussian,1119,fixed,(Intercept),-0.064,-0.202,0.
 "","","","",random,site (Intercept),0%,-1%,8%
 "","","","",random,Period (slope) | site,0%,-1%,8%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,Year (Intercept),0%,0%,0%
+"","","","",random,year (Intercept),0%,0%,0%
 "","","","",random,Residual,64%,51%,68%
 Table S1 - AU b,Escape distance,Gaussian,1119,fixed,(Intercept),-0.18,-0.432,0.058
 "","","","",fixed,flock size (ln),0.051,-0.002,0.104
@@ -156,5 +156,5 @@ Table S1 - AU b,Escape distance,Gaussian,1119,fixed,(Intercept),-0.18,-0.432,0.0
 "","","","",random,site (Intercept),1%,-10%,15%
 "","","","",random,Period (slope) | site,1%,-10%,15%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,Year (Intercept),1%,0%,2%
+"","","","",random,year (Intercept),1%,0%,2%
 "","","","",random,Residual,55%,36%,73%

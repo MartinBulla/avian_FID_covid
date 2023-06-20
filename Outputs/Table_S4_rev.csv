@@ -14,8 +14,8 @@ Table S4 - full a,Escape distance,Gaussian,3676,fixed,(Intercept),-0.079,-0.338,
 "","","","",random,site (Intercept),8%,7%,9%
 "","","","",random,genus (Intercept),4%,4%,4%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,Country (Intercept),2%,-16%,16%
-"","","","",random,stringency index (slope) | Country,2%,-16%,16%
+"","","","",random,country (Intercept),2%,-16%,16%
+"","","","",random,stringency index (slope) | country,2%,-16%,16%
 "","","","",random,Residual,67%,45%,96%
 Table S4 - full b,Escape distance,Gaussian,3676,fixed,(Intercept),0.052,-0.096,0.202
 "","","","",fixed,year,0.084,0.03,0.139
@@ -31,8 +31,8 @@ Table S4 - full b,Escape distance,Gaussian,3676,fixed,(Intercept),0.052,-0.096,0
 "","","","",random,site (Intercept),13%,13%,14%
 "","","","",random,genus (Intercept),5%,5%,6%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,Country (Intercept),3%,-9%,9%
-"","","","",random,stringency index (slope) | Country,3%,-9%,9%
+"","","","",random,country (Intercept),3%,-9%,9%
+"","","","",random,stringency index (slope) | country,3%,-9%,9%
 "","","","",random,Residual,55%,45%,73%
 Table S4 - FI a,Escape distance,Gaussian,354,fixed,(Intercept),0.032,-0.186,0.237
 "","","","",fixed,year,-0.108,-0.342,0.119
