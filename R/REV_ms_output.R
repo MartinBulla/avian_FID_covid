@@ -2776,7 +2776,7 @@ est_pgx[, control_for_starting_distance := "no"]
   out_FID_g[, effect := gsub("sp_day_year", "species within day & year", effect)]
   out_FID_g[, effect := gsub("IDLocality", "site", effect)]
   out_FID_g[, effect := gsub("sp_loc", "species within site", effect)]
-  out_FID_s[type == "random" & grepl("Google Mobility", effect, fixed = TRUE), effect := paste("Google Mobility (slope) |", gsub(" Google Mobility", "", effect))]
+  out_FID_g[, effect := paste("Google Mobility (slope) |", gsub(" Google Mobility", "", effect))]
   fwrite(file = here::here("Outputs/Table_S5_rev.csv"), out_FID_g)
 
 load(here::here("Data/dat_est_Google_rev.Rdata"))
