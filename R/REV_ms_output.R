@@ -768,7 +768,7 @@ ggplot(oo, aes(x = estimate, y = Country, col = Country, shape = control_for_sta
     scale_color_manual(guide = "none", values = col_) + #guide_legend(reverse = TRUE)
     scale_x_continuous(breaks = round(seq(-0.6, 1.2, by = 0.3), 1)) +
     ylab("") +
-    xlab("Standardized effect size of Period\n[on flight initiation distance]") +
+    xlab("Standardised effect size of Period\n[on flight initiation distance]") +
     # coord_cartesian(xlim = c(-.15, .15)) +
     # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
     theme_bw() +
@@ -1400,7 +1400,7 @@ out_FID_c %>%
        coord_fixed(ratio = 0.05, xlim = c(-0.23, 0.15)) +
        # scale_shape(guide = guide_legend(reverse = TRUE)) +
        # scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2,2, by = 1), labels = seq(-2,2, by = 1)) +
-       labs(y = NULL, x = "Google Mobility\n[Standardized effect sizes on\nflight initiation distances]", tag = "c)") + # title = "b) Effect of ") +
+       labs(y = NULL, x = "Google Mobility\n[Standardised effect sizes on\nflight initiation distances]", tag = "c)") + # title = "b) Effect of ") +
        # ylim(c(0,100))+
        # coord_flip()+
        theme_bw() +
@@ -2487,7 +2487,7 @@ est_psx[, control_for_starting_distance := "no"]
       scale_color_manual(guide = "none", values = col_) + #guide_legend(reverse = TRUE)
       scale_x_continuous(breaks = round(seq(-0.3, 0.4, by = 0.1), 1)) +
       ylab("") +
-      xlab("Standardized effect size of\nStringency Index\n[on flight initiation distance]") +
+      xlab("Standardised effect size of\nStringency Index\n[on flight initiation distance]") +
       labs(tag = 'a)')+
       # coord_cartesian(xlim = c(-.15, .15)) +
       # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
@@ -2833,7 +2833,7 @@ ggplot(ogo, aes(x = estimate, y = Country, col = Country, shape = control_for_st
     scale_color_manual(guide = "none", values = col_) + #guide_legend(reverse = TRUE)
     scale_x_continuous(breaks = round(seq(-0.3, 0.2, by = 0.1), 1)) +
     ylab("") +
-    xlab("Standardized effect size of\nGoogle Mobility (human presence)\n[on flight initiation distance]") +
+    xlab("Standardised effect size of\nGoogle Mobility (human presence)\n[on flight initiation distance]") +
     labs(tag = 'b)')+
     # coord_cartesian(xlim = c(-.15, .15)) +
     # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
