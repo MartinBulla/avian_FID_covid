@@ -2100,7 +2100,7 @@ if(save_plot==TRUE){
 ggsave(here::here("Outputs/Fig_5_rev.png"), p + theme(plot.subtitle = element_blank()), width = 7, height = 6, unit = "cm", dpi = 600)
 }
 #' <a name="F_5">
-#' **Figure 5 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (stringency index).**</a> Lines with shaded areas represent predicted relationships from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and stringency index as a random slope (Table [S3](#T_S3)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city.. Colours indicate country. Note the generally negative but weak association between human presence and stringency index.
+#' **Figure 5 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (stringency index).**</a> Lines with shaded areas represent predicted relationships from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and stringency index as a random slope (Table [S3](#T_S3)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and stringency index.
 #' 
 #' <a name="T_S3">
 #' **Table S3 | Google Mobility in relation to stringency index**</a>
