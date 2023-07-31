@@ -3825,8 +3825,7 @@ oh <- rbind(
   est_phs, est_phx,
   est_fhs, est_fhx
 )
-#save(oh, file = here::here("Data/dat_est_humans_rev.Rdata"))
-save(oh, file = here::here("Data/dat_est_humans_rev_no_2018-CZ.Rdata"))
+save(oh, file = here::here("Data/dat_est_humans_rev.Rdata")) #save(oh, file = here::here("Data/dat_est_humans_rev_no_2018-CZ.Rdata"))
 # estimatees for table
 mhs_out <- m_out(name = "Table S6 - full a", dep = "Escape distance", model = mhs, nsim = 5000)
 mhx_out <- m_out(name = "Table S6 - full b", dep = "Escape distance", model = mhx, nsim = 5000)
@@ -3854,10 +3853,9 @@ out_FID_h[, effect := gsub("Country", "country", effect)]
 out_FID_h[, effect := gsub("sp_day_year", "species within day & year", effect)]
 out_FID_h[, effect := gsub("IDLocality", "site", effect)]
 out_FID_h[, effect := gsub("sp_loc", "species within site", effect)]
-fwrite(file = here::here("Outputs/Table_S6_rev_no2018CZ.csv"), out_FID_h)
+fwrite(file = here::here("Outputs/Table_S6_rev.csv"), out_FID_h)#fwrite(file = here::here("Outputs/Table_S6_rev_no2018CZ.csv"), out_FID_h)
 
-#load(here::here("Data/dat_est_humans_rev.Rdata"))
-load(here::here("Data/dat_est_humans_rev_no_2018-CZ.Rdata"))
+load(here::here("Data/dat_est_humans_rev.Rdata"))#load(here::here("Data/dat_est_humans_rev_no_2018-CZ.Rdata"))
 
 oh[predictor %in% c("scale(humans)"), predictor := "Humans present"]
 oho <- oh[predictor %in% c("Humans present")]
@@ -3942,7 +3940,8 @@ gs6c <-
     axis.title = element_text(size = 7)
   )
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S6c_human_rev_width_CustomLocusZoom_v2_no2018CZ.png"), gs6c, width = 8, height = 6.5, unit = "cm", dpi = 600)
+  ggsave(here::here("Outputs/Fig_S6c_human_rev_width_CustomLocusZoom_v2.png"), gs6c, width = 8, height = 6.5, unit = "cm", dpi = 600)
+  #ggsave(here::here("Outputs/Fig_S6c_human_rev_width_CustomLocusZoom_v2_no2018CZ.png"), gs6c, width = 8, height = 6.5, unit = "cm", dpi = 600)
 }
 
 # predictions for Fig and Table - Human numbers
@@ -4124,7 +4123,8 @@ ohn <- rbind(
   est_phns, est_phnx,
   est_fhns, est_fhnx
 )
-save(ohn, file = here::here("Data/dat_est_human_numbers_rev_no2018CZ.Rdata"))
+save(ohn, file = here::here("Data/dat_est_human_numbers_rev.Rdata"))
+#save(ohn, file = here::here("Data/dat_est_human_numbers_rev_no2018CZ.Rdata"))
 # estimatees for table
 mhns_out <- m_out(name = "Table S7 - full a", dep = "Escape distance", model = mhns, nsim = 5000)
 mhnx_out <- m_out(name = "Table S7 - full b", dep = "Escape distance", model = mhnx, nsim = 5000)
@@ -4152,10 +4152,11 @@ out_FID_hn[, effect := gsub("Country", "country", effect)]
 out_FID_hn[, effect := gsub("sp_day_year", "species within day & year", effect)]
 out_FID_hn[, effect := gsub("IDLocality", "site", effect)]
 out_FID_hn[, effect := gsub("sp_loc", "species within site", effect)]
-fwrite(file = here::here("Outputs/Table_S7_rev_no2018CZ.csv"), out_FID_hn)
+fwrite(file = here::here("Outputs/Table_S7_rev.csv"), out_FID_hn)
+#fwrite(file = here::here("Outputs/Table_S7_rev_no2018CZ.csv"), out_FID_hn)
 
-#load(here::here("Data/dat_est_human_numbers_rev.Rdata"))
-load(here::here("Data/dat_est_human_numbers_rev_no2018CZ.Rdata"))
+load(here::here("Data/dat_est_human_numbers_rev.Rdata"))
+#load(here::here("Data/dat_est_human_numbers_rev_no2018CZ.Rdata"))
 ohn[predictor %in% c("scale(log(Human))"), predictor := "Human numbers"]
 ohno <- ohn[predictor %in% c("Human numbers")]
 ohno[, N := as.numeric(sub(".*N = ", "", model))]
@@ -4239,7 +4240,8 @@ gs6d <-
     axis.title = element_text(size = 7)
   )
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S6d_human_numbers__rev_width_CustomLocusZoom_v2_no2018CZ.png"), gs6d, width = 8, height = 6.5, unit = "cm", dpi = 600)
+  ggsave(here::here("Outputs/Fig_S6d_human_numbers__rev_width_CustomLocusZoom_v2.png"), gs6d, width = 8, height = 6.5, unit = "cm", dpi = 600)
+  #ggsave(here::here("Outputs/Fig_S6d_human_numbers__rev_width_CustomLocusZoom_v2_no2018CZ.png"), gs6d, width = 8, height = 6.5, unit = "cm", dpi = 600)
 }
 #' ### References
 #' - Bulla, M., Blumstein, D.T., Benedetti, Y., Floigl, K., Jokimäki, J., Kaisanlahti-Jokimäki, M.-L., Markó, G., Morelli, F., Siretckaia, A., Szakony, S., Weston, M.A., Zeid, F.A., Tryjanowski, P., Albrecht, T. & Mikula, P. (2022). Supporting information for 'Urban birds' flight responses were unaffected by the COVID-19 shutdowns'. Open Science Framework https://doi.org/10.17605/OSF.IO/WUZH7.
