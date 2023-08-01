@@ -35,6 +35,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     require(MASS)
     require(multcomp)
     require(optimx)
+    require(patchwork)
     require(performance)  
     require(PerformanceAnalytics)
     require(png)
@@ -339,6 +340,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 
           # EU
           dat$res = resid(mo)
+          if('Australia'%in%unique(dat$Country)){
           spdata=data.frame(resid = dat$res[dat$Country!='Australia'], x=dat$Lon[dat$Country!='Australia'], y=dat$Lat[dat$Country!='Australia'])
           spdata$col=ifelse(spdata$resid<0,rgb(83,95,124,100, maxColorValue = 255),ifelse(spdata$resid>0,rgb(253,184,19,100, maxColorValue = 255), 'red'))
             #cex_=c(1,2,3,3.5,4)
@@ -356,7 +358,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
           plot(spdata$x[spdata$resid<0], spdata$y[spdata$resid<0],col=spdata$col[spdata$resid<0], cex=as.numeric(spdata$cex[spdata$resid<0]), pch= 16, main=list('Australia residuals <0'), xlab = 'Longitude', ylab = 'Latitude')
           plot(spdata$x[spdata$resid>=0], spdata$y[spdata$resid>=0],col=spdata$col[spdata$resid>=0], cex=as.numeric(spdata$cex[spdata$resid>=0]), pch= 16, main=list('Australia residuals >=0'), xlab = 'Longitude', ylab = 'Latitude')
           }
-       
+        }
        mtext(stringr::str_wrap(paste(paste0(name," model: "), slot(mo,"call")[1],'(',slot(mo,"call")[2],sep=''), width = ceiling(nchar(paste(slot(mo,"call")[1],'(',slot(mo,"call")[2],sep=''))/2)+10), side = 3, line = 0, cex=0.5,outer = TRUE, col = 'darkblue') #ceiling(nchar(paste(slot(mo,"call")[1],'(',slot(mo,"call")[2],sep=''))/2)
        if(PNG==TRUE){dev.off()}
       }
@@ -408,11 +410,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 
     # add # of humans at the time of observation
       h = fread(here::here("Data/data_human.txt")) # fwrite(d, here::here('Data/data.txt'), sep ='\t')
-      dh = merge(d,h)
-      dh = dh[!is.na(Human)] # summary(factor(dh$Year))
-      dh[Human == 0, humans := 0]
-      dh[Human > 0, humans := 1] #dh = dh[!(Country%in%'Czechia' & Year == 2018)]
-      dhh <- dh[Human > 0]
+      d = merge(d,h, all.x = TRUE)
+      d[Human == 0, humans := 0]
+      d[Human > 0, humans := 1] # dh = dh[!(Country%in%'Czechia' & Year == 2018)]
 
     d1 = d[Covid == 1, .N, by = Species]
     d2 = d[Covid == 0, .N, by = Species]
@@ -441,18 +441,22 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     ppp = merge(p1p,p2p)  # species-localities with data before and during,but without Poland data 
    
     p1p4 = d[Year!=2014 & Country!='Poland' & Covid == 1, .N, by = .(IDLocality, Species)]
-    p2p4 = d[Year!=2014 &Country!='Poland' & Covid == 0, .N, by = .(IDLocality, Species)]
+    p2p4 = d[Year!=2014 & Country!='Poland' & Covid == 0, .N, by = .(IDLocality, Species)]
     setnames(p1p4, old = 'N', new ='N_during')
     setnames(p2p4, old = 'N', new ='N_before')
     ppp4 = merge(p1p4,p2p4) # species-localities with data before and during, but without Poland & 2014 data
 
-    s = d[Covid == 1]
-    s[, Nsp := .N, by ='Species']
-    s[, sp := gsub('[_]', ' ', Species)]
     # add google mobility
-    s = merge(s, g[,.(Country,  date_, parks_percent_change_from_baseline)], all.x = TRUE)
-    s[, year_ := as.character(Year)]  
-    s = merge(s, h, all.x = TRUE, by  = "IDObs")
+    d[, sp := gsub("[_]", " ", Species)]
+    d = merge(d, g[,.(Country,  date_, parks_percent_change_from_baseline)], all.x = TRUE, by = c('Country', 'date_'))
+    d[, year_ := as.character(Year)]  
+    
+
+    dh = d[!is.na(Human)] # summary(factor(dh$Year))
+    dhh <- dh[Human > 0]
+
+    s = d[Covid == 1]
+    s[, Nsp := .N, by = "Species"]
 
     ss = s[!is.na(parks_percent_change_from_baseline)]
     ss[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
@@ -461,6 +465,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     ss[, sp_country_google:= paste(sp_country, google)]
 
     g[, weekday := weekdays(date_)]
+
+    sh <- s[!is.na(Human)]
+    ssh <- ss[!is.na(Human)]
 #'
 #' ***
 #' 
@@ -1440,7 +1447,7 @@ out_FID_c %>%
      grid.draw(rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_)))
 
      if(save_plot==TRUE){
-     ggsave(here::here("Outputs/Fig_S2_rev_v6.png"), rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_)), width = 30, height = 15, units = "cm")
+     ggsave(here::here("Outputs/Fig_S1_rev_v6.png"), rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_)), width = 30, height = 15, units = "cm")
      }
 #' <a name="F_S1">
 #' **Figure S1 | Comparing estimates from alternative models.**</a> Changes in avian tolerance towards humans in response to (a) Period (before vs during the COVID-19 shutdowns) (b) stringency of governmental measures and (c) Google Mobility. The dots with horizontal lines represent the estimated standardised effect size and their 95% confidence intervals based on the joint posterior distribution of 5,000 simulated values generated by the **sim** function  from the *arm* R-package (Gelman et al. 2016) from the output of the mixed models (for details see [Table S2](#T_S2a)). The name of each effect size highlights the corresponding model in [Table S2a](#T_S2a) for (a), [Table S2b](#T_S2b) for (b) and [Table S2c](#T_S2c) for (c), the random structure of the specific model, if applicable, the condition used to reduce the dataset, and sample size. Depicted are effect sizes based on full (01) and reduced datasets with ≥5 (02) or ≥10 observations per species and period (03). For plots of model assumptions see https://doi.org/10.17605/OSF.IO/WUZH7 (Bulla et al. 2022). Note that effect sizes are small and estimates centre around zero.
@@ -1580,12 +1587,15 @@ out_FID_c %>%
 #' ***
 #' 
 #' ### Correlations among predictors
-#+ Fig_S2_cor_pred, fig.width=7.5, fig.height = 7.5
+#+ Fig_S2_cor_pred, fig.width=9, fig.height = 9
 d[, sin_rad := sin(rad)]
 d[, cos_rad := cos(rad)]
 
-dp <- d[, c("SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day")]
-setnames(dp, old = c("SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day"), new = c("Starting distance\nln(m)", "Flock size\nln(m)", "Body mass\nln(m)", "Sine\nof radians", "Cosine\nof radians", "Temperature\n°C", "Day"))
+dp <- d[, c("Covid", "StringencyIndex", "parks_percent_change_from_baseline", "Human", "SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day")]
+setnames(dp, old = c("Covid", "StringencyIndex", "parks_percent_change_from_baseline", "Human", "SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day"), new = c("Period", "Stringency Index", "Google Moility", "# of humans", "Starting distance\nln(m)", "Flock size\nln(m)", "Body mass\nln(m)", "Sine\nof radians", "Cosine\nof radians", "Temperature\n°C", "Day"))
+
+# dp <- d[, c("SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day")]
+# setnames(dp, old = c("SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day"), new = c("Starting distance\nln(m)", "Flock size\nln(m)", "Body mass\nln(m)", "Sine\nof radians", "Cosine\nof radians", "Temperature\n°C", "Day"))
 
 #if (save_plot == TRUE) {
 #  png(here::here("Outputs/Fig_S1_rev.png"), width = 19, height = 19, units = "cm", bg = "transparent", res = 600)
@@ -1597,7 +1607,7 @@ chart.Correlation(dp, histogram = TRUE, pch = 19, alpha = 0.5)
 mtext("Single observations", side = 3, line = 3)
 
 #' <a name="F_S2">
-#' **Figure S2 | Pairwise correlations among fixed effects used in this study.**</a> On the diagonal: histograms and density lines (red) for each variable. Above diagonal: Pearson’s correlation with stars indicating significance . Below diagonal: the bivariate scatterplots, with each dot representing a single observation and a red line representing smoothed fit. Created with *chart.Correlation* function from R-package *PerformanceAnalytics* (Peterson & Carl 2020).
+#' **Figure S2 | Pairwise correlations among predictors of escape distance used in this study.**</a> On the diagonal: histograms and density lines (red) for each variable. Above diagonal: Pearson’s correlation with stars indicating significance . Below diagonal: the bivariate scatterplots, with each dot representing a single observation and a red line representing smoothed fit. Note that first four predictors were never entered togetheer in a single model with escape distance as dependent variable. Created with *chart.Correlation* function from R-package *PerformanceAnalytics* (Peterson & Carl 2020).
 #'
 #' ***
 #' 
@@ -2239,7 +2249,7 @@ out_g_s %>%
 #' 
 #' ***
 #' 
-#' ### Effect sizes for stringency & Google Mobility
+#' ### Effect sizes for stringency, Google Mobility & # of humans
 # predictions for fig and table for stringency
  # full
  mss <- lmer(scale(log(FID)) ~
@@ -2499,92 +2509,6 @@ est_psx[, control_for_starting_distance := "no"]
   out_FID_s[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
   fwrite(file = here::here("Outputs/Table_S4_rev.csv"), out_FID_s)
 
-  load(here::here("Data/dat_est_Stringency_rev.Rdata"))
-  os[predictor %in% c("scale(StringencyIndex)"), predictor := "Stringency Index"]
-  oso <- os[predictor %in% c("Stringency Index")]
-  oso[, N:=as.numeric(sub('.*N = ', '', model))]
-  # add meta-analytical mean
-    oso_s = oso[control_for_starting_distance == 'yes']
-    met = summary(meta.summaries(d = oso_s$estimate, se = oso_s$sd, method = "fixed", weights = oso_s$N))$summci
-    oso_met = data.table(predictor = "Period", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(metanalytical)", N = NA)
-
-    oso_sx = oso[control_for_starting_distance == "no"]
-    metx = summary(meta.summaries(d = oso_sx$estimate, se = oso_sx$sd, method = "fixed", weights = oso_sx$N))$summci
-    oso_metx = data.table(predictor = "Period", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(metanalytical)", N = NA)
-    
-    oso = rbind(oso, oso_met, oso_metx)
-      
-  oso[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(metanalytical)", "All\n(mixed model)")))]
-
-  # prepare for adding N
-  oso[, N := as.character(N)]
-  oso[control_for_starting_distance == "no" | is.na(N), N := ""]
-  oso[, n_pos := 0.35]
-
-  width_ <- .5 # spacing between error bars
-
-  #col_ <- c(brewer.pal(n = 12, name = "Paired"), "grey30", "grey80")
-  #Tol_bright <- c("#EE6677", "#228833", "#4477AA", "#CCBB44", "#66CCEE", "#AA3377", "#BBBBBB")
-  #Tol_muted <- c("#88CCEE", "#44AA99", "#117733", "#332288", "#DDCC77", "#999933", "#CC6677", "#882255", "#AA4499", "#DDDDDD")
-  #Tol_light <- c("#BBCC33", "#AAAA00", "#77AADD", "#EE8866", "#EEDD88", "#FFAABB", "#99DDFF", "#44BB99", "#DDDDDD")
-
-  # From Color Universal Design (CUD): https://jfly.uni-koeln.de/color/
-  #Okabe_Ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
-  #col_ = Okabe_Ito[7:1]
-  # JAMA and LocusZoom modified order
-  #col_ =  c("#374E55FF", "#374E55FF", "#DF8F44FF", "#79AF97FF", "#00A1D5FF", "#B24745FF",  "#80796BFF") #"#6A6599FF",
-  #col_ <- c("#357EBDFF", "#9632B8FF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#D43F3AFF", "#D43F3AFF")[7:1] # "#D43F3AFF", "#B8B8B8FF"
-  col_ = c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1] # "#D43F3AFF", "#B8B8B8FF"
-  #show_col(col_)
-  gs6a = 
-  ggplot(oso, aes(x = estimate, y = Country, col = Country, shape = control_for_starting_distance)) +
-      geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
-      geom_errorbarh(aes(xmin = lwr, xmax = upr), height = 0, position = ggstance::position_dodgev(width_)) +
-      # geom_point(position = ggstance::position_dodgev(.6)) +
-      geom_point(position = position_dodge(width = width_), bg = "white", size = 1.1) +
-      # scale_color_viridis(discrete=TRUE, begin=0, end = 0.5)  +
-      # scale_fill_viridis(discrete=TRUE, begin=0, end = 0.5) +
-      # geom_text( aes(x = n_pos,label = N), vjust = 0, size = 1.75, position = ggstance::position_dodgev(width_))+ # 3 positions for 3 bars
-      # annotate("text", x=log10(3), y=85, label= "Used", col = "grey30", size = 2.5)+
-      geom_text( aes(x = n_pos,label = N), vjust = 1, size = 1.75, position = ggstance::position_dodgev(width_))+
-      scale_shape_manual(name = "Controlled for\nstarting distance", guide = guide_legend(reverse = TRUE), values = c(21, 19)) +
-      #scale_color_jama(guide = "none")+ #, palette = 'light'
-      scale_color_manual(guide = "none", values = col_) + #guide_legend(reverse = TRUE)
-      scale_x_continuous(breaks = round(seq(-0.3, 0.4, by = 0.1), 1)) +
-      ylab("") +
-      xlab("Standardised effect size of\nStringency Index\n[on flight initiation distance]") +
-      labs(tag = 'a)')+
-      # coord_cartesian(xlim = c(-.15, .15)) +
-      # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
-      theme_bw() +
-      theme(
-          legend.position = "right",
-          plot.tag = element_text(size = 7),
-          legend.title = element_text(size = 7),
-          legend.text = element_text(size = 6),
-          # legend.spacing.y = unit(0.1, 'cm'),
-          legend.key.height = unit(0.5, "line"),
-          legend.margin = margin(0, 0, 0, 0),
-          # legend.position=c(0.5,1.6),
-          plot.title = element_text(color = "grey", size = 7),
-          plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 1, unit = "pt"),
-          panel.grid = element_blank(),
-          panel.border = element_blank(),
-          panel.background = element_blank(),
-          axis.line = element_line(colour = ax_lines, size = 0.25),
-          axis.line.y = element_blank(),
-          axis.ticks.y = element_blank(),
-          axis.ticks.x = element_line(colour = ax_lines, size = 0.25),
-          # axis.text.x = element_text()
-          axis.ticks.length = unit(1, "pt"),
-          axis.text.x = element_text(, size = 6),
-          axis.text.y = element_text(colour = "black", size = 7),
-          axis.title = element_text(size = 7)
-      )
-
-  if(save_plot==TRUE){
-  ggsave(here::here("Outputs/Fig_S6a_Stringency.png"), gs6a, width = 8, height = 6.5, unit = "cm", dpi = 600)
-  }
 # predictions for Fig and Table - Google Mobility
  # full
  mgs <- lmer(scale(log(FID)) ~
@@ -2844,6 +2768,325 @@ est_pgx[, control_for_starting_distance := "no"]
   out_FID_g[, effect := paste("Google Mobility (slope) |", gsub(" Google Mobility", "", effect))]
   fwrite(file = here::here("Outputs/Table_S5_rev.csv"), out_FID_g)
 
+# predictions for Fig and Table - # of humans
+# full
+mhs <- lmer(scale(log(FID)) ~
+  scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | Year) + (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) +
+  (scale(Human) | Country) + (1 | IDLocality) + (1 | sp_loc),
+data = dh, REML = FALSE
+)
+
+est_mhs <- est_out(mhs, "ALL: (1|Year) + (1|weekday) + (1|genus) + (1|Species)  + (1|sp_day_year) + (scale(Human) |Country) + (1|IDLocality) +(1|sp_loc)")
+est_mhs[, control_for_starting_distance := "yes"]
+
+mhx <- lmer(scale(log(FID)) ~
+  # scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | Year) + (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) +
+  (scale(Human) | Country) + (1 | IDLocality) + (1 | sp_loc),
+data = dh, REML = FALSE
+)
+est_mhx <- est_out(mhx, "ALL: (1|Year) + (1|weekday) + (1|genus) + (1|Species) + (1|sp_day_year) + (scale(Human) |Country) + (1|IDLocality) +(1|sp_loc)")
+est_mhx[, control_for_starting_distance := "no"]
+
+
+# CZ - singular fits only due to genera estimated as zero (removing it changes no results)
+chs <- lmer(scale(log(FID)) ~
+  scale(Year) +
+  scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality) + (1 | sp_loc),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = dh[Country == "Czechia"], REML = FALSE
+)
+est_chs <- est_out(chs, "Czechia:(1|weekday)+(1|genus)+(1|Species)+(1|sp_day_year)+(1|IDLocality)+(1|sp_loc)")
+est_chs[, control_for_starting_distance := "yes"]
+
+chx <- lmer(scale(log(FID)) ~
+  scale(Year) +
+  scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality) + (1 | sp_loc),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = dh[Country == "Czechia"], REML = FALSE
+)
+est_chx <- est_out(chx, "Czechia: (1|weekday) + (1|genus)+(1|Species)+(1|sp_day_year)+(1|IDLocality)+(1|sp_loc)")
+est_chx[, control_for_starting_distance := "no"]
+
+# FI
+fhs <- lmer(scale(log(FID)) ~
+  scale(Year) +
+  scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality) + (1 | sp_loc),
+data = dh[Country == "Finland"], REML = FALSE
+)
+est_fhs <- est_out(fhs, "Finland: (1|weekday) + (1|genus)+(1|Species)+(1|sp_day_year)+(1|IDLocality)+(1|sp_loc)")
+est_fhs[, control_for_starting_distance := "yes"]
+
+fhx <- lmer(scale(log(FID)) ~
+  scale(Year) +
+  # scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality) + (1 | sp_loc),
+data = dh[Country == "Finland"], REML = FALSE
+)
+est_fhx <- est_out(fhx, "Finland: (1|weekday) + (1|genus)+(1|Species)+(1|sp_day_year)+(1|IDLocality)+(1|sp_loc)")
+est_fhx[, control_for_starting_distance := "no"]
+
+# HU - singular fits only due to sp_loc estimated as zero (removing it changes no results)
+hhs <- lmer(scale(log(FID)) ~
+  scale(Year) +
+  scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality) + (1 | sp_loc),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = dh[Country == "Hungary"], REML = FALSE
+)
+est_hhs <- est_out(hhs, "Hungary: (1|weekday) + (1|genus)+(1|Species)+(1|sp_day_year)+(1|IDLocality)+(1|sp_loc)")
+est_hhs[, control_for_starting_distance := "yes"]
+
+hhx <- lmer(scale(log(FID)) ~
+  scale(Year) +
+  # scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality) + (1 | sp_loc),
+# (1 | Year) + (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = dh[Country == "Hungary"], REML = FALSE
+)
+est_hhx <- est_out(hhx, "Hungary: (1|weekday) + (1|genus)+(1|Species)+(1|sp_day_year)+(1|IDLocality)+(1|sp_loc)")
+est_hhx[, control_for_starting_distance := "no"]
+
+# PL
+phs <- lmer(scale(log(FID)) ~
+  scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = dh[Country == "Poland"], REML = FALSE
+)
+est_phs <- est_out(phs, "Poland: (1|weekday) + (1|genus)+(1|Species)+(1|sp_day_year)")
+est_phs[, control_for_starting_distance := "yes"]
+
+phx <- lmer(scale(log(FID)) ~
+  # scale(log(SD)) +
+  scale(log(FlockSize)) +
+  scale(log(BodyMass)) +
+  scale(sin(rad)) + scale(cos(rad)) +
+  # scale(Day)+
+  scale(Temp) +
+  scale(Human) +
+  (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year),
+# (1 | Year) + (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = dh[Country == "Poland"], REML = FALSE
+)
+est_phx <- est_out(phx, "Poland: (1|weekday) + (1|genus)+(1|Species)+(1|sp_day_year)")
+est_phx[, control_for_starting_distance := "no"]
+
+# combine
+est_mhs[, Country := "All\n(mixed model)"]
+est_mhx[, Country := "All\n(mixed model)"]
+est_chs[, Country := "Czechia"]
+est_chx[, Country := "Czechia"]
+est_hhs[, Country := "Hungary"]
+est_hhx[, Country := "Hungary"]
+est_phs[, Country := "Poland"]
+est_phx[, Country := "Poland"]
+est_fhs[, Country := "Finland"]
+est_fhx[, Country := "Finland"]
+
+oh <- rbind(
+  est_mhs, est_mhx,
+  est_chs, est_chx,
+  est_hhs, est_hhx,
+  est_phs, est_phx,
+  est_fhs, est_fhx
+)
+save(oh, file = here::here("Data/dat_est_numberOFhumans_rev.Rdata")) # save(oh, file = here::here("Data/dat_est_humans_rev_no_2018-CZ.Rdata"))
+
+# model ass
+m_ass(name = "Table S6 - full a", mo = mhs, dat = dh, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+m_ass(name = "Table S6 - full b", mo = mhx, dat = dh, fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+
+m_ass(name = "Table S6 - CZ a", mo = chs, dat = dh[Country == "Czechia"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+m_ass(name = "Table S6 - CZ b", mo = chx, dat = dh[Country == "Czechia"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+
+m_ass(name = "Table S6 - FI a", mo = fhs, dat = dh[Country == "Finland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+m_ass(name = "Table S6 - FI b", mo = fhx, dat = dh[Country == "Finland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+
+m_ass(name = "Table S6 - HU a", mo = hhs, dat = dh[Country == "Hungary"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+m_ass(name = "Table S6 - HU b", mo = hhx, dat = dh[Country == "Hungary"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+
+m_ass(name = "Table S6 - PL a", mo = phs, dat = dh[Country == "Poland"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+m_ass(name = "Table S6 - PL b", mo = phx, dat = dh[Country == "Poland"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "sin", "cos", "", ""), outdir = "Outputs/modelAss/")
+
+# estimatees for table
+mhs_out <- m_out(name = "Table S6 - full a", dep = "Escape distance", model = mhs, nsim = 5000)
+mhx_out <- m_out(name = "Table S6 - full b", dep = "Escape distance", model = mhx, nsim = 5000)
+chs_out <- m_out(name = "Table S6 - CZ a", dep = "Escape distance", model = chs, nsim = 5000)
+chx_out <- m_out(name = "Table S6 - CZ b", dep = "Escape distance", model = chx, nsim = 5000)
+fhs_out <- m_out(name = "Table S6 - FI a", dep = "Escape distance", model = fhs, nsim = 5000)
+fhx_out <- m_out(name = "Table S6 - FI b", dep = "Escape distance", model = fhx, nsim = 5000)
+hhs_out <- m_out(name = "Table S6 - HU a", dep = "Escape distance", model = hhs, nsim = 5000)
+hhx_out <- m_out(name = "Table S6 - HU b", dep = "Escape distance", model = hhx, nsim = 5000)
+phs_out <- m_out(name = "Table S6 - PL a", dep = "Escape distance", model = phs, nsim = 5000)
+phx_out <- m_out(name = "Table S6 - PL b", dep = "Escape distancey", model = phx, nsim = 5000)
+
+out_FID_h <- rbind(mhs_out, mhx_out, fhs_out, fhx_out, phs_out, phx_out, chs_out, chx_out, hhs_out, hhx_out, fill = TRUE)
+out_FID_h[is.na(out_FID_h)] <- ""
+out_FID_h[, effect := gsub("scale\\(Human\\)", "# of humans present", effect)]
+out_FID_h[, effect := gsub("scale\\(Year\\)", "year", effect)]
+out_FID_h[, effect := gsub("scale\\(log\\(SD\\)", "starting distance (ln)", effect)]
+out_FID_h[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+out_FID_h[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
+out_FID_h[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
+out_FID_h[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
+out_FID_h[, effect := gsub("scale\\(cos\\(rad\\)\\)", "time (cosine of radians)", effect)]
+out_FID_h[, effect := gsub("Species", "species", effect)]
+out_FID_h[, effect := gsub("Country", "country", effect)]
+out_FID_h[, effect := gsub("sp_day_year", "species within day & year", effect)]
+out_FID_h[, effect := gsub("IDLocality", "site", effect)]
+out_FID_h[, effect := gsub("sp_loc", "species within site", effect)]
+out_FID_h[, effect := gsub("country # of humans present", "# of humans (slope) | country", effect)]
+fwrite(file = here::here("Outputs/Table_S6.csv"), out_FID_h) # fwrite(file = here::here("Outputs/Table_S6_rev_no2018CZ.csv"), out_FID_h)
+
+#+ Fig_S6 est_str, fig.width=3*2, fig.height = 2.56
+  # fig.width=8*2*0.393701, fig.height = 2.56*0.393701
+  load(here::here("Data/dat_est_Stringency_rev.Rdata"))
+  os[predictor %in% c("scale(StringencyIndex)"), predictor := "Stringency Index"]
+  oso <- os[predictor %in% c("Stringency Index")]
+  oso[, N:=as.numeric(sub('.*N = ', '', model))]
+  # add meta-analytical mean
+    oso_s = oso[control_for_starting_distance == 'yes']
+    met = summary(meta.summaries(d = oso_s$estimate, se = oso_s$sd, method = "fixed", weights = oso_s$N))$summci
+    oso_met = data.table(predictor = "Period", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(metanalytical)", N = NA)
+
+    oso_sx = oso[control_for_starting_distance == "no"]
+    metx = summary(meta.summaries(d = oso_sx$estimate, se = oso_sx$sd, method = "fixed", weights = oso_sx$N))$summci
+    oso_metx = data.table(predictor = "Period", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(metanalytical)", N = NA)
+    
+    oso = rbind(oso, oso_met, oso_metx)
+      
+  oso[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(metanalytical)", "All\n(mixed model)")))]
+
+  # prepare for adding N
+  oso[, N := as.character(N)]
+  oso[control_for_starting_distance == "no" | is.na(N), N := ""]
+  oso[, n_pos := 0.35]
+
+  width_ <- .5 # spacing between error bars
+
+  #col_ <- c(brewer.pal(n = 12, name = "Paired"), "grey30", "grey80")
+  #Tol_bright <- c("#EE6677", "#228833", "#4477AA", "#CCBB44", "#66CCEE", "#AA3377", "#BBBBBB")
+  #Tol_muted <- c("#88CCEE", "#44AA99", "#117733", "#332288", "#DDCC77", "#999933", "#CC6677", "#882255", "#AA4499", "#DDDDDD")
+  #Tol_light <- c("#BBCC33", "#AAAA00", "#77AADD", "#EE8866", "#EEDD88", "#FFAABB", "#99DDFF", "#44BB99", "#DDDDDD")
+
+  # From Color Universal Design (CUD): https://jfly.uni-koeln.de/color/
+  #Okabe_Ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
+  #col_ = Okabe_Ito[7:1]
+  # JAMA and LocusZoom modified order
+  #col_ =  c("#374E55FF", "#374E55FF", "#DF8F44FF", "#79AF97FF", "#00A1D5FF", "#B24745FF",  "#80796BFF") #"#6A6599FF",
+  #col_ <- c("#357EBDFF", "#9632B8FF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#D43F3AFF", "#D43F3AFF")[7:1] # "#D43F3AFF", "#B8B8B8FF"
+  col_ = c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1] # "#D43F3AFF", "#B8B8B8FF"
+  #show_col(col_)
+  gs6a = 
+  ggplot(oso, aes(x = estimate, y = Country, col = Country, shape = control_for_starting_distance)) +
+      geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
+      geom_errorbarh(aes(xmin = lwr, xmax = upr), height = 0, position = ggstance::position_dodgev(width_)) +
+      # geom_point(position = ggstance::position_dodgev(.6)) +
+      geom_point(position = position_dodge(width = width_), bg = "white", size = 1.1) +
+      # scale_color_viridis(discrete=TRUE, begin=0, end = 0.5)  +
+      # scale_fill_viridis(discrete=TRUE, begin=0, end = 0.5) +
+      # geom_text( aes(x = n_pos,label = N), vjust = 0, size = 1.75, position = ggstance::position_dodgev(width_))+ # 3 positions for 3 bars
+      # annotate("text", x=log10(3), y=85, label= "Used", col = "grey30", size = 2.5)+
+      geom_text( aes(x = n_pos,label = N), vjust = 1, size = 1.75, position = ggstance::position_dodgev(width_))+
+      scale_shape_manual(name = "Controlled for\nstarting distance", guide = guide_legend(reverse = TRUE), values = c(21, 19)) +
+      #scale_color_jama(guide = "none")+ #, palette = 'light'
+      scale_color_manual(guide = "none", values = col_) + #guide_legend(reverse = TRUE)
+      scale_x_continuous(breaks = round(seq(-0.3, 0.4, by = 0.1), 1), , expand = c(0.04, 0.04)) +
+      ylab("") +
+      xlab("Standardised effect size of\nStringency Index\n[on flight initiation distance]") +
+      labs(tag = 'a)')+
+      # coord_cartesian(xlim = c(-.15, .15)) +
+      # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
+      theme_bw() +
+      theme(
+          legend.position = "right",
+          plot.tag = element_text(size = 7),
+          legend.title = element_text(size = 7),
+          legend.text = element_text(size = 6),
+          # legend.spacing.y = unit(0.1, 'cm'),
+          legend.key.height = unit(0.5, "line"),
+          legend.margin = margin(0, 0, 0, 0),
+          # legend.position=c(0.5,1.6),
+          plot.title = element_text(color = "grey", size = 7),
+          plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 1, unit = "pt"),
+          panel.grid = element_blank(),
+          panel.border = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = ax_lines, size = 0.25),
+          axis.line.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.ticks.x = element_line(colour = ax_lines, size = 0.25),
+          # axis.text.x = element_text()
+          axis.ticks.length = unit(1, "pt"),
+          axis.text.x = element_text(, size = 6),
+          axis.text.y = element_text(colour = "black", size = 7),
+          axis.title = element_text(size = 7)
+      )
+
+  if(save_plot==TRUE){
+  ggsave(here::here("Outputs/Fig_S6a_Stringency.png"), gs6a, width = 8, height = 6.5, unit = "cm", dpi = 600)
+  }
+
+# b
 load(here::here("Data/dat_est_Google_rev.Rdata"))
 og[predictor %in% c("scale(parks_percent_change_from_baseline)"), predictor := "Google Mobility"]
 ogo <- og[predictor %in% c("Google Mobility")]
@@ -2867,20 +3110,7 @@ ogo[control_for_starting_distance == "no" | is.na(N), N := ""]
 ogo[, n_pos := .15]
 
 width_ <- .5 # spacing between error bars
-
-#col_ <- c(brewer.pal(n = 12, name = "Paired"), "grey30", "grey80")
-#Tol_bright <- c("#EE6677", "#228833", "#4477AA", "#CCBB44", "#66CCEE", "#AA3377", "#BBBBBB")
-#Tol_muted <- c("#88CCEE", "#44AA99", "#117733", "#332288", "#DDCC77", "#999933", "#CC6677", "#882255", "#AA4499", "#DDDDDD")
-#Tol_light <- c("#BBCC33", "#AAAA00", "#77AADD", "#EE8866", "#EEDD88", "#FFAABB", "#99DDFF", "#44BB99", "#DDDDDD")
-
-# From Color Universal Design (CUD): https://jfly.uni-koeln.de/color/
-#Okabe_Ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
-#col_ = Okabe_Ito[7:1]
-# JAMA and LocusZoom modified order
-#col_ =  c("#374E55FF", "#374E55FF", "#DF8F44FF", "#79AF97FF", "#00A1D5FF", "#B24745FF",  "#80796BFF") #"#6A6599FF",
-#col_ <- c("#357EBDFF", "#9632B8FF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#D43F3AFF", "#D43F3AFF")[7:1] # "#D43F3AFF", "#B8B8B8FF"
-col_ = c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1] # "#D43F3AFF", "#B8B8B8FF"
-#show_col(col_)
+col_ = c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1] # "#D43F3AFF", "#B8B8B8FF" #show_col(col_)
 
 gs6b = 
 ggplot(ogo, aes(x = estimate, y = Country, col = Country, shape = control_for_starting_distance)) +
@@ -2930,23 +3160,127 @@ ggplot(ogo, aes(x = estimate, y = Country, col = Country, shape = control_for_st
 if(save_plot==TRUE){
 ggsave(here::here("Outputs/Fig_S6b_Google_rev_width_CustomLocusZoom_v2.png"), gs6b, width = 8, height = 6.5, unit = "cm", dpi = 600)
 }
-#+ Fig_S6 est_str, fig.width=3*1.5, fig.height = 2.56
-#gg_S6 <- ggarrange(
- # gs6a+theme(legend.position = "none"), gs6b,
-  #nrow = 1, widths=c(1, 1.3)
-#)
-gg_S6 <- ggarrange(
-  gs6a, NULL, gs6b, widths = c(1,0.05,1),
-  nrow = 1, common.legend = TRUE, legend = 'right'
+
+# c
+load(here::here("Data/dat_est_numberOFhumans_rev.Rdata")) # load(here::here("Data/dat_est_humans_rev_no_2018-CZ.Rdata"))
+
+oh[predictor %in% c("scale(Human)"), predictor := "# of humans"]
+oho <- oh[predictor %in% c("# of humans")]
+oho[, N := as.numeric(sub(".*N = ", "", model))]
+# add meta-analytical mean
+oho_s <- oho[control_for_starting_distance == "yes"]
+met <- summary(meta.summaries(d = oho_s$estimate, se = oho_s$sd, method = "fixed", weights = oho_s$N))$summci
+oho_met <- data.table(predictor = "# of humans", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(metanalytical)", N = NA)
+
+oho_sx <- oho[control_for_starting_distance == "no"]
+metx <- summary(meta.summaries(d = oho_sx$estimate, se = oho_sx$sd, method = "fixed", weights = oho_sx$N))$summci
+oho_metx <- data.table(predictor = "# of humans", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(metanalytical)", N = NA)
+
+oho_au = data.table(predictor = "# of humans", estimate = NA, lwr = NA, upr = NA, sd = NA, model = NA, control_for_starting_distance = c("no","yes"),  Country = "Australia", N = 0) # dummy for australia
+oho <- rbind(oho, oho_met, oho_metx, oho_au)
+
+oho[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary","Australia", "Combined\n(metanalytical)", "All\n(mixed model)")))]
+
+# prepare for adding N
+oho[, N := as.character(N)]
+oho[control_for_starting_distance == "no" | is.na(N), N := ""]
+oho[, n_pos := .1]
+
+width_ <- .5 # spacing between error bars
+col_ = c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1] #col_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#9632B8FF", "#9632B8FF")[6:1] # "#D43F3AFF", "#B8B8B8FF" # show_col(col_)
+
+gs6c <-
+  ggplot(oho, aes(x = estimate, y = Country, col = Country, shape = control_for_starting_distance)) +
+  geom_text(aes(x = n_pos, label = N), vjust = 1, size = 1.75, position = ggstance::position_dodgev(width_)) +
+  geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
+  geom_errorbarh(aes(xmin = lwr, xmax = upr), height = 0, position = ggstance::position_dodgev(width_)) +
+  # geom_point(position = ggstance::position_dodgev(.6)) +
+  geom_point(position = position_dodge(width = width_), bg = "white", size = 1.1) +
+  # scale_color_viridis(discrete=TRUE, begin=0, end = 0.5)  +
+  # scale_fill_viridis(discrete=TRUE, begin=0, end = 0.5) +
+  # geom_text( aes(x = n_pos,label = N), vjust = 0, size = 1.75, position = ggstance::position_dodgev(width_))+ # 3 positions for 3 bars
+  # annotate("text", x=log10(3), y=85, label= "Used", col = "grey30", size = 2.5)+
+ 
+  scale_shape_manual(name = "Controlled for\nstarting distance", guide = guide_legend(reverse = TRUE), values = c(21, 19)) +
+  # scale_color_jama(guide = "none")+ #, palette = 'light'
+  scale_color_manual(guide = "none", values = col_) + # guide_legend(reverse = TRUE)
+  scale_x_continuous(breaks = round(seq(-0.3, 0.1, by = 0.1), 1), limits = c(-0.3, 0.13)) +
+  ylab("") +
+  xlab("Standardised effect size of\n# of humans\n[on flight initiation distance]") +
+  labs(tag = "c)") +
+  # coord_cartesian(xlim = c(-.15, .15)) +
+  # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
+  theme_bw() +
+  theme(
+    plot.tag = element_text(size = 7),
+    legend.position = "right",
+    legend.title = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    # legend.spacing.y = unit(0.1, 'cm'),
+    legend.key.height = unit(0.5, "line"),
+    legend.margin = margin(0, 0, 0, 0),
+    # legend.position=c(0.5,1.6),
+    plot.title = element_text(color = "grey", size = 7),
+    plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 1, unit = "pt"),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = ax_lines, size = 0.25),
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.ticks.x = element_line(colour = ax_lines, size = 0.25),
+    # axis.text.x = element_text()
+    axis.ticks.length = unit(1, "pt"),
+    axis.text.x = element_text(, size = 6),
+    axis.text.y = element_text(colour = "black", size = 7),
+    axis.title = element_text(size = 7)
+  )
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_S6c_numberOFhumans.png"), gs6c, width = 8, height = 6.5, unit = "cm", dpi = 600)
+  # ggsave(here::here("Outputs/Fig_S6c_human_rev_width_CustomLocusZoom_v2_no2018CZ.png"), gs6c, width = 8, height = 6.5, unit = "cm", dpi = 600)
+}
+
+# combine
+
+  #gg_S6 <- ggarrange(
+  #  gs6a, NULL, gs6b, widths = c(1,0.05,1),
+  #  nrow = 1, common.legend = TRUE, legend = 'right'
+  #)
+
+gg_S6 <- gs6a + gs6b + gs6c +plot_layout(guides = "collect")
+
+# adjust tag
+gg_S6[[1]] <- gg_S6[[1]] + theme(
+  #plot.margin = margin(r = 2, l = 2),
+  plot.tag.position = c(.4, .98))
+
+# Remove title from second subplot & adjust tag
+gg_S6[[2]] <- gg_S6[[2]] + theme(
+  plot.margin = margin(r = 2, l = 2),
+  plot.tag.position = c(.035, .98),
+  axis.text.y = element_blank(),
+  axis.ticks.y = element_blank(),
+  axis.title.y = element_blank()
+  
+)
+
+# Remove title from third subplot & adjust tag
+gg_S6[[3]] <- gg_S6[[3]] + theme(
+   plot.tag.position = c(.035, .98),
+  axis.text.y = element_blank(),
+  axis.ticks.y = element_blank(),
+  axis.title.y = element_blank()
 )
 
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S6_rev.png"), gg_S6, width = 8*1.5, height = 6.5, unit = "cm", dpi = 600)
+  ggsave(here::here("Outputs/Fig_S6_rev_v2.png"), gg_S6, width = 8 * 2, height = 6.5, unit = "cm", dpi = 600)
 }
+
 gg_S6
+TODO: finalize legend
 #'
 #' <a name="F_S6">
-#' **Figure S6 | Changes in avian tolerance towards humans in response to (a) stringency of governmental measures, and (b) Google Mobility.**</a> The dots with horizontal lines represent estimated standardised effect size and their 95% confidence intervals, the numbers sample sizes. **For the country-specific and "All"**, the effect sizes and 95% confidence intervals come from the joint posterior distribution of 5000 simulated values generated by the sim function from the arm package (Gelman et al. 2022) using the mixed model outputs controlled for starting distance of the observer (filled circles) or not (empty circles; Table [S4](#T_S4) and [S5](#T_S5)). The models were further controlled for year, flock size (ln-transfomred), body size (ln-transformed), temperature (also a proxy for a day within the breeding season: r~Pearson~ = `r round(cor(d$Temp,d$Day_),2)`; Fig. [S2](#F_S2)), and time of a day, as well as for the non-independence of data points by fitting random intercepts of weekday, genus, species, species at a given day and year, country (in All - a global mixed model), site, and species within a site, while fitting, in case of "All" (global model an all countries) stringency index or Google Mobility as a random slope within country (i.e. allowing for different effect in each country). Fitting stringency index or Google Mobility as random slope at other random intercepts produces similar results (Fig. [S1b and S1c](#F_S1), Table [S2b](#T_S2b) and [S2c](#T_S2c)). The multicollinearity was small as correlations between predictors were weak (Fig. [S2](#F_S2)). **For the "Combined"**, the estimate and 95% confidence interval represent the meta-analytical mean based on the country estimates and their standard deviation (from the country-specific models), and sample size per country. These analyses were restricted to data collected in the Period during the COVID-19 shutdowns. Stringency index data were sourced from ([Hale et al. 2021](https://ourworldindata.org/covid-stringency-index)), Google Mobility from [Google Mobility Reports](https://www.google.com/covid19/mobility).
+#' **Figure S6 | Changes in avian tolerance towards humans in response to (a) stringency of governmental measures, (b) Google Mobility and (c) number of humans during escape distancee trial.**</a> The dots with horizontal lines represent estimated standardised effect size and their 95% confidence intervals, the numbers sample sizes. **For the country-specific and "All"**, the effect sizes and 95% confidence intervals come from the joint posterior distribution of 5000 simulated values generated by the sim function from the arm package (Gelman et al. 2022) using the mixed model outputs controlled for starting distance of the observer (filled circles) or not (empty circles; Table [S4](#T_S4), [S5](#T_S5) and [S6](#T_S6)). The models were further controlled for year, flock size (ln-transfomred), body size (ln-transformed), temperature (also a proxy for a day within the breeding season: r~Pearson~ = `r round(cor(d$Temp,d$Day_),2)`; Fig. [S2](#F_S2)), and time of a day, as well as for the non-independence of data points by fitting random intercepts of weekday, genus, species, species at a given day and year, country (in All - a global mixed model), site, and species within a site, while fitting, in case of "All" (global model on all countries) stringency index, Google Mobility or number of humans as a random slope within country (i.e. allowing for different effect in each country). Fitting stringency index or Google Mobility as random slope at other random intercepts produces similar results (Fig. [S1b-dc](#F_S1), Table [S2b](#T_S2b), [S2c](#T_S2c) & [S2d](#T_S2d)). The multicollinearity was small as correlations between predictors were weak (Fig. [S2](#F_S2)). **For the "Combined"**, the estimate and 95% confidence interval represent the meta-analytical mean based on the country estimates and their standard deviation (from the country-specific models), and sample size per country. Stringency index data were sourced from ([Hale et al. 2021](https://ourworldindata.org/covid-stringency-index)), Google Mobility from [Google Mobility Reports](https://www.google.com/covid19/mobility) and their analyses were restricted to data collected in the Period during the COVID-19 shutdowns. Number of humans was collected by us at the time of escape distance trial as number of humans within a 50 meter radius.
 #'
 #' <a name="T_S4">
 #' **Table S4 | Escape distance in relations to stringency index**</a>
@@ -3451,18 +3785,40 @@ ts5 %>%
 hd1= 
 ggplot(dh, aes(x = Human)) +
   geom_histogram() +scale_x_continuous(name = "# of humans")+
-  labs(tag = "a)", subtitle = "Original-scale")
+  labs(tag = "a)", subtitle = "All data\nOriginal-scale")
 hd2=
 ggplot(dh, aes(x = Human +0.01)) +
   geom_histogram() + 
   scale_x_continuous(name = "# of humans", trans = "log10", 
-  breaks = trans_breaks("log10", function(x) 10^x),
-  labels = trans_format("log10", math_format(10^.x))) +
-  labs(tag = "b)", subtitle = "Log-scale")
-ggarrange(hd1, hd2, ncol= 2, common.legend = TRUE)
+  breaks = c(0.01, 1, 10, 50),
+  labels = c(0, 1, 10, 50)) +
+  labs(tag = "b)", subtitle = "All data\nLog-scale")
+
+hd3 <-
+  ggplot(dhh, aes(x = Human)) +
+  geom_histogram() +
+  scale_x_continuous(name = "# of humans") +
+  labs(tag = "c)", subtitle = ">0 data\nOriginal-scale")
+hd4 <-
+  ggplot(dhh, aes(x = Human)) +
+  geom_histogram() +
+  scale_x_continuous(
+    name = "# of humans", trans = "log10"
+  ) +
+  labs(tag = "d)", subtitle = ">0 data\nLog-scale")
+
+hd1234 <- ggarrange(
+  hd1 + rremove("ylab") + rremove("xlab"), hd2 + rremove("ylab") + rremove("xlab"), 
+  hd3 + rremove("ylab") + rremove("xlab"), hd4 + rremove("ylab") + rremove("xlab"),
+  ncol = 2, nrow =2)
+annotate_figure(hd1234,
+  left = textGrob("# of observations", rot = 90, gp = gpar(cex = 1)),
+  bottom = textGrob("# of humans",gp = gpar(cex = 1))
+)
 ggsave(file = "Outputs/Fig_S9_humans_dist.png", width = 12, height = 5, units = "cm")
+
 #' <a name="F_S9">
-#' **Figure S9 | Human numbers at the time of obseration.**</a> Distribution of human numbers at the time of escape distance trial on original scale (a) and log-scale (b). N = 3504 observations.
+#' **Figure S9 | Human numbers at the time of obseration.**</a> Distribution of human numbers at the time of escape distance trial on original scale (a,c) and log-scale (b,d) and for all data (a-b; N = 3504 observations) and only cases when humans were present (c-d; N = 2327).
 #'
 #+ Fig_S10_hp_counntries, fig.width=27*0.393701, fig.height = 8*0.393701
 dh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
@@ -3484,7 +3840,7 @@ h1 = ggplot(dh, aes(col= Year_, x = Human, y = Country)) +
 
 h2 = ggplot(dh, aes(col = Year_, x = Human + 0.01,y = Country)) +
   geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
-  scale_x_continuous(trans = "log10", name = "# of humans + 0.01",
+  scale_x_continuous(trans = "log10", name = "# of humans",
   breaks = trans_breaks("log10", function(x) 10^x),
   labels = trans_format("log10", math_format(10^.x))) +
   guides(col = guide_legend(title = "Year", , reverse = TRUE)) + 
@@ -3518,16 +3874,16 @@ h4 = ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
     )
 
 ggarrange(h1,h2,h3,h4, ncol =4, common.legend = TRUE, legend = 'right', widths =c(1.35, 1, 1,1))  
-ggsave(file = 'Outputs/Fig_human_numbers.png', width = 27, height = 8, units = "cm")
+ggsave(file = 'Outputs/Fig_human_numbers_v2.png', width = 27, height = 8, units = "cm")
 #' <a name="F_S10">
 #' **Figure S10 | Human numbers at the time of obseration per country and yeaar.**</a> First two panels are based on all data, last two panels only on where humans were present. Numbers indicate sample sizes.
+
+
 #' TODO: S10 and S11 create real model data like for stringenccy and google mobiliity
 #' ### Human presenze ~ stringency & Google Mobility
-#+ Fig_S11_hp_stringncy&googl, fig.width=16*0.393701*2, fig.height = 8*0.393701*2
-sh <- s[!is.na(Human)]
-sh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
+#+ Fig_S11_hp_stringncy&googl, fig.width=10*0.393701*2, fig.height = 6*0.393701*2
 
-ssh <- ss[!is.na(Human)]
+sh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
 ssh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
 
 shg1 = 
@@ -3557,7 +3913,7 @@ ggplot(sh, aes(x = StringencyIndex, y = Human+0.01, col = Country, fill = Countr
   breaks = c(0.01, 1,12, 50),
   labels = c(0, 1,12,50))+
   coord_cartesian(ylim = c(0.005, 50)) +
-  labs(y = "# of humans", x = "Stringency index", tag = "b)")
+  labs(y = "# of humans", x = "Stringency index", tag = "c)")
 
 #ggarrange(shg1, shg2, ncol = 2, common.legend = TRUE, legend = 'right')
 #ggsave(file = "Outputs/Fig_human_numbers_stringeny.png", width = 16, height = 8, units = "cm")
@@ -3567,7 +3923,7 @@ sshg1 <-
   stat_smooth(method = "lm") +
   # geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
   geom_jitter(aes(y = Human+0.01, fill = Country), data = ssh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) + 
-  labs(y = '# of humans', tag = 'c)')+
+  labs(y = '# of humans', tag = 'b)')+
   stat_cor(method = "pearson", size = 2) + 
   coord_cartesian(ylim = c(0, 50)) +
   theme(
@@ -3600,11 +3956,213 @@ sshg2 <-
 
 ggarrange(shg1, sshg1, shg2, sshg2, ncol = 2, nrow = 2, common.legend = TRUE, legend = "right", widths = c(1.1,1), heights = c(1, 1.1))
 
-ggsave(file = "Outputs/Fig_humans_stringency&google.png", width = 16*2, height = 8*2, units = "cm")
+ggsave(file = "Outputs/Fig_humans_stringency&google.png", width = 10*2, height = 6*2, units = "cm")
 #' <a name="F_S11">
 #' **Figure S11 | Human numbers in relation to stringency index and google mobility.**</a> Dots represent individual data points (a, b on original scale; c, d on log-scale),  lines with shaded areas  fits with 95%CIs from linear models (wihtout any controls).
 
+TODO:
+#+ Fig_S11_pred 
+sh[, year_day := paste(Year,Day)]
+sh[, year_weekday := paste(Year, weekday)]
+
+sh_ = sh[Human > 0]
+
+lsh_ <- list()
+
+shf <- sh[Country == "Finland"]
+shfi <- lmer(log(Human+0.01) ~
+  Year +
+  StringencyIndex +
+  (scale(StringencyIndex) | year_weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = shf, REML = FALSE
+)
+bsim <- sim(shfi, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(shf$Year), StringencyIndex = seq(min(shf$StringencyIndex), max(shf$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Finland"
+newD$Year <- NULL
+lsh_[[1]] <- newD
+
+shc <- sh[Country == "Czechia"]
+shcz <- lmer(log(Human+0.01) ~
+  StringencyIndex +
+  (scale(StringencyIndex) | weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = shc, REML = FALSE
+)
+bsim <- sim(shcz, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(StringencyIndex = seq(min(shc$StringencyIndex), max(shc$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Czechia"
+lsh_[[2]] <- newD
+
+sh_h <- sh[Country == "Hungary"]
+shhu <- lmer(log(Human+0.01) ~
+  Year +
+  StringencyIndex +
+  (scale(StringencyIndex) | year_weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = sh_h, REML = FALSE
+)
+
+bsim <- sim(shhu, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(sh_h$Year), StringencyIndex = seq(min(sh_h$StringencyIndex), max(sh_h$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Hungary"
+newD$Year <- NULL
+lsh_[[3]] <- newD
+
+# Figure H_S
+h_s <- data.table(do.call(rbind, lsh_))
+h_s[, Country := factor(Country, levels = rev(c("Finland",  "Czechia", "Hungary")))]
+h_s[, pred_o:=exp(pred)-0.01]
+h_s[, lwr_o:=exp(lwr)-0.01]
+h_s[, upr_o:=exp(upr)-0.01]
+
+col_h <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
+col_h <- col_h[c(4,5,7)]
+
+ph <-
+  ggplot(h_s, aes(x = StringencyIndex, y = pred, col = Country)) +
+  geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
+  #geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
+  geom_jitter(aes(y = log(Human+0.01), fill = Country), data = sh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
+  geom_line(lwd = 1) +
+  labs(subtitle = "Mixed model per country predicitons", y = "Human presence [count]", x = "Stringency Index") +
+  coord_cartesian(xlim = c(25, 75), ylim = c(log(0.01), log(50))) +
+  #facet_wrap(~Country) +
+  # scale_color_locuszoom()+
+  # scale_fill_locuszoom(guide = "none")
+  scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
+  scale_y_continuous(breaks = log(c(0.01, 1,10,50)), labels = c(0,1,10,50)) +
+  # scale_y_continuous(breaks = round(seq(-100, 175, by = 25), 1)) +
+  scale_colour_manual(
+    values = col_h, guide = guide_legend(reverse = TRUE, override.aes = list(size = 0)),
+    labels = paste(
+      "<span style='color:",
+      col_h,
+      "'>",
+      levels(h_s$Country),
+      "</span>"
+    )
+  ) +
+  scale_fill_manual(values = col_h, guide = "none") +
+  theme_bw() +
+  theme(
+    legend.text = element_markdown(size = 6),
+    # legend.position = "right",
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(0.1, 'cm'),
+    legend.key.height = unit(0.5, "line"),
+    legend.key.size = unit(0, "line"),
+    legend.margin = margin(0, 0, 0, 0),
+    legend.box.margin = margin(-10, 1, -10, -10),
+    # legend.position=c(0.5,1.6),
+    plot.title = element_text(color = "grey", size = 7),
+    plot.subtitle = element_text(color = "grey60", size = 6),
+    plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 0.5, unit = "pt"),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = ax_lines, size = 0.25),
+    axis.ticks = element_line(colour = ax_lines, size = 0.25),
+    # axis.text.x = element_text()
+    axis.ticks.length = unit(1, "pt"),
+    axis.text = element_text(, size = 6),
+    axis.title = element_text(size = 7)
+  )
+ph
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_HS_temp_rev_widht_70mm.png"), ph #+ theme(plot.subtitle = element_blank())
+  , width = 7, height = 6, unit = "cm", dpi = 600)
+}
+
+ph2 <-
+  ggplot(h_s, aes(x = StringencyIndex, y = pred, col = Country)) +
+  geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
+  # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
+  geom_jitter(aes(y = log(Human + 0.01), fill = Country), data = sh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
+  geom_line(lwd = 1) +
+  labs(subtitle = "Mixed model per country predicitons", y = "Human presence [count]", x = "Stringency Index") +
+  coord_cartesian(xlim = c(25, 75), ylim = c(log(0.01), log(50))) +
+  facet_wrap(~Country) +
+  # scale_color_locuszoom()+
+  # scale_fill_locuszoom(guide = "none")
+  scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
+  scale_y_continuous(breaks = log(c(0.01, 1, 10, 50)), labels = c(0, 1, 10, 50)) +
+  # scale_y_continuous(breaks = round(seq(-100, 175, by = 25), 1)) +
+  scale_colour_manual(
+    values = col_h, guide = guide_legend(reverse = TRUE, override.aes = list(size = 0)),
+    labels = paste(
+      "<span style='color:",
+      col_h,
+      "'>",
+      levels(h_s$Country),
+      "</span>"
+    )
+  ) +
+  scale_fill_manual(values = col_h, guide = "none") +
+  theme_bw() +
+  theme(
+    legend.text = element_markdown(size = 6),
+    legend.position = "none",
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(0.1, 'cm'),
+    legend.key.height = unit(0.5, "line"),
+    legend.key.size = unit(0, "line"),
+    legend.margin = margin(0, 0, 0, 0),
+    legend.box.margin = margin(-10, 1, -10, -10),
+    # legend.position=c(0.5,1.6),
+    plot.title = element_text(color = "grey", size = 7),
+    plot.subtitle = element_text(color = "grey60", size = 6),
+    plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 0.5, unit = "pt"),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = ax_lines, size = 0.25),
+    axis.ticks = element_line(colour = ax_lines, size = 0.25),
+    # axis.text.x = element_text()
+    axis.ticks.length = unit(1, "pt"),
+    axis.text = element_text(, size = 6),
+    axis.title = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
+  )
+ph2
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_HS_temp_rev_widht_70mm_v2.png"), ph2 #+ theme(plot.subtitle = element_blank())
+    ,
+    width = 10, height = 6, unit = "cm", dpi = 600
+  )
+}
+
+#' **Figure S11 | Human numbers in relation to stringency index and google mobility.**</a> Dots represent individual data points (a, b on original scale; c, d on log-scale),  lines with shaded areas fits with 95%CIs from linear mixed effect models .
+#' 
 TODO:: continue here
+
+ggplot(dh, aes(x=Hour, y = Human+0.01, fill = Year_, col = Year_)) + geom_point() + stat_smooth() + facet_wrap(~Country) + scale_y_continuous(trans = 'log10')
 #+ Fig_S13_fid_hp_countries, fig.width=27*0.393701, fig.height = 8*0.393701
 hf1 = ggplot(dh, aes(x = Human, y = FID, col = Country)) +
   geom_jitter(alpha = 0.5) +
