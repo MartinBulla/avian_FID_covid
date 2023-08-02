@@ -3868,8 +3868,15 @@ bayes_factor(mH_no, mH_yes)
 post_prob(mH_yes, mH_no)
 
 # export models
-save(file = 'Data/rev_DAT_brms.Rdata', mP_no, mP_yes, m_no, m_yes, mG_no, mG_yes, mH_no, mH_yes)
-load(here::here("Data/rev_DAT_brms.Rdata"))
+save(file = 'Data/rev_DAT_brms_P.Rdata', mP_no, mP_yes)
+save(file = 'Data/rev_DAT_brms_S.Rdata', m_no, m_yes)
+save(file = 'Data/rev_DAT_brms_G.Rdata', mG_no, mG_yes)
+save(file = 'Data/rev_DAT_brms_H.Rdata', mH_no, mH_yes)
+
+load(here::here("Data/rev_DAT_brms_P.Rdata"))
+load(here::here("Data/rev_DAT_brms_S.Rdata"))
+load(here::here("Data/rev_DAT_brms_G.Rdata"))
+load(here::here("Data/rev_DAT_brms_H.Rdata"))
 v_sc <- (VarCorr(mP_yes, summary = FALSE)$scinam$sd)^2
 v_sp <- (VarCorr(mP_yes, summary = FALSE)$Species$sd)^2
 v_r <- (VarCorr(mP_yes, summary = FALSE)$residual$sd)^2

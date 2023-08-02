@@ -2,6 +2,7 @@
 from","Variance explained by phylogeny
 (95%CI)","Bayes
 factor",Probability of non-phylogenetic model
-Table S2a - model 01a,0-0.19%,99,0.98
-Table S2b - model 01a,0-0.38%,115,0.99
-Table S2c - model 01a,0-0.36%,96,0.99
+Table S2a - model 01a (Period),0-0.19%,461,0.99
+Table S2b - model 01a (stringency index),0-0.38%,54,0.99
+Table S2c - model 01a (Google Mobility),0-0.36%,153,0.99
+Table S2d - model 01a (# of humans),0-0.56%,138,0.99
