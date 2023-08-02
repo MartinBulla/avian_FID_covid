@@ -2254,6 +2254,419 @@ out_g_s %>%
 #' 
 #' ***
 #' 
+#' ### Exploration of # of humans
+dh[, Country := factor(Country, levels = (c("Finland", "Poland", "Czechia", "Hungary")))]
+dh[Covid == 0, Period := "Before COVID-19 shutdown"]
+dh[Covid == 1, Period := "During COVID-19 shutdown"]
+
+dhh[, Country := factor(Country, levels = (c("Finland", "Poland", "Czechia", "Hungary")))]
+dhh[Covid == 0, Period := "Before COVID-19 shutdown"]
+dhh[Covid == 1, Period := "During COVID-19 shutdown"]
+
+#+ Fig_S6_hp_dist, fig.width=9, fig.height = 5
+# nrow(dh[Human == 0])
+# nrow(dh[Human > 0])
+hd1 <-
+  ggplot(dh, aes(x = Human, col = Period, fill = Period)) +
+  geom_histogram(position = "dodge") + 
+  labs(tag = "a)", subtitle = "All data\nOriginal-scale", xlab ="# of humans", ylab = '# of escape distance trials' )+
+  scale_color_manual(values = c("orange", "skyblue")) +
+  scale_fill_manual(values = c("orange", "skyblue"))
+  
+hd2 <-
+  ggplot(dh, aes(x = Human + 0.01, col = Period, fill = Period)) +
+  geom_histogram(position = "dodge") +
+  scale_x_continuous(trans = "log10",
+    breaks = c(0.01, 1, 10, 50),
+    labels = c(0, 1, 10, 50)
+  ) +
+  labs(tag = "b)", subtitle = "All data\nLog-scale", xlab ="# of humans", ylab = '# of escape distance trials' )+
+  scale_color_manual(values = c("orange", "skyblue")) +
+  scale_fill_manual(values = c("orange", "skyblue"))
+
+hd3 <-
+  ggplot(dhh, aes(x = Human, col = Period, fill = Period)) +
+  geom_histogram(position = "dodge") +
+  labs(tag = "c)", subtitle = ">0 data\nOriginal-scale", xlab ="# of humans", ylab = '# of escape distance trials' )+
+  scale_color_manual(values = c("orange", "skyblue")) +
+  scale_fill_manual(values = c("orange", "skyblue"))
+
+hd4 <-
+  ggplot(dhh, aes(x = Human, col = Period, fill = Period)) +
+  geom_histogram(position = "dodge") +
+  scale_x_continuous(trans = "log10"
+  ) +
+  labs(tag = "d)", subtitle = ">0 data\nLog-scale", xlab ="# of humans", ylab = '# of escape distance trials' )+
+  scale_color_manual(values = c("orange", "skyblue")) +
+  scale_fill_manual(values = c("orange", "skyblue"))
+
+hd1234 <- ggarrange(
+  hd1 + rremove("ylab") + rremove("xlab"), hd2 + rremove("ylab") + rremove("xlab"),
+  hd3 + rremove("ylab") + rremove("xlab"), hd4 + rremove("ylab") + rremove("xlab"),
+  ncol = 2, nrow = 2, common.legend = TRUE, legend = "right"
+)
+annotate_figure(hd1234,
+  left = textGrob("# of escape distance trials", rot = 90, gp = gpar(cex = 1)),
+  bottom = textGrob("# of humans", gp = gpar(cex = 1), hjust = 1)
+)
+ggsave(file = "Outputs/Fig_S_hp_dist.png", width = 9, height = 5)
+
+#' <a name="F_S6">
+#' **Figure S6_hp_dist | Distribution of # of humans  at the time of escape distance trial.**</a> Color indicates Period. (a, c) Data on original scale, (b,d) on log-scale. Depicted are all data (a-b; N = `r nrow(dh)' observations) and only cases when humans were present (c-d; N = `r nrow(dhh)').
+
+#+ Fig_S7_hp_C, fig.width=27*0.393701, fig.height = 8*0.393701
+dh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
+dh[, Year_ := factor(Year, levels = rev(c("2018", "2019", "2020", "2021")))]
+dh_N <- dh[, .N, by = c("Country", "Year_")]
+dh_N[, n_pos := 70]
+
+dhh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
+dhh[, Year_ := factor(Year, levels = rev(c("2018", "2019", "2020", "2021")))]
+dhh_N <- dhh[, .N, by = c("Country", "Year_")]
+dhh_N[, n_pos := 100]
+width_ <- 1
+
+h1 <- ggplot(dh, aes(col = Year_, x = Human, y = Country)) +
+  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
+  scale_x_continuous(name = "# of humans", lim = c(0, 100)) +
+  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
+  labs(subtitle = "All data\n(original scale) ")
+
+h2 <- ggplot(dh, aes(col = Year_, x = Human + 0.01, y = Country)) +
+  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
+  scale_x_continuous(
+    trans = "log10", name = "# of humans",
+    breaks = trans_breaks("log10", function(x) 10^x),
+    labels = trans_format("log10", math_format(10^.x))
+  ) +
+  guides(col = guide_legend(title = "Year", , reverse = TRUE)) +
+  labs(subtitle = "\n(log-scale)") +
+  geom_text(data = dh_N, aes(x = n_pos, label = N, y = Country, col = Year_), vjust = 1, size = 2, position = position_dodge2(width_, preserve = "single")) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+h3 <- ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
+  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
+  scale_x_continuous(name = "# of humans", lim = c(0, 100)) +
+  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
+  labs(subtitle = ">0 data\n(original scale)") +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+h4 <- ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
+  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
+  scale_x_continuous(
+    trans = "log10", name = "# of humans",
+    breaks = trans_breaks("log10", function(x) 10^x),
+    labels = trans_format("log10", math_format(10^.x))
+  ) +
+  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
+  labs(subtitle = "\n(log-scale)") +
+  geom_text(data = dhh_N, aes(x = n_pos, label = N, y = Country, col = Year_), vjust = 1, size = 2, position = position_dodge2(width_, preserve = "single")) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+h1234 <- ggarrange(
+  h1 + rremove("xlab") , h2 +  rremove("xlab"),
+  h3 +  rremove("xlab"), h4 + rremove("xlab"),
+  ncol = 4, nrow = 1, 
+  common.legend = TRUE, legend = "right",
+  widths = c(1.35, 1, 1, 1)
+)
+annotate_figure(h1234,
+  bottom = textGrob("# of humans", gp = gpar(cex = 1))
+)
+
+ggsave(file = "Outputs/Fig_S7_hp_C.png", width = 27, height = 8, units = "cm")
+#' <a name="F_S7_hp_C">
+#' **Figure S7_hp_C | Number of humans at the time of obseration per country and year.**</a> First two panels are based on all data, last two panels only use trials where humans were present. Numbers indicate sample sizes. Note the lack of COVID-19 shutdown effects.
+#' 
+#' ***
+#' 
+#' # of bumans ~ stringency & Google Mobility
+sh[, year_day := paste(Year, Day)]
+sh[, year_weekday := paste(Year, weekday)]
+sh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
+
+# predictions for humans ~ stringency
+lsh <- list()
+shf <- sh[Country == "Finland"]
+shfi <- lmer(Human ~
+  Year +
+  StringencyIndex +
+  (1 | year_weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = shf, REML = FALSE
+)
+bsim <- sim(shfi, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(shf$Year), StringencyIndex = seq(min(shf$StringencyIndex), max(shf$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Finland"
+newD$Year <- NULL
+lsh[[1]] <- newD
+
+shc <- sh[Country == "Czechia"]
+shcz <- lmer(Human ~
+  StringencyIndex +
+  (scale(StringencyIndex) | weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = shc, REML = FALSE
+)
+bsim <- sim(shcz, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(StringencyIndex = seq(min(shc$StringencyIndex), max(shc$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Czechia"
+lsh[[2]] <- newD
+
+sh_h <- sh[Country == "Hungary"]
+shhu <- lmer(Human ~
+  Year +
+  StringencyIndex +
+  (1 | year_weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = sh_h, REML = FALSE
+)
+
+bsim <- sim(shhu, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(sh_h$Year), StringencyIndex = seq(min(sh_h$StringencyIndex), max(sh_h$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Hungary"
+newD$Year <- NULL
+lsh[[3]] <- newD
+
+h_s <- data.table(do.call(rbind, lsh))
+h_s[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
+
+# predictions for log(humans+0.01) ~ stringency
+lsh_ <- list()
+
+shf <- sh[Country == "Finland"]
+shfi_ln <- lmer(log(Human+0.01) ~
+  Year +
+  StringencyIndex +
+  (scale(StringencyIndex) | year_weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = shf, REML = FALSE
+)
+bsim <- sim(shfi_ln, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(shf$Year), StringencyIndex = seq(min(shf$StringencyIndex), max(shf$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Finland"
+newD$Year <- NULL
+lsh_[[1]] <- newD
+
+shc <- sh[Country == "Czechia"]
+shcz_ln <- lmer(log(Human+0.01) ~
+  StringencyIndex +
+  (scale(StringencyIndex) | weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = shc, REML = FALSE
+)
+bsim <- sim(shcz_ln, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(StringencyIndex = seq(min(shc$StringencyIndex), max(shc$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Czechia"
+lsh_[[2]] <- newD
+
+sh_h <- sh[Country == "Hungary"]
+shhu_ln <- lmer(log(Human+0.01) ~
+  Year +
+  StringencyIndex +
+  (scale(StringencyIndex) | year_weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = sh_h, REML = FALSE
+)
+
+bsim <- sim(shhu_ln, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(sh_h$Year), StringencyIndex = seq(min(sh_h$StringencyIndex), max(sh_h$StringencyIndex), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + StringencyIndex, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Hungary"
+newD$Year <- NULL
+lsh_[[3]] <- newD
+
+h_s_ln <- data.table(do.call(rbind, lsh_))
+h_s_ln[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
+h_s_ln[, pred_o := exp(pred) - 0.01]
+h_s_ln[, lwr_o := exp(lwr) - 0.01]
+h_s_ln[, upr_o := exp(upr) - 0.01]
+
+TODO::
+# predictions for humans ~ Google
+# predictions for log(humans+0.01) ~ Google
+
+# plot
+col_h <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
+col_h <- col_h[c(4, 5, 7)] #show_col(col_h)
+# original stringency
+p_hs_o <-
+  ggplot(h_s, aes(x = StringencyIndex, y = pred, col = Country)) +
+  geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
+  # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
+  geom_jitter(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
+  geom_line(lwd = 1) +
+  labs(subtitle = "Original scale", y = "# of humans", x = "Stringency index") +
+  coord_cartesian(xlim = c(25, 75), ylim = c(0, 50)) +
+  facet_wrap(~Country) +
+  # scale_color_locuszoom()+
+  # scale_fill_locuszoom(guide = "none")
+  scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
+  # scale_y_continuous(breaks = log(c(0.01, 1, 10, 50)), labels = c(0, 1, 10, 50)) +
+  # scale_y_continuous(breaks = round(seq(-100, 175, by = 25), 1)) +
+  scale_colour_manual(
+    values = col_h, guide = guide_legend(reverse = TRUE, override.aes = list(size = 0)),
+    labels = paste(
+      "<span style='color:",
+      col_h,
+      "'>",
+      levels(h_s$Country),
+      "</span>"
+    )
+  ) +
+  scale_fill_manual(values = col_h, guide = "none") +
+  theme_bw() +
+  theme(
+    legend.text = element_markdown(size = 6),
+    legend.position = "none",
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(0.1, 'cm'),
+    legend.key.height = unit(0.5, "line"),
+    legend.key.size = unit(0, "line"),
+    legend.margin = margin(0, 0, 0, 0),
+    legend.box.margin = margin(-10, 1, -10, -10),
+    # legend.position=c(0.5,1.6),
+    plot.title = element_text(color = "grey", size = 7),
+    plot.subtitle = element_text(color = "grey60", size = 6),
+    plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 0.5, unit = "pt"),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = ax_lines, size = 0.25),
+    axis.ticks = element_line(colour = ax_lines, size = 0.25),
+    # axis.text.x = element_text()
+    axis.ticks.length = unit(1, "pt"),
+    axis.text = element_text(, size = 6),
+    axis.title = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
+  )
+p_hs_o
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_HS_temp_rev_widht_70mm_v2_origi.png"), p_hs_o #+ theme(plot.subtitle = element_blank())
+    ,
+    width = 10, height = 4.5, unit = "cm", dpi = 600
+  )
+}
+
+# ln stringency
+p_hs_ln = ggplot(h_s_ln, aes(x = StringencyIndex, y = pred, col = Country)) +
+  geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
+  # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
+  geom_jitter(aes(y = log(Human + 0.01), fill = Country), data = sh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
+  geom_line(lwd = 1) +
+  labs(subtitle = "Mixed model per country predicitons", y = "Human presence [count]", x = "Stringency Index") +
+  coord_cartesian(xlim = c(25, 75), ylim = c(log(0.01), log(50))) +
+  facet_wrap(~Country) +
+  # scale_color_locuszoom()+
+  # scale_fill_locuszoom(guide = "none")
+  scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
+  scale_y_continuous(breaks = log(c(0.01, 1, 10, 50)), labels = c(0, 1, 10, 50)) +
+  # scale_y_continuous(breaks = round(seq(-100, 175, by = 25), 1)) +
+  scale_colour_manual(
+    values = col_h, guide = guide_legend(reverse = TRUE, override.aes = list(size = 0)),
+    labels = paste(
+      "<span style='color:",
+      col_h,
+      "'>",
+      levels(h_s$Country),
+      "</span>"
+    )
+  ) +
+  scale_fill_manual(values = col_h, guide = "none") +
+  theme_bw() +
+  theme(
+    legend.text = element_markdown(size = 6),
+    legend.position = "none",
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(0.1, 'cm'),
+    legend.key.height = unit(0.5, "line"),
+    legend.key.size = unit(0, "line"),
+    legend.margin = margin(0, 0, 0, 0),
+    legend.box.margin = margin(-10, 1, -10, -10),
+    # legend.position=c(0.5,1.6),
+    plot.title = element_text(color = "grey", size = 7),
+    plot.subtitle = element_text(color = "grey60", size = 6),
+    plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 0.5, unit = "pt"),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = ax_lines, size = 0.25),
+    axis.ticks = element_line(colour = ax_lines, size = 0.25),
+    # axis.text.x = element_text()
+    axis.ticks.length = unit(1, "pt"),
+    axis.text = element_text(, size = 6),
+    axis.title = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
+  )
+p_hs_ln
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_HS_ln.png"), p_hs_ln #+ theme(plot.subtitle = element_blank())
+    ,
+    width = 10, height = 4.5, unit = "cm", dpi = 600
+  )
+}
+TODO::
+# Google original
+# Google ln
+
 #' ### Effect sizes for stringency, Google Mobility & # of humans
 # predictions for fig and table for stringency
  # full
@@ -3335,7 +3748,7 @@ out_FID_h %>%
   kable_paper("hover", full_width = F)
 #'
 #' ***
-#' TODO:
+#'
 #' ### Species trends for stringency, Google Mobility, and # of humans
 #+ Fig_S7_species_string, fig.width=6, fig.height = 7.5
 ss <- s[Nsp > 9]
@@ -3877,6 +4290,7 @@ load(here::here("Data/rev_DAT_brms_P.Rdata"))
 load(here::here("Data/rev_DAT_brms_S.Rdata"))
 load(here::here("Data/rev_DAT_brms_G.Rdata"))
 load(here::here("Data/rev_DAT_brms_H.Rdata"))
+
 v_sc <- (VarCorr(mP_yes, summary = FALSE)$scinam$sd)^2
 v_sp <- (VarCorr(mP_yes, summary = FALSE)$Species$sd)^2
 v_r <- (VarCorr(mP_yes, summary = FALSE)$residual$sd)^2
@@ -3925,115 +4339,16 @@ fwrite(file = "Data/T_S5.csv", ts5)
 
 #+t_s5, echo=FALSE,results='hide', warning=FALSE, message=FALSE
 #' <a name="T_S5">
-#' **Table S5 | Comparison of models without and with control for phylogeny.**</a>
+#' **Table S5 | Are residuals confounded by phylogeny? Comparison of models on residulas without and with control for phylogeny.**</a>
 ts5 = fread(here::here('Data/T_S5.csv'))
 ts5 %>%
   kbl(align=c('l', 'r', 'r','r')) %>%
   kable_paper("hover", full_width = F)
 #'
-#' **Variance explained by phylogeny (95%CI)** represents percentage of variance explained by phylogeny in an intercept only model fitted to residuals of the original models in STAN (Stan Development Team 2022) using ‘brm’ function from ‘brms’ R-package (Bürkner 2017, Bürkner 2018) with phylogeny and species as random effects. **Bayes factor** in favour of model without phylogeny and **probability of non-phylogenetic model** in comparison to a model with phylogeny. The Gelman-Rubin diagnostics was 1 for all models, indicating model convergence (Brooks & Gelman 1998). Note that for all cases, the model without phylogeny fits residuals better than a model with phylogeny, which justifies our use of simple original models, not controlled for phylogeny.
+#' Testing whether residuals of the original a-models from Table [S2a](#T_S2a), [S2b](#T_S2b) and [S2c](#T_S2c) are confounded by phylogeny. **Variance explained by phylogeny (95%CI)** represents percentage of variance explained by phylogeny in an intercept only model fitted to residuals of the original models in STAN (Stan Development Team 2022) using ‘brm’ function from ‘brms’ R-package (Bürkner 2017, Bürkner 2018) with phylogeny and species as random effects. **Bayes factor** in favour of model without phylogeny and **probability of non-phylogenetic model** in comparison to a model with phylogeny. The Gelman-Rubin diagnostics was 1 for all models, indicating model convergence (Brooks & Gelman 1998). Note that for all cases, the model without phylogeny fits residuals better than a model with phylogeny, which justifies our use of simple original models, not controlled for phylogeny (Table [S2a](#T_S2a), [S2b](#T_S2b) and [S2c](#T_S2c)).
 # END
-#'
+#' TODO:
 #' ### Exploration of human presence at the time of observation
-#+ Fig_S9_hp_dist, fig.width=10*0.393701, fig.height = 5*0.393701
-#nrow(dh[Human == 0])
-#nrow(dh[Human > 0])
-hd1= 
-ggplot(dh, aes(x = Human)) +
-  geom_histogram() +scale_x_continuous(name = "# of humans")+
-  labs(tag = "a)", subtitle = "All data\nOriginal-scale")
-hd2=
-ggplot(dh, aes(x = Human +0.01)) +
-  geom_histogram() + 
-  scale_x_continuous(name = "# of humans", trans = "log10", 
-  breaks = c(0.01, 1, 10, 50),
-  labels = c(0, 1, 10, 50)) +
-  labs(tag = "b)", subtitle = "All data\nLog-scale")
-
-hd3 <-
-  ggplot(dhh, aes(x = Human)) +
-  geom_histogram() +
-  scale_x_continuous(name = "# of humans") +
-  labs(tag = "c)", subtitle = ">0 data\nOriginal-scale")
-hd4 <-
-  ggplot(dhh, aes(x = Human)) +
-  geom_histogram() +
-  scale_x_continuous(
-    name = "# of humans", trans = "log10"
-  ) +
-  labs(tag = "d)", subtitle = ">0 data\nLog-scale")
-
-hd1234 <- ggarrange(
-  hd1 + rremove("ylab") + rremove("xlab"), hd2 + rremove("ylab") + rremove("xlab"), 
-  hd3 + rremove("ylab") + rremove("xlab"), hd4 + rremove("ylab") + rremove("xlab"),
-  ncol = 2, nrow =2)
-annotate_figure(hd1234,
-  left = textGrob("# of observations", rot = 90, gp = gpar(cex = 1)),
-  bottom = textGrob("# of humans",gp = gpar(cex = 1))
-)
-ggsave(file = "Outputs/Fig_S9_humans_dist.png", width = 12, height = 5, units = "cm")
-
-#' <a name="F_S9">
-#' **Figure S9 | Human numbers at the time of obseration.**</a> Distribution of human numbers at the time of escape distance trial on original scale (a,c) and log-scale (b,d) and for all data (a-b; N = 3504 observations) and only cases when humans were present (c-d; N = 2327).
-#'
-#+ Fig_S10_hp_counntries, fig.width=27*0.393701, fig.height = 8*0.393701
-dh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
-dh[, Year_ := factor(Year, levels = rev(c("2018", "2019", "2020", "2021")))]
-dh_N = dh[, .N, by = c('Country', 'Year_')]
-dh_N[, n_pos := 70]
-
-dhh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
-dhh[, Year_ := factor(Year, levels = rev(c("2018", "2019", "2020", "2021")))]
-dhh_N = dhh[, .N, by = c('Country', 'Year_')]
-dhh_N[, n_pos := 100] 
-width_ = 1
-
-h1 = ggplot(dh, aes(col= Year_, x = Human, y = Country)) +
-   geom_boxplot(position = position_dodge2(width_, preserve = "single")) + 
-   scale_x_continuous(name = '# of humans', lim = c(0,100)) +
-   guides(col = guide_legend(title = "Year", reverse = TRUE)) + 
-   labs(subtitle = "All data\n ")
-
-h2 = ggplot(dh, aes(col = Year_, x = Human + 0.01,y = Country)) +
-  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
-  scale_x_continuous(trans = "log10", name = "# of humans",
-  breaks = trans_breaks("log10", function(x) 10^x),
-  labels = trans_format("log10", math_format(10^.x))) +
-  guides(col = guide_legend(title = "Year", , reverse = TRUE)) + 
-  labs(subtitle = "All data\n(log scale)") + 
-  geom_text(data = dh_N, aes(x = n_pos, label = N, y = Country, col = Year_), vjust = 1, size = 2, position = position_dodge2(width_, preserve = "single")) +
-  theme(axis.title.y = element_blank(),
-        axis.text.y = element_blank()
-        )
-
-h3 = ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
-  geom_boxplot(position = position_dodge2(width_, preserve = "single")) + 
-  scale_x_continuous(name = "# of humans", lim = c(0,100)) +
-  guides(col = guide_legend(title = "Year", reverse = TRUE)) + 
-  labs(subtitle = "Data with humans around\n ") +
-  theme(
-    axis.title.y = element_blank(),
-    axis.text.y = element_blank()
-  )
-
-h4 = ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
-  geom_boxplot(position = position_dodge2(width_, preserve = "single")) + 
-  scale_x_continuous(trans = "log10",name = "# of humans",
-   breaks = trans_breaks("log10", function(x) 10^x),
-   labels = trans_format("log10", math_format(10^.x))) +
-  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
-  labs(subtitle = "Data with humans around\n(log scale)")+
-  geom_text(data = dhh_N, aes(x = n_pos, label = N, y = Country, col = Year_), vjust = 1, size = 2, position = position_dodge2(width_, preserve = "single")) +
-    theme(
-      axis.title.y = element_blank(),
-      axis.text.y = element_blank()
-    )
-
-ggarrange(h1,h2,h3,h4, ncol =4, common.legend = TRUE, legend = 'right', widths =c(1.35, 1, 1,1))  
-ggsave(file = 'Outputs/Fig_human_numbers_v2.png', width = 27, height = 8, units = "cm")
-#' <a name="F_S10">
-#' **Figure S10 | Human numbers at the time of obseration per country and yeaar.**</a> First two panels are based on all data, last two panels only on where humans were present. Numbers indicate sample sizes.
-
 
 #' TODO: S10 and S11 create real model data like for stringenccy and google mobiliity
 #' ### Human presenze ~ stringency & Google Mobility
@@ -4123,72 +4438,7 @@ sh[, year_weekday := paste(Year, weekday)]
 
 sh_ = sh[Human > 0]
 
-lsh_ <- list()
 
-shf <- sh[Country == "Finland"]
-shfi <- lmer(log(Human+0.01) ~
-  Year +
-  StringencyIndex +
-  (scale(StringencyIndex) | year_weekday),
-# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
-data = shf, REML = FALSE
-)
-bsim <- sim(shfi, n.sim = nsim)
-v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
-newD <- data.frame(Year = mean(shf$Year), StringencyIndex = seq(min(shf$StringencyIndex), max(shf$StringencyIndex), length.out = 100)) # values to predict for
-X <- model.matrix(~ Year + StringencyIndex, data = newD) # exactly the model which was used has to be specified here
-newD$pred <- (X %*% v)
-predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
-for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
-newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
-newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
-newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
-newD$Country <- "Finland"
-newD$Year <- NULL
-lsh_[[1]] <- newD
-
-shc <- sh[Country == "Czechia"]
-shcz <- lmer(log(Human+0.01) ~
-  StringencyIndex +
-  (scale(StringencyIndex) | weekday),
-# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
-data = shc, REML = FALSE
-)
-bsim <- sim(shcz, n.sim = nsim)
-v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
-newD <- data.frame(StringencyIndex = seq(min(shc$StringencyIndex), max(shc$StringencyIndex), length.out = 100)) # values to predict for
-X <- model.matrix(~StringencyIndex, data = newD) # exactly the model which was used has to be specified here
-newD$pred <- (X %*% v)
-predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
-for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
-newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
-newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
-newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
-newD$Country <- "Czechia"
-lsh_[[2]] <- newD
-
-sh_h <- sh[Country == "Hungary"]
-shhu <- lmer(log(Human+0.01) ~
-  Year +
-  StringencyIndex +
-  (scale(StringencyIndex) | year_weekday),
-# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
-data = sh_h, REML = FALSE
-)
-
-bsim <- sim(shhu, n.sim = nsim)
-v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
-newD <- data.frame(Year = mean(sh_h$Year), StringencyIndex = seq(min(sh_h$StringencyIndex), max(sh_h$StringencyIndex), length.out = 100)) # values to predict for
-X <- model.matrix(~ Year + StringencyIndex, data = newD) # exactly the model which was used has to be specified here
-newD$pred <- (X %*% v)
-predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
-for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
-newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
-newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
-newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
-newD$Country <- "Hungary"
-newD$Year <- NULL
-lsh_[[3]] <- newD
 
 # Figure H_S
 h_s <- data.table(do.call(rbind, lsh_))
