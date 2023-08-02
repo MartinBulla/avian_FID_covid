@@ -472,7 +472,12 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     g[, weekday := weekdays(date_)]
 
     sh <- s[!is.na(Human)]
+    sh[, year_day := paste(Year, Day)]
+    sh[, year_weekday := paste(Year, weekday)]
+
     ssh <- ss[!is.na(Human)]
+    ssh[, year_day := paste(Year, Day)]
+    ssh[, year_weekday := paste(Year, weekday)]
 #'
 #' ***
 #' 
@@ -2180,7 +2185,7 @@ if(save_plot==TRUE){
 ggsave(here::here("Outputs/Fig_5_rev_widht_70mm.png"), p + theme(plot.subtitle = element_blank()), width = 7, height = 6, unit = "cm", dpi = 600)
 }
 #' <a name="F_5">
-#' **Figure 5 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (stringency index).**</a> Lines with shaded areas represent predicted relationships from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and stringency index as a random slope (Table [S3](#T_S3)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and stringency index.
+#' **Figure 5 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (stringency index).**</a> Lines with shaded areas represent predictions with 95%CIs from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and stringency index as a random slope (Table [S3](#T_S3)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and stringency index.
 #' 
 #' <a name="T_S3">
 #' **Table S3 | Google Mobility in relation to stringency index**</a>
@@ -2390,9 +2395,9 @@ ggsave(file = "Outputs/Fig_S7_hp_C.png", width = 27, height = 8, units = "cm")
 #' ***
 #' 
 #' # of bumans ~ stringency & Google Mobility
-sh[, year_day := paste(Year, Day)]
-sh[, year_weekday := paste(Year, weekday)]
+#+ Fig_S8_h, fig.width=12*0.393701, fig.height = 12*0.393701
 sh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
+ssh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
 
 # predictions for humans ~ stringency
 lsh <- list()
@@ -2400,7 +2405,7 @@ shf <- sh[Country == "Finland"]
 shfi <- lmer(Human ~
   Year +
   StringencyIndex +
-  (1 | year_weekday),
+  (scale(StringencyIndex) | year_weekday),
 # (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
 data = shf, REML = FALSE
 )
@@ -2442,8 +2447,7 @@ sh_h <- sh[Country == "Hungary"]
 shhu <- lmer(Human ~
   Year +
   StringencyIndex +
-  (1 | year_weekday),
-# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+  (scale(StringencyIndex) | year_weekday),
 data = sh_h, REML = FALSE
 )
 
@@ -2538,9 +2542,145 @@ h_s_ln[, pred_o := exp(pred) - 0.01]
 h_s_ln[, lwr_o := exp(lwr) - 0.01]
 h_s_ln[, upr_o := exp(upr) - 0.01]
 
-TODO::
 # predictions for humans ~ Google
+lshg <- list()
+
+sshf <- ssh[Country == "Finland"]
+sshfi <- lmer(Human ~
+  Year +
+  parks_percent_change_from_baseline +
+  (scale(parks_percent_change_from_baseline) | year_weekday),
+data = sshf, REML = FALSE
+)
+bsim <- sim(sshfi, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(sshf$Year), parks_percent_change_from_baseline = seq(min(sshf$parks_percent_change_from_baseline), max(sshf$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + parks_percent_change_from_baseline, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Finland"
+newD$Year <- NULL
+lshg[[1]] <- newD
+
+sshc <- ssh[Country == "Czechia"]
+sshcz <- lmer(Human ~
+  parks_percent_change_from_baseline +
+  (scale(parks_percent_change_from_baseline) | weekday),
+# (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
+data = sshc, REML = FALSE
+)
+bsim <- sim(sshcz, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(parks_percent_change_from_baseline = seq(min(sshc$parks_percent_change_from_baseline), max(sshc$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+X <- model.matrix(~parks_percent_change_from_baseline, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Czechia"
+lshg[[2]] <- newD
+
+ssh_h <- ssh[Country == "Hungary"]
+sshhu <- lmer(Human ~
+  Year +
+  parks_percent_change_from_baseline +
+  ((parks_percent_change_from_baseline) | year_weekday),
+data = ssh_h, REML = FALSE
+)
+
+bsim <- sim(sshhu, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(ssh_h$Year), parks_percent_change_from_baseline = seq(min(ssh_h$parks_percent_change_from_baseline), max(ssh_h$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + parks_percent_change_from_baseline, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Hungary"
+newD$Year <- NULL
+lshg[[3]] <- newD
+
+h_sg <- data.table(do.call(rbind, lshg))
+h_sg[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
+
 # predictions for log(humans+0.01) ~ Google
+lshg_ <- list()
+
+sshf <- ssh[Country == "Finland"]
+sshfi_ln <- lmer(log(Human+0.01) ~
+  Year +
+  parks_percent_change_from_baseline +
+  (scale(parks_percent_change_from_baseline) | year_weekday),
+data = sshf, REML = FALSE
+)
+bsim <- sim(sshfi_ln, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(sshf$Year), parks_percent_change_from_baseline = seq(min(sshf$StringencyIndex), max(sshf$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + parks_percent_change_from_baseline, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Finland"
+newD$Year <- NULL
+lshg_[[1]] <- newD
+
+sshc <- ssh[Country == "Czechia"]
+sshcz_ln <- lmer(log(Human+0.01) ~
+  parks_percent_change_from_baseline +
+  (scale(parks_percent_change_from_baseline) | weekday),
+data = sshc, REML = FALSE
+)
+bsim <- sim(sshcz_ln, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(parks_percent_change_from_baseline = seq(min(sshc$parks_percent_change_from_baseline), max(sshc$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+X <- model.matrix(~parks_percent_change_from_baseline, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Czechia"
+lshg_[[2]] <- newD
+
+ssh_h <- ssh[Country == "Hungary"]
+sshhu_ln <- lmer(log(Human+0.01) ~
+  Year +
+  parks_percent_change_from_baseline +
+  (scale(parks_percent_change_from_baseline) | year_weekday),
+data = ssh_h, REML = FALSE
+)
+
+bsim <- sim(sshhu_ln, n.sim = nsim)
+v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
+newD <- data.frame(Year = mean(ssh_h$Year), parks_percent_change_from_baseline = seq(min(ssh_h$parks_percent_change_from_baseline), max(ssh_h$parks_percent_change_from_baseline), length.out = 100)) # values to predict for
+X <- model.matrix(~ Year + parks_percent_change_from_baseline, data = newD) # exactly the model which was used has to be specified here
+newD$pred <- (X %*% v)
+predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
+for (j in 1:nsim) predmatrix[, j] <- (X %*% bsim@fixef[j, ])
+newD$lwr <- apply(predmatrix, 1, quantile, prob = 0.025)
+newD$upr <- apply(predmatrix, 1, quantile, prob = 0.975)
+newD$pred <- apply(predmatrix, 1, quantile, prob = 0.5)
+newD$Country <- "Hungary"
+newD$Year <- NULL
+lshg_[[3]] <- newD
+
+h_g_ln <- data.table(do.call(rbind, lshg_))
+h_g_ln[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
+h_g_ln[, pred_o := exp(pred) - 0.01]
+h_g_ln[, lwr_o := exp(lwr) - 0.01]
+h_g_ln[, upr_o := exp(upr) - 0.01]
 
 # plot
 col_h <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
@@ -2611,7 +2751,7 @@ p_hs_ln = ggplot(h_s_ln, aes(x = StringencyIndex, y = pred, col = Country)) +
   # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
   geom_jitter(aes(y = log(Human + 0.01), fill = Country), data = sh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
   geom_line(lwd = 1) +
-  labs(subtitle = "Mixed model per country predicitons", y = "Human presence [count]", x = "Stringency Index") +
+  labs(subtitle = "Ln-scale", y = "# of humans", x = "Stringency index") +
   coord_cartesian(xlim = c(25, 75), ylim = c(log(0.01), log(50))) +
   facet_wrap(~Country) +
   # scale_color_locuszoom()+
@@ -2663,9 +2803,145 @@ if (save_plot == TRUE) {
     width = 10, height = 4.5, unit = "cm", dpi = 600
   )
 }
+
+# original google
+p_hg_o <-
+  ggplot(h_sg, aes(x = parks_percent_change_from_baseline, y = pred, col = Country)) +
+  geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
+  # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
+  geom_jitter(aes(y = Human, fill = Country), data = ssh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
+  geom_line(lwd = 1) +
+  labs(subtitle = "", y = "# of humans", x = "Google Mobility") +
+  coord_cartesian(xlim = c(-50, 150), ylim = c(0, 50)) +
+  facet_wrap(~Country) +
+  # scale_color_locuszoom()+
+  # scale_fill_locuszoom(guide = "none")
+  #scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
+  # scale_y_continuous(breaks = log(c(0.01, 1, 10, 50)), labels = c(0, 1, 10, 50)) +
+  # scale_y_continuous(breaks = round(seq(-100, 175, by = 25), 1)) +
+  scale_colour_manual(
+    values = col_h, guide = guide_legend(reverse = TRUE, override.aes = list(size = 0)),
+    labels = paste(
+      "<span style='color:",
+      col_h,
+      "'>",
+      levels(h_s$Country),
+      "</span>"
+    )
+  ) +
+  scale_fill_manual(values = col_h, guide = "none") +
+  theme_bw() +
+  theme(
+    legend.text = element_markdown(size = 6),
+    legend.position = "none",
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(0.1, 'cm'),
+    legend.key.height = unit(0.5, "line"),
+    legend.key.size = unit(0, "line"),
+    legend.margin = margin(0, 0, 0, 0),
+    legend.box.margin = margin(-10, 1, -10, -10),
+    # legend.position=c(0.5,1.6),
+    plot.title = element_text(color = "grey", size = 7),
+    plot.subtitle = element_text(color = "grey60", size = 6),
+    plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 0.5, unit = "pt"),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = ax_lines, size = 0.25),
+    axis.ticks = element_line(colour = ax_lines, size = 0.25),
+    # axis.text.x = element_text()
+    axis.ticks.length = unit(1, "pt"),
+    axis.text = element_text(, size = 6),
+    axis.title = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
+  )
+p_hg_o
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_HG_rev_widht_70mm_v2_origi.png"), p_hg_o #+ theme(plot.subtitle = element_blank())
+    ,
+    width = 10, height = 4.5, unit = "cm", dpi = 600
+  )
+}
+
+# ln google
+p_hg_ln <- ggplot(h_g_ln, aes(x = parks_percent_change_from_baseline, y = pred, col = Country)) +
+  geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
+  # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
+  geom_jitter(aes(y = log(Human + 0.01), fill = Country), data = ssh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
+  geom_line(lwd = 1) +
+  labs(subtitle = "", y = "# of humans", x = "Google Mobility") +
+  coord_cartesian(xlim = c(-50, 150), ylim = c(log(0.01), log(50))) +
+  facet_wrap(~Country) +
+  # scale_color_locuszoom()+
+  # scale_fill_locuszoom(guide = "none")
+  #scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
+  scale_y_continuous(breaks = log(c(0.01, 1, 10, 50)), labels = c(0, 1, 10, 50)) +
+  # scale_y_continuous(breaks = round(seq(-100, 175, by = 25), 1)) +
+  scale_colour_manual(
+    values = col_h, guide = guide_legend(reverse = TRUE, override.aes = list(size = 0)),
+    labels = paste(
+      "<span style='color:",
+      col_h,
+      "'>",
+      levels(h_s$Country),
+      "</span>"
+    )
+  ) +
+  scale_fill_manual(values = col_h, guide = "none") +
+  theme_bw() +
+  theme(
+    legend.text = element_markdown(size = 6),
+    legend.position = "none",
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(0.1, 'cm'),
+    legend.key.height = unit(0.5, "line"),
+    legend.key.size = unit(0, "line"),
+    legend.margin = margin(0, 0, 0, 0),
+    legend.box.margin = margin(-10, 1, -10, -10),
+    # legend.position=c(0.5,1.6),
+    plot.title = element_text(color = "grey", size = 7),
+    plot.subtitle = element_text(color = "grey60", size = 6),
+    plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r = 0.5, unit = "pt"),
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = ax_lines, size = 0.25),
+    axis.ticks = element_line(colour = ax_lines, size = 0.25),
+    # axis.text.x = element_text()
+    axis.ticks.length = unit(1, "pt"),
+    axis.text = element_text(, size = 6),
+    axis.title = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
+  )
+p_hg_ln
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_GS_ln.png"), p_hs_ln #+ theme(plot.subtitle = element_blank())
+    ,
+    width = 10, height = 4.5, unit = "cm", dpi = 600
+  )
+}
+
+# combine & export
+sshh <- ggarrange(
+  p_hs_o + rremove("ylab") + xlab(''), p_hg_o +  rremove("ylab") + xlab(''),
+   p_hs_ln +  rremove("ylab"), p_hg_ln + rremove("ylab"),
+  ncol = 2, nrow = 2
+  ) + theme(plot.margin = margin(r = 2)) 
+
+annotate_figure(sshh,
+  left = textGrob("# of humans", rot = 90, gp = gpar(cex = 0.6))
+)
+ggsave(file = "Outputs/Fig_S8_h.png", width = 12, height = 12, units = "cm")
+
+#' <a name="F_S8_h">
+#' **Figure S8_h | Human numbers in association with stringency of antipandemic governmental restrictions (stringency index) and daily human presence in parks (Google Mobility).**</a> Dots represent individual data points (a, c on original scale; b, d on ln-scale), jittered to increase visibility, lines with shaded areas predictions with 95%CIs from mixed effect models  controlled for the year (in case of Finland and Hungary) and non-independence of data points by including weekday within the year as random intercept and stringency index or Google Mobility as a random slope (Table S4_h). Note the generally negative but weak association between human presence and stringency index.
+
+
+
 TODO::
-# Google original
-# Google ln
+
 
 #' ### Effect sizes for stringency, Google Mobility & # of humans
 # predictions for fig and table for stringency
