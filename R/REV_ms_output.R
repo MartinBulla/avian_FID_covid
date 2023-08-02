@@ -458,6 +458,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     
 
     dh = d[!is.na(Human)] # summary(factor(dh$Year))
+    dh[, Nsp := .N, by = "Species"]
     dhh <- dh[Human > 0]
 
     s = d[Covid == 1]
@@ -855,7 +856,8 @@ out_FID_c %>%
 #' ***
 #' 
 #' ### Alternative models give similar results
-#+ Fig_S1_alt_mod, fig.width=11, fig.height = 6
+#+ Fig_S1_alt_mod, fig.width=11, fig.height = 8
+  # width = 30, height = 20, units = "cm"
   # prepare estimates Period
     # 01a all data, main text
       m1a <- lmer(scale(log(FID)) ~
@@ -1294,11 +1296,136 @@ out_FID_c %>%
     )
     est_mg03c = est_out(mg03c, "03c) (scale(parks_percent_change_from_baseline)|Country) + (1|IDLocality); >9/specie")
 
-    # export
+  # prepare estimates number of humans
+    mh01a=lmer(scale(log(FID))~  
+      scale(log(SD))+
+      scale(log(FlockSize))+
+      scale(log(BodyMass))+
+      scale(sin(rad)) + scale(cos(rad)) + 
+      #scale(Day)+
+      scale(Temp)+
+      scale(Human)+
+      (1 | Year) + (1|weekday) + (1|genus) +(1|Species) + (1|sp_day_year) + (scale(Human)|Country) + (1|IDLocality)+(1|sp_loc),  
+      data = dh, REML = FALSE
+      ) 
+    est_mh01a = est_out(mh01a, "01a) (1|Year) + (1|weekday) + (1|genus) +(1|Species) + (1|sp_day_year) + (scale(Human)|Country) + (1|IDLocality)+(1|sp_loc)")
+    
+    mh01b <- lmer(scale(log(FID)) ~
+     scale(log(SD)) +
+     scale(log(FlockSize)) +
+     scale(log(BodyMass)) +
+     scale(sin(rad)) + scale(cos(rad)) +
+     # scale(Day)+
+     scale(Temp) +
+     scale(Human) +
+     (1|Year) + (1|weekday) + (0+scale(Human)| genus) + (1 | Species) + (0+scale(Human) | sp_day_year) + 
+     (scale(Human)| Country) + (1 | IDLocality) + (1 | sp_loc),
+     data = dh, REML = FALSE
+     ) 
+     est_mh01b = est_out(mh01b, "01b) (1|Year) + (1|weeekday) + (0 + scale(Human)|genus)+(1|Species)+(0 + scale(Human)|sp_day_year) + (scale(Human)|Country) + (1|IDLocality) +(1|sp_loc)")
+     
+    mh01c <- lmer(scale(log(FID)) ~
+      scale(log(SD)) +
+      scale(log(FlockSize)) +
+      scale(log(BodyMass)) +
+      scale(sin(rad)) + scale(cos(rad)) +
+      # scale(Day)+
+      scale(Temp) +
+      scale(Human) +
+      (1|Year) + (1|genus) + (1|sp_day_year) + (scale(Human) | Country) + (1 | IDLocality) +(1|sp_loc),
+    data = dh, REML = FALSE
+    )
+    est_mh01c = est_out(mh01c, "01c) (1|Year) + (1|genus) + (1|sp_day_year) + (scale(Human)|Country) + (1|IDLocality) +(1|sp_loc)")
+
+    mh02a = lmer(scale(log(FID)) ~
+      scale(log(SD)) +
+      scale(log(FlockSize)) +
+      scale(log(BodyMass)) +
+      scale(sin(rad)) + scale(cos(rad)) +
+      # scale(Day)+
+      scale(Temp) +
+      scale(Human) +
+      (1 | Year) + (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (scale(Human) | Country) + (1 | IDLocality) + (1 | sp_loc),
+    data = dh[Nsp>4], REML = FALSE
+    )
+    est_mh02a = est_out(mh02a, "02a) (1|Year) + (1|weekday) + (1|genus) +(1|Species) + (1|sp_day_year) + (scale(Human)|Country) + (1|IDLocality)+(1|sp_loc); >4/specie")
+
+    mh02b <- lmer(scale(log(FID)) ~
+      scale(log(SD)) +
+      scale(log(FlockSize)) +
+      scale(log(BodyMass)) +
+      scale(sin(rad)) + scale(cos(rad)) +
+      # scale(Day)+
+      scale(Temp) +
+      scale(Human) +
+      (1 | Year) + (1 | weekday) + (scale(Human) | genus) + (1 | Species) + (1 | sp_day_year) +
+      (scale(Human) | Country) + (1 | IDLocality) + (1 | sp_loc),
+    data = dh[Nsp>4], REML = FALSE
+    )
+
+    est_mh02b = est_out(mh02b, "02b) (1|Year) + (1|weeekday) + (scale(Human)|genus)+(1|Species)+(1|sp_day_year) + (scale(Human)|Country) + (1|IDLocality) +(1|sp_loc); >4/specie")
+
+    mh02c <- lmer(scale(log(FID)) ~
+      scale(log(SD)) +
+      scale(log(FlockSize)) +
+      scale(log(BodyMass)) +
+      scale(sin(rad)) + scale(cos(rad)) +
+      # scale(Day)+
+      scale(Temp) +
+      scale(Human) +
+      (1|Year) + (1|genus) + (1|sp_day_year) + (scale(Human) | Country) + (1 | IDLocality) +(1|sp_loc),
+    data = dh[Nsp>4], REML = FALSE
+    )
+
+    est_mh02c = est_out(mh02c, "02c) (1|Year) + (1|genus) + (1|sp_day_year) + (scale(Human)|Country) + (1|IDLocality) +(1|sp_loc); >4/specie")
+
+    mh03a = lmer(scale(log(FID)) ~
+      scale(log(SD)) +
+      scale(log(FlockSize)) +
+      scale(log(BodyMass)) +
+      scale(sin(rad)) + scale(cos(rad)) +
+      # scale(Day)+
+      scale(Temp) +
+      scale(Human) +
+      (1 | Year) + (1 | weekday) + (1 | genus) + (1 | Species) + (1 | sp_day_year) + (scale(Human) | Country) + (1 | IDLocality) + (1 | sp_loc),
+    data = dh[Nsp > 9], REML = FALSE
+    )
+    est_mh03a = est_out(mh03a, "03a) (1|Year) + (1|weekday) + (1|genus) +(1|Species) + (1|sp_day_year) + (scale(parks_percent_change_from_baseline)|Country) + (1|IDLocality)+(1|sp_loc); >9/specie")
+
+    mh03b <- lmer(scale(log(FID)) ~
+      scale(log(SD)) +
+      scale(log(FlockSize)) +
+      scale(log(BodyMass)) +
+      scale(sin(rad)) + scale(cos(rad)) +
+      # scale(Day)+
+      scale(Temp) +
+      scale(Human) +
+      (1 | Year) + (1 | weekday) + (scale(Human) | genus) + (1 | Species) + (1 | sp_day_year) +
+      (scale(Human) | Country) + (1 | IDLocality) + (1 | sp_loc),
+    data = dh[Nsp > 9], REML = FALSE
+    )
+
+    est_mh03b = est_out(mh03b, "03b) (1|Year) + (1|weeekday) + (scale(Human)|genus)+(1|Species)+(1|sp_day_year) + (scale(Human)|Country) + (1|IDLocality) +(1|sp_loc); >9/specie")
+
+    mh03c <- lmer(scale(log(FID)) ~
+      scale(log(SD)) +
+      scale(log(FlockSize)) +
+      scale(log(BodyMass)) +
+      scale(sin(rad)) + scale(cos(rad)) +
+      # scale(Day)+
+      scale(Temp) +
+      scale(Human) +
+      (1|Year) + (1|genus) + (1|sp_day_year) + (scale(Human) | Country) + (1 | IDLocality) +(1|sp_loc),
+    data = dh[Nsp > 9], REML = FALSE
+    )
+    est_mh03c = est_out(mh03c, "03c) (1|Year) + (1|genus) + (1|sp_day_year) + (scale(Human) | Country) + (1 | IDLocality) +(1|sp_loc); >9/specie")
+
+    # export TODO:
       save(file = here::here("Data/Fig_S2_estimates.Rdata"), 
       est_m1a, est_m1b, est_m1c, est_m1d, est_m1e, est_m2a, est_m2b, est_m2c, est_m3a, est_m3b, est_m3c, 
       est_m01a, est_m01b, est_m01c, est_m02a, est_m02b, est_m02c, est_m03a, est_m03b, est_m03c, 
-      est_mg01a, est_mg01b, est_mg01c, est_mg02a, est_mg02b, est_mg02c, est_mg03a, est_mg03b, est_mg03c)
+      est_mg01a, est_mg01b, est_mg01c, est_mg02a, est_mg02b, est_mg02c, est_mg03a, est_mg03b, est_mg03c,
+      est_mh01a, est_mh01b, est_mh01c, est_mh02a, est_mh02b, est_mh02c, est_mh03a, est_mh03b, est_mh03c) # load(here::here("Data/Fig_S2_estimates.Rdata"))
      
      # prepare plot for Period
      xs = rbind(est_m1a, est_m1b, est_m1c, est_m1d, est_m1e, est_m2a, est_m2b, est_m2c, est_m3a, est_m3b, est_m3c)
@@ -1353,6 +1480,7 @@ out_FID_c %>%
        )
      #gs2
      # ggsave(here::here('Outputs/Figure_Sy.png'),g, width = 30, height =5, units = 'cm')
+     
      # prepare plot for Stringency
      xs0 = rbind(est_m01a, est_m01b, est_m01c, est_m02a, est_m02b, est_m02c, est_m03a, est_m03b, est_m03c)
      xs0[, model := gsub("scale\\(StringencyIndex\\)", "Stringency Index", model)]
@@ -1403,6 +1531,7 @@ out_FID_c %>%
        )
      #g0
      # ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
+     
      # prepare plot for Google
      xg0 = rbind(est_mg01a, est_mg01b, est_mg01c, est_mg02a, est_mg02b, est_mg02c, est_mg03a, est_mg03b, est_mg03c)
      xg0[, model := gsub("scale\\(parks_percent_change_from_baseline\\)", "Google Mobility", model)]
@@ -1453,14 +1582,66 @@ out_FID_c %>%
        )
      #gg0
      # ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
+
+     # prepare plot for number of humans
+     xh0 = rbind(est_mh01a, est_mh01b, est_mh01c, est_mh02a, est_mh02b, est_mh02c, est_mh03a, est_mh03b, est_mh03c)
+     xh0[, model := gsub("scale\\(Human\\)", "# of humans", model)]
+     xh0[, model := gsub("Year", "year", model)]
+     xh0[, model := gsub("Species", "species", model)]
+     xh0[, model := gsub("sp_day_year", "species within day & year", model)]
+     xh0[, model := gsub("IDLocality", "site", model)]
+     xh0[, model := gsub("sp_loc", "species within site", model)]
+     gh0_ =
+       ggplot(xh0[predictor == "scale(Human)"], aes(y = model, x = estimate, col = model)) +
+       geom_vline(xintercept = 0, col = "grey30", lty = 3) +
+       geom_errorbar(aes(xmin = lwr, xmax = upr, col = model), width = 0, position = position_dodge(width = 0.01)) +
+       # ggtitle ("Sim based")+
+       geom_point(position = position_dodge(width = 0.01)) +
+       # scale_colour_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
+       # scale_fill_brewer(type = 'qual', palette = 'Paired',guide = guide_legend(reverse = TRUE))+
+       scale_color_viridis(discrete = TRUE, guide = guide_legend(reverse = TRUE)) +
+       scale_fill_viridis(discrete = TRUE, guide = guide_legend(reverse = TRUE)) +
+       scale_y_discrete(limits = rev) +
+       coord_fixed(ratio = 0.05, xlim = c(-0.23, 0.15)) +
+       # scale_shape(guide = guide_legend(reverse = TRUE)) +
+       # scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2,2, by = 1), labels = seq(-2,2, by = 1)) +
+       labs(y = NULL, x = "# of humans\n[Standardised effect sizes on\nflight initiation distances]", tag = "d)") + # title = "b) Effect of ") +
+       # ylim(c(0,100))+
+       # coord_flip()+
+       theme_bw() +
+       theme(
+         legend.position = "none",
+         plot.subtitle = element_text(size = 7),
+         plot.title = element_text(size = 7),
+         plot.tag = element_text(size = 7),
+         legend.title = element_text(size = 7),
+         legend.text = element_text(size = 6),
+         ## legend.spacing.y = unit(0.1, 'cm'),
+         legend.key.height = unit(0.5, "line"),
+         # plot.margin = margin(b = 0.5, l = 0.5, t = 0.5, r =0.5, unit =  "pt"),
+         panel.grid = element_blank(),
+         panel.border = element_blank(),
+         panel.background = element_blank(),
+         axis.line = element_line(colour = ax_lines, size = 0.25),
+         axis.line.y = element_blank(),
+         axis.ticks.y = element_blank(),
+         axis.ticks.x = element_line(colour = ax_lines, size = 0.25),
+         axis.ticks.length = unit(1, "pt"),
+         axis.text.x = element_text(colour = "black", size = 6),
+         axis.text.y = element_text(colour = "black", size = 7),
+         axis.title = element_text(size = 7)
+       )
+     #gg0
+     # ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
+
      # combine
-     grid.draw(rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_)))
+     grid.draw(rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_), ggplotGrob(gh0_)))
 
      if(save_plot==TRUE){
-     ggsave(here::here("Outputs/Fig_S1_rev_v6.png"), rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_)), width = 30, height = 15, units = "cm")
+     ggsave(here::here("Outputs/Fig_S1_rev_v7.png"), rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_), ggplotGrob(gh0_)), width = 30, height = 20, units = "cm")
      }
 #' <a name="F_S1">
-#' **Figure S1 | Comparing estimates from alternative models.**</a> Changes in avian tolerance towards humans in response to (a) Period (before vs during the COVID-19 shutdowns) (b) stringency of governmental measures and (c) Google Mobility. The dots with horizontal lines represent the estimated standardised effect size and their 95% confidence intervals based on the joint posterior distribution of 5,000 simulated values generated by the **sim** function  from the *arm* R-package (Gelman et al. 2016) from the output of the mixed models (for details see [Table S2](#T_S2a)). The name of each effect size highlights the corresponding model in [Table S2a](#T_S2a) for (a), [Table S2b](#T_S2b) for (b) and [Table S2c](#T_S2c) for (c), the random structure of the specific model, if applicable, the condition used to reduce the dataset, and sample size. Depicted are effect sizes based on full (01) and reduced datasets with ≥5 (02) or ≥10 observations per species and period (03). For plots of model assumptions see https://doi.org/10.17605/OSF.IO/WUZH7 (Bulla et al. 2022). Note that effect sizes are small and estimates centre around zero.
+#' **Figure S1 | Comparing estimates from alternative models.**</a> Changes in avian tolerance towards humans in response to (a) Period (before vs during the COVID-19 shutdowns) (b) stringency of governmental measures, (c) Google Mobility and (d) number of humans during an escape distance trial. The dots with horizontal lines represent the estimated standardised effect size and their 95% confidence intervals based on the joint posterior distribution of 5,000 simulated values generated by the **sim** function  from the *arm* R-package (Gelman et al. 2016) from the output of the mixed models (for details see [Table S2](#T_S2a)). The name of each effect size highlights the corresponding model in [Table S2a](#T_S2a) for (a), [Table S2b](#T_S2b) for (b), [Table S2c](#T_S2c) for (c) and [Table S2d](#T_S2d) for (d), the random structure of the specific model, if applicable, the condition used to reduce the dataset, and sample size. Depicted are effect sizes based on full (01) and reduced datasets with ≥5 (02) or ≥10 observations per species and period (03). For plots of model assumptions see https://doi.org/10.17605/OSF.IO/WUZH7 (Bulla et al. 2023). Note that effect sizes are small and estimates close to zero.
 #'
 #' <a name="T_S2a">
 #' **Table S2a | Alternative models on escape distance given Period** </a>
@@ -1500,7 +1681,7 @@ out_FID_c %>%
     fwrite(file = here::here("Outputs/Table_S2a.csv"), out1)
 
     out1$response = out1$error_structure = NULL
-    out1[model != "", model := paste0('0',substring(model, 12))]
+    out1[model != "", model := paste0('0',substring(model, 13))]
     setnames(out1, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "lower", "upper"))
     out1 %>%
        kbl() %>%
@@ -1543,12 +1724,12 @@ out_FID_c %>%
     fwrite(file = here::here("Outputs/Table_S2b.csv"), out2)
 
     out2$response = out2$error_structure = NULL
-    out2[model != "", model := paste0("0", substring(model, 12))]
+    out2[model != "", model := paste0("0", substring(model, 13))]
     setnames(out2, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "lower", "upper"))
     out2 %>%
       kbl() %>%
       kable_paper("hover", full_width = F)
-#' Note that (1a) model is the one reported in the main text.
+#' Note that (1a) model is the one reported in the Fig. S6 [#F_S6].
 #' 
 #' <a name="T_S2c">
 #' **Table S2c | Alternative models on escape distance given Google Mobility**</a>
@@ -1586,12 +1767,56 @@ out_FID_c %>%
        out3$R2_mar = out3$R2_con = NULL
      fwrite(file = here::here("Outputs/Table_S2c.csv"), out3)
      out3$response = out3$error_structure = NULL
-     out3[model != "", model := paste0("0", substring(model, 12))]
+     out3[model != "", model := paste0("0", substring(model, 13))]
      setnames(out3, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "lower", "upper"))
      out3 %>%
           kbl() %>%
           kable_paper("hover", full_width = F)
-#' Note that (1a) model is the one reported in the main text.
+#' Note that (1a) model is the one reported in the Fig. S6 [#F_S6].
+
+#' <a name="T_S2d">
+#' **Table S2d | Alternative models on escape distance given # of humans**</a>
+#'
+    # humans
+     mh01a_ = m_out(name = "Table S2d - 1a", dep = "Escape distance", model = mh01a, nsim = 5000)
+     mh01b_ = m_out(name = "Table S2d - 1b", dep = "Escape distance", model = mh01b, nsim = 5000)
+     mh01c_ = m_out(name = "Table S2d - 1c", dep = "Escape distance", model = mh01c, nsim = 5000)
+
+     mh02a_ = m_out(name = "Table S2d - 2a", dep = "Escape distance", model = mh02a, nsim = 5000)
+     mh02b_ = m_out(name = "Table S2d - 2b", dep = "Escape distance", model = mh02b, nsim = 5000)
+     mh02c_ = m_out(name = "Table S2d - 2c", dep = "Escape distance", model = mh02c, nsim = 5000)
+
+     mh03a_ = m_out(name = "Table S2d - 3a", dep = "Escape distance", model = mh03a, nsim = 5000)
+     mh03b_ = m_out(name = "Table S2d - 3b", dep = "Escape distance", model = mh03b, nsim = 5000)
+     mh03c_ = m_out(name = "Table S2d - 3c", dep = "Escape distancey", model = mh03c, nsim = 5000)
+
+     out4 = rbind(mh01a_, mh01b_, mh01c_, mh02a_, mh02b_, mh02c_, mh03a_, mh03b_, mh03c_, fill = TRUE)
+     out4[is.na(out4)] = ""
+      out4[, effect := gsub("scale\\(Human\\)", "# of humans", effect)]
+      out4[, effect := gsub("scale\\(Year\\)", "year", effect)]
+      out4[, effect := gsub("scale\\(log\\(SD\\)\\)", "starting distance (ln)", effect)]
+      out4[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+      out4[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
+      out4[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
+      out4[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
+      out4[, effect := gsub("scale\\(cos\\(rad\\)\\)", "time (cosine of radians)", effect)]
+       out4[, effect := gsub("Species", "species", effect)]
+       out4[, effect := gsub("Country", "country", effect)]
+       out4[, effect := gsub("Year", "year", effect)]
+       out4[, effect := gsub("sp_day_year", "species within day & year", effect)]
+       out4[, effect := gsub("IDLocality", "site", effect)]
+       out4[, effect := gsub("sp_loc", "species within site", effect)]
+       out4[type == "random" & grepl("# of humans", effect, fixed = TRUE), effect := paste("# of humans (slope) |", gsub(" # of humans", "", effect))]
+       out4$R2_mar = out4$R2_con = NULL
+     fwrite(file = here::here("Outputs/Table_S2d.csv"), out4)
+     out4$response = out4$error_structure = NULL
+     out4[model != "", model := paste0("0", substring(model, 13))]
+     setnames(out4, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "lower", "upper"))
+     out4 %>%
+          kbl() %>%
+          kable_paper("hover", full_width = F)
+#' Note that (1a) model is the one reported in the Fig. S6 [#F_S6].
+#' 
 # TODO: modelAss
 #'
 #' ***
@@ -4610,13 +4835,13 @@ ts5 <- data.table(
     round(post_prob(mH_yes, mH_no)[2], 2)
   )
 )
-#save(file = "Data/T_S5.Rdata", ts5)
-fwrite(file = "Data/T_S5.csv", ts5)
+#save(file = "Data/T_S7.Rdata", ts5)
+fwrite(file = "Data/T_S7.csv", ts5)
 
-#+t_s5, echo=FALSE,results='hide', warning=FALSE, message=FALSE
-#' <a name="T_S5">
-#' **Table S5 | Are residuals confounded by phylogeny? Comparison of models on residulas without and with control for phylogeny.**</a>
-ts5 = fread(here::here('Data/T_S5.csv'))
+#+t_s7, echo=FALSE,results='hide', warning=FALSE, message=FALSE
+#' <a name="T_S7">
+#' **Table S7 | Are residuals confounded by phylogeny? Comparison of models on residulas without and with control for phylogeny.**</a>
+ts5 = fread(here::here('Outputs/T_S7.csv'))
 ts5 %>%
   kbl(align=c('l', 'r', 'r','r')) %>%
   kable_paper("hover", full_width = F)
