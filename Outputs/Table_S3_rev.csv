@@ -1,30 +1,30 @@
 model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
-Table S3 - FI,Google Mobility,Gaussian,322,fixed,(Intercept),-0.27,-1.02,0.529
-"","","","",fixed,year,0.936,0.441,1.44
-"","","","",fixed,stringency index,-0.261,-1.023,0.492
-"","","","",random,weekday within year (Intercept),22%,47%,54%
-"","","","",random,stringency index (slope) | weekday within year,22%,47%,54%
-"","","","",random,Residual,55%,-7%,5%
-Table S3 - PL,Google Mobility,Gaussian,329,fixed,(Intercept),0.023,-0.627,0.626
-"","","","",fixed,year,0.76,0.015,1.531
-"","","","",fixed,stringency index,0.016,-0.359,0.4
+Table S3 - FI,Google Mobility,Gaussian,322,fixed,(Intercept),-0.259,-1.026,0.523
+"","","","",fixed,year,0.936,0.453,1.436
+"","","","",fixed,stringency index,-0.273,-1.013,0.499
+"","","","",random,weekday within year (Intercept),-16%,47%,54%
+"","","","",random,stringency index (slope) | weekday within year,-16%,47%,54%
+"","","","",random,Residual,131%,-7%,5%
+Table S3 - PL,Google Mobility,Gaussian,329,fixed,(Intercept),0.016,-0.617,0.636
+"","","","",fixed,year,0.776,0.015,1.537
+"","","","",fixed,stringency index,0.023,-0.362,0.408
 "","","","",random,weekday within year (Intercept),47%,44%,49%
 "","","","",random,stringency index (slope) | weekday within year,47%,44%,49%
 "","","","",random,Residual,6%,2%,13%
-Table S3 - CZ,Google Mobility,Gaussian,1054,fixed,(Intercept),0.009,-0.521,0.548
-"","","","",fixed,stringency index,-0.229,-0.642,0.191
-"","","","",random,weekday (Intercept),23%,-182%,40%
-"","","","",random,stringency index (slope) | weekday,23%,-182%,40%
-"","","","",random,Residual,54%,21%,464%
-Table S3 - HU,Google Mobility,Gaussian,874,fixed,(Intercept),0.249,-0.255,0.766
-"","","","",fixed,year,0.002,-0.442,0.465
-"","","","",fixed,stringency index,-1.269,-1.969,-0.574
-"","","","",random,weekday within year (Intercept),48%,21%,49%
-"","","","",random,stringency index (slope) | weekday within year,48%,21%,49%
-"","","","",random,Residual,4%,2%,59%
-Table S3 - AU,Google Mobility,Gaussian,1065,fixed,(Intercept),0.519,-0.011,1.053
-"","","","",fixed,year,0.443,0.241,0.645
-"","","","",fixed,stringency index,-0.537,-0.848,-0.246
-"","","","",random,weekday within year (Intercept),-31%,44%,65%
-"","","","",random,stringency index (slope) | weekday within year,-31%,44%,65%
-"","","","",random,Residual,162%,-30%,13%
+Table S3 - CZ,Google Mobility,Gaussian,1054,fixed,(Intercept),-0.002,-0.508,0.523
+"","","","",fixed,stringency index,-0.221,-0.619,0.189
+"","","","",random,weekday (Intercept),23%,-166%,40%
+"","","","",random,stringency index (slope) | weekday,23%,-166%,40%
+"","","","",random,Residual,54%,21%,433%
+Table S3 - HU,Google Mobility,Gaussian,874,fixed,(Intercept),0.242,-0.262,0.755
+"","","","",fixed,year,-0.001,-0.454,0.475
+"","","","",fixed,stringency index,-1.27,-1.949,-0.578
+"","","","",random,weekday within year (Intercept),48%,24%,49%
+"","","","",random,stringency index (slope) | weekday within year,48%,24%,49%
+"","","","",random,Residual,4%,2%,53%
+Table S3 - AU,Google Mobility,Gaussian,1065,fixed,(Intercept),0.526,0.007,1.07
+"","","","",fixed,year,0.441,0.244,0.642
+"","","","",fixed,stringency index,-0.541,-0.848,-0.238
+"","","","",random,weekday within year (Intercept),-40%,44%,65%
+"","","","",random,stringency index (slope) | weekday within year,-40%,44%,65%
+"","","","",random,Residual,180%,-30%,13%
