@@ -502,7 +502,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' ### Repository: files & folders
 #' [Supplementary information, including code](https://martinbulla.github.io/avian_FID_covid/): the current html document with supplementary informatiion, figures and tables.  
 #'   
-#' [Data](Data/): raw data (for their desciption see [READ_ME](Data/READ_ME.txt) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses  
+#' [Data](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data): raw data (for their desciption see [READ_ME](Data/READ_ME.txt) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses
 #' - [model_sim](Data/model_sim): posterior simulations for given models  
 #' - [Pics](Data/Pics): phylopic pictures used in the graphs  
 #'  
