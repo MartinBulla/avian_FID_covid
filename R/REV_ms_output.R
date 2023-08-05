@@ -9,6 +9,7 @@
 #'         toc_depth: 4
 #'         code_folding: hide
 #'         link-citations: yes
+#' base:  href="/[avian_FID_covid]/"
 #' ---
 
 #+ r setup, include=FALSE
@@ -498,7 +499,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' 
 #' ***
 #' 
-#' ### Repository: Files & Folders
+#' ### Repository: files & folders
 #' [Supplementary information, including code](https://martinbulla.github.io/avian_FID_covid/): the current html document with supplementary informatiion, figures and tables.  
 #'   
 #' [Data](Data/): raw data (for their desciption see [READ_ME](Data/READ_ME.txt) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses  
