@@ -20,10 +20,16 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' ###### Code to load tools and data
 #+ start, echo = T, results = 'hide', warning=FALSE
  # packages
+    library(ape)
     require(arm)
+    library(brms)
+    library(car)
+    library(coda)
     require(data.table)
+    library(dplyr)
     require(effects)
     require(foreach)
+    library(geiger)
     require(ggimage)
     require(ggplot2)
     require(ggpubr)
@@ -33,18 +39,27 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     require(gtable)
     require(here)
     require(kableExtra)
+    library(magrittr)
     require(MASS)
+    library(MCMCglmm)
     require(multcomp)
     require(optimx)
+    library(parallel)
     require(patchwork)
     require(performance)  
     require(PerformanceAnalytics)
+    library(phangorn)
+    library(phylobase)
+    library(phytools)
+    library(plyr)
     require(png)
     require(RColorBrewer)
     require(rmeta)
     require(rphylopic)
     require(scales)
+    library(stringr)
     require(viridis)
+
  # constants
     save_plot = TRUE
     round_ = 3 # number of decimal places to round model coefficients
@@ -370,34 +385,33 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
       }
     
  # data
+    t = fread(here::here("Data/taxonomy.txt"))
+    
     ph  =  fread(here::here('Data/phylopic.txt'))
     setnames(ph, old = c('Name', 'Code'), new = c('genus2', 'uid'))
 
-    t = fread(here::here('Data/taxonomy.txt'))
-    
     g = fread(here::here('Data/google_mobility.txt')) #fwrite(d, here::here('Data/data.txt'), sep ='\t')
     g[, Year := as.integer(substring(date, nchar(date)-3, nchar(date)))]
     g[nchar(date)==9, date:=paste0('0',date)]
     g[, date_ :=as.Date(date, format = '%d.%m.%Y')]
     g[, Day :=yday(date_)]
-    g[country_region!='Australia', Day := Day-92 +1] # 1 April = start of breeding season (1st day) = 92 day of the year 
-    g[country_region=='Australia', Day := Day-228 +1] # 15 Augusst = start of breeding season (1st day) = 228 day of the year 
-    setnames(g, old = 'country_region', new ='Country')
+    setnames(g, old = "country_region", new = "Country")
 
-    d = fread(here::here('Data/data_corrected.txt')) #fwrite(d, here::here('Data/data.txt'), sep ='\t')
-    # add data and weekdays
-    x = fread(here::here("Data/date.txt"))[, .(IDObs, Date_corr)]
-    x[, date_:=as.Date(Date_corr, "%d.%m.%Y" )]
-    x[, weekday := weekdays(date_)]
-    d =  merge(d, x[, .(IDObs, date_, weekday)], by = "IDObs")
-    #d[, date_ := as.Date(Day, origin = paste0(Year, '-01-01'))]
-
-    # adjust correct assignment of season (Year) for Australia
+    # adjust correct assignment of breeding season (Year) for Australiato the the year of when a given breeding season started
+    g[Country != "Australia", Day := Day - 92 + 1] # 1 April = start of breeding season (1st day) = 92 day of the year
+    g[Country == "Australia", Day := Day - 228 + 1] # 15 Augusst = start of breeding season (1st day) = 228 day of the year
+    
+    d = fread(here::here('Data/data.txt')) #fwrite(d, here::here('Data/data.txt'), sep ='\t')
+    d[Human == 0, humans := 0]
+    d[Human > 0, humans := 1] # dh = dh[!(Country%in%'Czechia' & Year == 2018)]
+  
+    # adjust correct assignment of breeding season (Year) for Australiato the the year of when a given breeding season started
     d[Country == 'Australia' & Year == 2020 & Covid == 0, Year:=2019]
     d[Country == 'Australia' & Year == 2021 & Day>139, Year:=2020]
     d[Country == 'Australia' & Year == 2022 & Day>139, Year:=2021]
 
     d = d[order(Year, IDLocality, Day, Hour)]
+    d[, year_ := as.character(Year)]
     d[Country %in% c("Czech_Republic", "Czech Republic"), Country := "Czechia"]
     d[, genus := sub("_.*", "", Species)]
     d[, sp_day_year := paste(Year, Species, Day, sep="_")]
@@ -414,25 +428,22 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     d[, weekday := weekdays(date_)]
     #d[Country == 'Australia', Day_:= abs(Day - 189)]
 
-    # add # of humans at the time of observation
-      h = fread(here::here("Data/data_human.txt")) # fwrite(d, here::here('Data/data.txt'), sep ='\t')
-      d = merge(d,h, all.x = TRUE)
-      d[Human == 0, humans := 0]
-      d[Human > 0, humans := 1] # dh = dh[!(Country%in%'Czechia' & Year == 2018)]
-
+    # species with data before and during
     d1 = d[Covid == 1, .N, by = Species]
     d2 = d[Covid == 0, .N, by = Species]
     setnames(d1, old = 'N', new ='N_during')
     setnames(d2, old = 'N', new ='N_before')
-    dd = merge(d1,d2) # species with data before and during
+    dd = merge(d1, d2) # species with data before and during
     da = merge(d1,d2, all = TRUE)
 
+    # species with data before and during
     d1p = d[Country!='Poland' & Covid == 1, .N, by = Species]
     d2p = d[Country!='Poland' & Covid == 0, .N, by = Species]
     setnames(d1p, old = 'N', new ='N_during')
     setnames(d2p, old = 'N', new ='N_before')
     ddp = merge(d1p,d2p) # species with data before and during, but without Poland data
 
+    # species-localities with data before and during
     p1 = d[Covid == 1, .N, by = .(IDLocality, Species)]
     p2 = d[Covid == 0, .N, by = .(IDLocality, Species)]
     setnames(p1, old = 'N', new ='N_during')
@@ -440,12 +451,14 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     pp = merge(p1,p2)  # species-localities with data before and during
     pa = merge(p1,p2, all = TRUE)
 
+    # species-localities with data before and during,but without Poland data
     p1p = d[Country!='Poland' & Covid == 1, .N, by = .(IDLocality, Species)]
     p2p = d[Country!='Poland' & Covid == 0, .N, by = .(IDLocality, Species)]
     setnames(p1p, old = 'N', new ='N_during')
     setnames(p2p, old = 'N', new ='N_before')
     ppp = merge(p1p,p2p)  # species-localities with data before and during,but without Poland data 
-   
+
+    # species-localities with data before and during, but without Poland & 2014 data
     p1p4 = d[Year!=2014 & Country!='Poland' & Covid == 1, .N, by = .(IDLocality, Species)]
     p2p4 = d[Year!=2014 & Country!='Poland' & Covid == 0, .N, by = .(IDLocality, Species)]
     setnames(p1p4, old = 'N', new ='N_during')
@@ -455,23 +468,25 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     # add google mobility
     d[, sp := gsub("[_]", " ", Species)]
     d = merge(d, g[,.(Country,  date_, parks_percent_change_from_baseline)], all.x = TRUE, by = c('Country', 'date_'))
-    d[, year_ := as.character(Year)]  
-    
-
+     
+    # limit to data with # of humans
     dh = d[!is.na(Human)] # summary(factor(dh$Year))
     dh[, Nsp := .N, by = "Species"]
     dh[, Country := factor(Country, levels = (c("Finland", "Poland", "Czechia", "Hungary")))]
     dh[Covid == 0, Period := "Before COVID-19 shutdown"]
     dh[Covid == 1, Period := "During COVID-19 shutdown"]
 
+    # limit to data with # of humans > 0
     dhh <- dh[Human > 0]
     dhh[, Country := factor(Country, levels = (c("Finland", "Poland", "Czechia", "Hungary")))]
     dhh[Covid == 0, Period := "Before COVID-19 shutdown"]
     dhh[Covid == 1, Period := "During COVID-19 shutdown"]
     
+    # limit to COVID-19 period (Stringeny data)
     s = d[Covid == 1]
     s[, Nsp := .N, by = "Species"]
 
+    # limit to data with Google Mobility
     ss = s[!is.na(parks_percent_change_from_baseline)]
     ss[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
     ss[parks_percent_change_from_baseline<0, google := 'before_zero']
@@ -480,13 +495,21 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 
     g[, weekday := weekdays(date_)]
 
+    # limit stringency data to those with # of humans
     sh <- s[!is.na(Human)]
     sh[, year_day := paste(Year, Day)]
     sh[, year_weekday := paste(Year, weekday)]
 
+    # limit Google data # limit to data with # of humans
     ssh <- ss[!is.na(Human)]
     ssh[, year_day := paste(Year, Day)]
     ssh[, year_weekday := paste(Year, weekday)]
+
+    # add sinam
+    d[, scinam := Species]
+    s[, scinam := Species]
+    ss[, scinam := Species]
+    dh[, scinam := Species]
 #'
 #' ***
 #' 
@@ -500,16 +523,16 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' ***
 #' 
 #' ### Repository: files & folders
-#' [Supplementary information, including code](https://martinbulla.github.io/avian_FID_covid/): the current html document with supplementary informatiion, figures and tables.  
-#'   
-#' [Data](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data): raw data (for their desciption see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.txt) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses
+#' [Supplementary information, including code](https://martinbulla.github.io/avian_FID_covid/): the current html document with supplementary informatiion, figures and tables.   
+#'  
+#' [R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) - scripts used in the analysis:
+#' - "_runRmarkdown.R" generates htmls from the following R-script:
+#' - "REV_ms_output.R" R-script used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items
+#' <br />
+#' [Data](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data): raw data (for their desciption see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses
 #' - [model_sim](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/model_sim): posterior simulations for given models
 #' - [Pics](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/Pics): phylopic pictures used in the graphs
 #'  
-#' [R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/)-scripts used in the analysis; those starting with
-#' - "_runRmarkdown.R" generates htmls from the following R-script:  
-#' - "REV_ms_output.R" R-script used to generate the given html document, contains all scripts used to generate the paper outputs, including the display items  
-#' <br />
 #' [Outputs](https://github.com/MartinBulla/avian_FID_covid/tree/main/Outputs/): separate files of all outputs used in the manuscript and this Supplement
 #'  
 #' [LICENSE](https://github.com/MartinBulla/avian_FID_covid/tree/main/LICENSE): terms of reuse - applicable only after this work is published as a preprint or in a scientific journal, until then the data are not available for reuse.
@@ -4434,31 +4457,8 @@ if (save_plot == TRUE) {
 #' ### Testing for phylo-signal in residuals
 #' Example code. Don't run, as it takes too long. To make the Table S7, load the saved mcmc outputs instead.
 #+ prep_phylo, eval = FALSE, results = 'hide', warning=FALSE
-# packages and data
-library(ape)
-library(brms)
-library(coda)
-library(dplyr)
-library(geiger)
-library(MCMCglmm)
-library(parallel)
-library(phangorn)
-library(phylobase)
-
-sapply(c(
-  "magrittr", "car",
-  "ape", "phytools",  "stringr", "plyr"
-),
-require,
-character.only = TRUE
-)
-
+# read trees 
 trees = read.tree("Data/trees.tre")
-
-d[, scinam := Species]
-s[, scinam := Species]
-ss[, scinam := Species]
-dh[, scinam := Species]
 
 # get residuals
 # period
