@@ -523,17 +523,18 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' ***
 #' 
 #' ### Repository: files & folders
-#' [Supplementary information, including code](https://martinbulla.github.io/avian_FID_covid/): the current html document with supplementary informatiion, figures and tables.   
+#' [**Supplementary information**, including code](https://martinbulla.github.io/avian_FID_covid/): the current html document with supplementary informatiion, figures and tables.   
 #'  
-#' [R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) - scripts used in the analysis:
-#' - "_runRmarkdown.R" generates htmls from the following R-script:
-#' - "REV_ms_output.R" R-script used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items
+#' [**R**](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/)-scripts used in the analysis:  
+#' - [_runRmarkdown.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/_runRmarkdown.R) generates htmls from the following R-script:  
+#' - [REV_ms_output.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items  
 #' <br />
-#' [Data](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data): raw data (for their desciption see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses
-#' - [model_sim](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/model_sim): posterior simulations for given models
+#' [**Data**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data): raw data (for their desciption 
+#'see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses  
+#' - [model_sim](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/model_sim): posterior simulations for given models  
 #' - [Pics](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/Pics): phylopic pictures used in the graphs
 #'  
-#' [Outputs](https://github.com/MartinBulla/avian_FID_covid/tree/main/Outputs/): separate files of all outputs used in the manuscript and this Supplement
+#' [**Outputs**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Outputs/): separate files of all outputs used in the manuscript and this Supplement
 #'  
 #' [LICENSE](https://github.com/MartinBulla/avian_FID_covid/tree/main/LICENSE): terms of reuse - applicable only after this work is published as a preprint or in a scientific journal, until then the data are not available for reuse.
 #'  
@@ -830,7 +831,7 @@ width_ <- .5 # spacing between error bars
 col_ = c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1] # "#D43F3AFF", "#B8B8B8FF"
 #show_col(col_)
 
-#p = 
+g_f1 = 
 ggplot(oo, aes(x = estimate, y = Country, col = Country, shape = control_for_starting_distance)) +
     geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
     geom_errorbarh(aes(xmin = lwr, xmax = upr), height = 0, position = ggstance::position_dodgev(width_)) +
@@ -874,7 +875,7 @@ ggplot(oo, aes(x = estimate, y = Country, col = Country, shape = control_for_sta
         axis.title = element_text(size = 7)
     )
 
-ggsave(here::here("Outputs/Fig_rev_width_CustomLocusZoom_v2.png"), width = 8, height = 6.5, unit = "cm", dpi = 600)
+ggsave(here::here("Outputs/Fig_1_width-80mm.png"), g_f1,  width = 8, height = 6.5, unit = "cm", dpi = 600)
 #ggsave("Outputs/Fig_rev_width_CustomJAMAv1.png", width = 8, height = 6, unit = "cm", dpi = 600)
 #ggsave("Outputs/Fig_rev_width_Okabe_v2.png", width = 8, height = 6, unit = "cm", dpi = 600)
 #ggsave("Outputs/Fig_rev_width_UChicago_v3.png", width = 8, height = 6, unit = "cm", dpi = 600)
@@ -883,11 +884,14 @@ ggsave(here::here("Outputs/Fig_rev_width_CustomLocusZoom_v2.png"), width = 8, he
 #ggsave("Outputs/Fig_rev_width_jama_v2.png", width = 8, height = 6, unit = "cm", dpi = 600)
 #ggsave("Outputs/Fig_rev_width_jco_v2.png", width = 8, height = 6, unit = "cm", dpi = 600)
 #ggsave("Outputs/Fig_rev_width_npg_v2.png", width = 8, height = 6, unit = "cm", dpi = 600)
-
 # show used colors
-#gg <- ggplot_build(p)
-#col_ = unique(gg$data[[3]]["colour"])$colour
-#show_col(col_)
+# gg <- ggplot_build(p)
+# col_ = unique(gg$data[[3]]["colour"])$colour
+# show_col(col_)
+
+g_f1
+
+#'
 #' <a name="F_1">
 #' **Figure 1 | Change in avian tolerance towards humans before vs during the COVID-19 shutdowns.**</a> The dots with horizontal lines represent estimated standardised effect size and their 95% confidence intervals, the numbers sample sizes. **For the country-specific and "All“**, the effect sizes and 95% confidence intervals come from the joint posterior distribution of 5000 simulated values generated by the sim function from the arm package (Gelman et al., 2022) using the mixed model outputs controlled for starting distance of the observer (filled circles) or not (empty circles; Tables [S1](#T_S1) and [S2a](#T_S2a)). The models were further controlled for flock size, body size, temperature (also a proxy for a day within the breeding season: r~Pearson~ = 0.48; Fig. [S2](#F_S2)), and time of a day, as well as for the non-independence of data points by fitting random intercepts of year, weekday, genus, species, species at a given day and year, country (in All - a global mixed model), site, and species within a site, while fitting Period as random slope within site (i.e. allowing for different Period effect at each site) and in All also within country. Fitting Period as random slope at other random intercepts produces similar results (see Fig. [S1a](#F_S1)). The multicollinearity was small as correlations between predictors were weak (Fig. [S2](#F_S2)). **For the “Combined“**, the estimate and 95% confidence interval represent the meta-analytical mean based on the country estimates and their standard deviation (from the country-specific models), and sample size per country. Note that effect sizes are small and estimates centre around zero.
 #' 
@@ -1688,11 +1692,12 @@ out_FID_c %>%
      # ggsave(here::here('Outputs/Figure_Sz.png'),g0, width = 30, height =5, units = 'cm')
 
      # combine
-     grid.draw(rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_), ggplotGrob(gh0_)))
-
      if(save_plot==TRUE){
      ggsave(here::here("Outputs/Fig_S1_rev_v7.png"), rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_), ggplotGrob(gh0_)), width = 30, height = 20, units = "cm")
      }
+     
+     grid.draw(rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_), ggplotGrob(gh0_)))
+
 #' <a name="F_S1">
 #' **Figure S1 | Comparing estimates from alternative models.**</a> Changes in avian tolerance towards humans in response to (a) Period (before vs during the COVID-19 shutdowns) (b) stringency of governmental measures, (c) Google Mobility and (d) number of humans during an escape distance trial. The dots with horizontal lines represent the estimated standardised effect size and their 95% confidence intervals based on the joint posterior distribution of 5,000 simulated values generated by the **sim** function  from the *arm* R-package (Gelman et al. 2016) from the output of the mixed models (for details see [Table S2](#T_S2a)). The name of each effect size highlights the corresponding model in [Table S2a](#T_S2a) for (a), [Table S2b](#T_S2b) for (b), [Table S2c](#T_S2c) for (c) and [Table S2d](#T_S2d) for (d), the random structure of the specific model, if applicable, the condition used to reduce the dataset, and sample size. Depicted are effect sizes based on full (01) and reduced datasets with ≥5 (02) or ≥10 observations per species and period (03). [Here](Outputs/modelAss/) for plots of model assumptions. Note that effect sizes are small and estimates close to zero.
 #'
@@ -1926,6 +1931,7 @@ dxx[Covid == 1, period := "during COVID-19"]
 col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
 col3__ <- col3_[3:7]
 
+g_f2 = 
 ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
   geom_boxplot(outlier.size = 0.5) +
   #geom_rect(data=NULL, aes(xmin = 3.5, xmax = Inf, ymin = -Inf, ymax = Inf), color = "grey60", fill = "grey60")+
@@ -1958,7 +1964,11 @@ ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
     axis.text.x = element_text(colour = "grey30", size = 6),
     axis.text.y = element_text(colour = "grey30", size = 6)
   )
-if(save_plot == TRUE){ggsave(here::here("Outputs/Fig_2_rev_v3.png"), width = 18, height = 16, units = "cm")}
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_2_rev_v3.png"), g_f2, width = 18, height = 16, units = "cm")
+}
+
+g_f2
 
 #' <a name="F_2">
 #' **Figure 2 | Temporal  variation in avian tolerance toward humans across species.**</a> Each heading denotes the scientific name of the species, country and unique site ID within each country. Boxplots outline colour highlights country (as in [Fig. 1](#F_1)), background colour indicates Period (white: before the COVID-19 shutdowns; grey: during the COVID-19 shutdowns). Boxplots depict median (horizontal line inside the box), the 25th and 75th percentiles (box) ± 1.5 times the interquartile range or the minimum/maximum value, whichever is smaller (bars), and the outliers (dots). Included are only species–site combinations with ≥5 observations per Period. Y-axis is on the log-scale. Note the lack of consistent shutdowns effects within and between species as well as within and between the countries.
@@ -2184,17 +2194,35 @@ ggx3 <- gtable_filter_remove(gg3,
   name = c(paste0("axis-b-", c(2, 4), "-7"), "axis-b-6-6"),
   trim = FALSE
 )
-grid.draw(ggx3)
 if (save_plot == TRUE) {
   ggsave(here::here("Outputs/Fig_S4_species_rev_v4.png"), ggx3, width = 13.5, height = 17.5, unit = "cm", dpi = 600) # 11.43cm
 }
+grid.draw(ggx3)
 #' <a name="F_S4">
 #' **Figure S4 | Avian tolerance towards humans before and during the COVID-19 shutdowns according to species.**</a> Dots represent means or single escape distance observations of species at specific sites (e.g. specific park or cemetery) with data for both periods (i.e. before and during the shutdowns) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Dotted lines indicate no difference, dots above the lines indicate lower tolerance towards humans (i.e. longer escape distances), dots below the lines indicate lower tolerance before than during the COVID-19 shutdowns. Panels are ordered alphabetically. The axes are on the log-scale.
 #'
 #' ***
 #' 
-#' ### Exploration of Google Mobility
+#' ### Exploration of human presence
 #+ Fig_4, fig.width=8, fig.height = 6
+
+theme_mb2 <-
+  theme_MB +
+  theme(
+    plot.subtitle = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
+    # panel.spacing = unit(1, "mm"),
+    legend.position = "none",
+    # legend.spacing.y = unit(-0.78, "cm")
+    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+    # legend.spacing.y = unit(-0.9, "cm"),
+    axis.text.x = element_text(colour = "grey30", size = 6),
+    axis.text.y = element_text(colour = "grey30", size = 6),
+    plot.tag = element_text(size = 7)
+  )
+
+# Fig_4a - Google Mobility
 g_ <- fread(here::here("Data/google_mobility.txt")) # fwrite(d, here::here('Data/data.txt'), sep ='\t')
 g_[, Year := as.integer(substring(date, nchar(date) - 3, nchar(date)))]
 g_[nchar(date) == 9, date := paste0("0", date)]
@@ -2206,89 +2234,247 @@ g_[, Country := factor(Country, levels = (c("Finland", "Poland", "Czechia", "Hun
 
 ann_text_gg <- data.frame(
   parks_percent_change_from_baseline = 15, Year = 2021, lab = "Text",
-  Country = factor("Finland", levels = (c("Finland", "Poland", "Czechia","Hungary","Australia")))
+  Country = factor("Finland", levels = (c("Finland", "Poland", "Czechia", "Hungary", "Australia")))
 )
 
-g0 = ggplot(g_, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
-  geom_histogram(position = "dodge") +
+g0 <- ggplot(g_, aes(x = parks_percent_change_from_baseline, fill = factor(Year))) +
+  geom_histogram(position = "dodge", color = NA) +
   facet_wrap(~Country, nrow = 5) +
   # scale_y_continuous(trans = 'log')+
-  scale_fill_manual(values = c("orange", "skyblue", "black"), guide = 'none') +
+  scale_fill_manual(values = c("orange", "skyblue", "black"), guide = "none") +
   geom_vline(xintercept = 0, lty = 3, col = "#991616") +
   geom_text(data = ann_text_gg, aes(y = 100), label = "Baseline", col = "#991616", size = 1.75, hjust = 0) +
-  labs(subtitle = "\nDistributions", x = 'Google Mobility\n[% change in human presence]', y = '\n# of days') +
+  labs(subtitle = "\nDistributions", x = "Google Mobility\n[% change in human presence]", y = "\n# of days") +
   theme_MB +
   theme(
-      plot.subtitle = element_text(size = 7),
-      strip.background = element_blank(),
-      strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
-      # panel.spacing = unit(1, "mm"),
-      legend.position = "none", # c(1, 0.01),
-      # legend.spacing.y = unit(-0.78, "cm")
-      # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
-      #legend.spacing.y = unit(-0.9, "cm"),
-      axis.text.x = element_text(colour = "grey30", size = 6),
-      axis.text.y = element_text(colour = "grey30", size = 6)
-    )
+    plot.subtitle = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
+    # panel.spacing = unit(1, "mm"),
+    legend.position = "none", # c(1, 0.01),
+    # legend.spacing.y = unit(-0.78, "cm")
+    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+    # legend.spacing.y = unit(-0.9, "cm"),
+    axis.text.x = element_text(colour = "grey30", size = 6),
+    axis.text.y = element_text(colour = "grey30", size = 6)
+  )
 
-g1 = ggplot(g_, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
+g1 <- ggplot(g_, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
   geom_line() +
   facet_wrap(~Country, nrow = 5) +
   # scale_y_continuous(trans = 'log')+
-  coord_cartesian(ylim = c(-100, 300))+
-  scale_color_manual(values = c("orange", "skyblue", "black"), guide = 'none') +
-  labs(subtitle = "\nRaw data", xlab = 'Day\n ', y = 'Google Mobility\n[% change in human presence]') +
+  coord_cartesian(ylim = c(-100, 300)) +
+  scale_color_manual(values = c("orange", "skyblue", "black"), guide = "none") +
+  labs(subtitle = "\nRaw data", xlab = "Day\n ", y = "Google Mobility\n[% change in human presence]") +
   theme_MB +
   theme(
-      plot.subtitle = element_text(size = 7),
-      strip.background = element_blank(),
-      strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
-      # panel.spacing = unit(1, "mm"),
-      legend.position = "none", # c(1, 0.01),
-      legend.justification = c(1, 0),
-      legend.title = element_blank(),
-      # legend.spacing.y = unit(-0.78, "cm")
-      # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
-      legend.spacing.y = unit(-0.9, "cm"),
-      axis.text.x = element_text(colour = "grey30", size = 6),
-      axis.text.y = element_text(colour = "grey30", size = 6)
-    )
-
-g2 = ggplot(g_, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
-     stat_smooth(se =FALSE) +
-     facet_wrap(~Country, nrow = 5) +
-     # scale_y_continuous(trans = 'log')+
-     coord_cartesian(ylim = c(-100, 300))+
-     scale_color_manual(values = c("orange", "skyblue", "black"), labels = c("2020", "2021", "2022 (post-COVID-19)"), name = 'Year')+
-     labs(subtitle = "Locally estimated\nscatterplot smoothing", xlab = 'Day\ntest') +
-     theme_MB +
-     theme(
-         plot.subtitle = element_text(size = 7),
-         strip.background = element_blank(),
-         strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
-         legend.text = element_text(color = "grey30", size = 6),
-         # panel.spacing = unit(1, "mm"),
-         #legend.position = "none", # c(1, 0.01),
-         legend.justification = c(0, 1),
-         legend.box.margin=margin(5,5,5,5),
-         #legend.title = element_blank(),
-         # legend.spacing.y = unit(-0.78, "cm")
-         # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
-         #legend.background = element_blank(),
-         #legend.spacing.y = unit(-0.9, "cm"),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-       )
-    
-  ggarrange(
-    g0, g1, g2,
-    ncol = 3, widths = c(0.975, 1, 1.46)
+    plot.subtitle = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
+    # panel.spacing = unit(1, "mm"),
+    legend.position = "none", # c(1, 0.01),
+    legend.justification = c(1, 0),
+    legend.title = element_blank(),
+    # legend.spacing.y = unit(-0.78, "cm")
+    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+    legend.spacing.y = unit(-0.9, "cm"),
+    axis.text.x = element_text(colour = "grey30", size = 6),
+    axis.text.y = element_text(colour = "grey30", size = 6)
   )
-  ggsave(here::here("Outputs/Fig_4_rev_v2.png"), width = 8*2, height = 11, unit = "cm", dpi = 600)
 
+g2 <- ggplot(g_, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
+  stat_smooth(se = FALSE) +
+  facet_wrap(~Country, nrow = 5) +
+  # scale_y_continuous(trans = 'log')+
+  coord_cartesian(ylim = c(-100, 300)) +
+  scale_color_manual(values = c("orange", "skyblue", "black"), labels = c("2020", "2021", "2022 (post-COVID-19)"), name = "Year") +
+  labs(subtitle = "Locally estimated\nscatterplot smoothing", xlab = "Day\ntest") +
+  theme_MB +
+  theme(
+    plot.subtitle = element_text(size = 7),
+    strip.background = element_blank(),
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
+    legend.text = element_text(color = "grey30", size = 6),
+    # panel.spacing = unit(1, "mm"),
+    # legend.position = "none", # c(1, 0.01),
+    legend.justification = c(0, 1),
+    legend.box.margin = margin(5, 5, 5, 5),
+    # legend.title = element_blank(),
+    # legend.spacing.y = unit(-0.78, "cm")
+    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
+    # legend.background = element_blank(),
+    # legend.spacing.y = unit(-0.9, "cm"),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank()
+  )
+
+g123 <- ggarrange(
+  g0, g1, g2,
+  ncol = 3, widths = c(0.975, 1, 1.46)
+)
+
+fig_4a <- annotate_figure(g123,
+  top = textGrob("a)", gp = gpar(cex = 0.7), x = 0.02, vjust = 0, y = 0)
+)
+
+# Fig_4b - # of humans distributions before/during
+hd1 <-
+  ggplot(dh, aes(x = Human, fill = Period)) +
+  geom_histogram(position = "dodge", color = NA) +
+  labs(subtitle = "All data\nOriginal-scale", xlab = "# of humans", ylab = "# of escape distance trials") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  annotate("text", x = 10, y = 900, label = "Before COVID-19 shutdowns", col = "orange", size = 1.8, hjust = 0) +
+  annotate("text", x = 10, y = 800, label = "After COVID-19 shutdowns", col = "skyblue", size = 1.8, hjust = 0) +
+  # scale_color_manual(values = c("orange", "skyblue")) +
+  scale_fill_manual(values = c("orange", "skyblue"))
+
+hd2 <-
+  ggplot(dh, aes(x = Human + 0.01, col = Period, fill = Period)) +
+  geom_histogram(position = "dodge", color = NA) +
+  scale_x_continuous(
+    trans = "log10", expand = c(0, 0),
+    breaks = c(0.01, 1, 10, 50),
+    labels = c(0, 1, 10, 50)
+  ) +
+  scale_y_continuous(expand = c(0, 0)) +
+  # scale_color_manual(values = c("orange", "skyblue")) +
+  scale_fill_manual(values = c("orange", "skyblue")) +
+  labs(subtitle = "\nLog-scale", xlab = "# of humans", ylab = "# of escape distance trials")
+
+hd3 <-
+  ggplot(dhh, aes(x = Human, col = Period, fill = Period)) +
+  geom_histogram(position = "dodge", color = NA) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  # scale_color_manual(values = c("orange", "skyblue")) +
+  scale_fill_manual(values = c("orange", "skyblue")) +
+  labs(subtitle = ">0 data\nOriginal-scale", xlab = "# of humans", ylab = "# of escape distance trials")
+
+hd4 <-
+  ggplot(dhh, aes(x = Human, col = Period, fill = Period)) +
+  geom_histogram(position = "dodge", color = NA) +
+  scale_x_continuous(trans = "log10", expand = c(0, 0)) +
+  # scale_y_continuous(expand = c(0,0)) +
+  scale_color_manual(values = c("orange", "skyblue")) +
+  scale_fill_manual(values = c("orange", "skyblue")) +
+  labs(subtitle = "\nLog-scale", xlab = "# of humans", ylab = "# of escape distance trials")
+
+
+hd1234_w <- ggarrange(
+  hd1 + theme_mb2 + rremove("ylab") + rremove("xlab"), hd2 + theme_mb2 + rremove("ylab") + rremove("xlab"),
+  hd3 + theme_mb2 + rremove("ylab") + rremove("xlab"), hd4 + theme_mb2 + rremove("ylab") + rremove("xlab"),
+  ncol = 4, nrow = 1
+)
+
+fig_4b <-
+  annotate_figure(hd1234_w,
+    left = textGrob("# of escape distance trials", rot = 90, gp = gpar(cex = 0.6, col = "grey30"), vjust = 1.2),
+    bottom = textGrob("# of humans", gp = gpar(cex = 0.6, col = "grey30"), hjust = 1, vjust = 0),
+    top = textGrob("b)", gp = gpar(cex = 0.7), x = -.005, vjust = 0, y = 0)
+  )
+
+# Fig_4c - # of humans distributions year & country
+dh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
+dh[, Year_ := factor(Year, levels = rev(c("2018", "2019", "2020", "2021")))]
+dh_N <- dh[, .N, by = c("Country", "Year_")]
+dh_N[, n_pos := 60]
+
+dhh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
+dhh[, Year_ := factor(Year, levels = rev(c("2018", "2019", "2020", "2021")))]
+dhh_N <- dhh[, .N, by = c("Country", "Year_")]
+dhh_N[, n_pos := 75]
+width_ <- 1
+
+col_hn <- rev(c("orange", "darkorange3", "skyblue", "deepskyblue4"))
+
+h1 <- ggplot(dh, aes(col = Year_, x = Human, y = Country)) +
+  geom_boxplot(position = position_dodge2(width_, preserve = "single"), outlier.size = 0.1) +
+  scale_x_continuous(name = "# of humans", lim = c(0, 100)) +
+  scale_colour_manual(values = col_hn) +
+  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
+  labs(subtitle = "All data\n(original scale) ") +
+  annotate("text", x = 90, y = 4 + 0.5, label = "Year", col = "grey70", size = 1.8, hjust = 0) +
+  annotate("text", x = 90, y = 4 + 0.3, label = "2018", col = "orange", size = 1.8, hjust = 0) +
+  annotate("text", x = 90, y = 4 + 0.1, label = "2019", col = "darkorange3", size = 1.8, hjust = 0) +
+  annotate("text", x = 90, y = 4 - 0.1, label = "2020", col = "skyblue", size = 1.8, hjust = 0) +
+  annotate("text", x = 90, y = 4 - 0.3, label = "2021", col = "deepskyblue4", size = 1.8, hjust = 0) +
+  theme_mb2
+
+h2 <- ggplot(dh, aes(col = Year_, x = Human + 0.01, y = Country)) +
+  geom_boxplot(position = position_dodge2(width_, preserve = "single"), outlier.size = 0.1) +
+  scale_x_continuous(
+    trans = "log10", name = "# of humans",
+    breaks = c(0.01, 1, 10, 100),
+    labels = c(0, 1, 10, 100)
+    # ,breaks = trans_breaks("log10", function(x) 10^x),
+    # labels = trans_format("log10", math_format(10^.x))
+  ) +
+  coord_cartesian(xlim = c(0.01, 100)) +
+  scale_colour_manual(values = col_hn) +
+  guides(col = guide_legend(title = "Year", , reverse = TRUE)) +
+  labs(subtitle = "\n(log-scale)") +
+  annotate("text", x = 60, y = 4 + 0.5, label = "N", col = "grey70", size = 1.8, hjust = 0) +
+  geom_text(data = dh_N, aes(x = n_pos, label = N, y = Country, col = Year_), vjust = 1, hjust = 0, size = 1.8, position = position_dodge2(width_, preserve = "single")) +
+  theme_mb2 +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+h3 <- ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
+  geom_boxplot(position = position_dodge2(width_, preserve = "single"), outlier.size = 0.1) +
+  coord_cartesian(xlim = c(0, 100)) +
+  scale_x_continuous(name = "# of humans") +
+  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
+  scale_colour_manual(values = col_hn) +
+  labs(subtitle = ">0 data\n(original scale)") +
+  theme_mb2 +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+h4 <- ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
+  geom_boxplot(position = position_dodge2(width_, preserve = "single"), outlier.size = 0.1) +
+  scale_x_continuous(
+    trans = "log10", name = "# of humans"
+    # ,breaks = trans_breaks("log10", function(x) 10^x),
+    # labels = trans_format("log10", math_format(10^.x))
+  ) +
+  coord_cartesian(xlim = c(1, 100)) +
+  scale_colour_manual(values = col_hn) +
+  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
+  labs(subtitle = "\n(log-scale)") +
+  annotate("text", x = 75, y = 4 + 0.5, label = "N", col = "grey70", size = 1.8, hjust = 0) +
+  geom_text(data = dhh_N, aes(x = n_pos, label = N, y = Country, col = Year_), vjust = 1, hjust = 0, size = 1.8, position = position_dodge2(width_, preserve = "single")) +
+  theme_mb2 +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+h1234 <- ggarrange(
+  h1 + rremove("xlab") + rremove("ylab"), h2 + rremove("xlab") + rremove("ylab"),
+  h3 + rremove("xlab") + rremove("ylab"), h4 + rremove("xlab") + rremove("ylab"),
+  ncol = 4, nrow = 1,
+  widths = c(1.35, 1, 1, 1)
+)
+fig_4c <-
+  annotate_figure(h1234,
+    bottom = textGrob("# of humans", gp = gpar(cex = 0.6, col = "grey30"), hjust = 1, vjust = 0),
+    top = textGrob("c)", gp = gpar(cex = 0.7), x = 0.02, vjust = 0, y = 0)
+  )
+
+# combine
+fig_4 = ggarrange(fig_4a, fig_4b, fig_4c, nrow = 3, heights = c(11, 5, 6))
+if(save)
+ggsave(here::here("Outputs/Outputs/Fig_4_width-160mm.png.png"), fig_4, width = 8 * 2, height = 22, unit = "cm", dpi = 600)
+fig_4
 #' <a name="F_4">
-#' **Figure 4 | Changes in human presence in parks within and between years and countries.**</a> Left plots represent distribution (histograms) of human presence (Google Mobility), middle plots the raw data, right plots locally estimated scatterplot smoothing. Note that Google Mobility data were not freely available for years before the COVID-19 pandemic (i.e. before 2020) but 2022 was a year without shutdowns in the studied countries. For weekday-specific pattern see [Fig. S5](#F_S5) below.
-#'
+#' **Figure 4 | Changes in human presence in parks within and between years and countries.**</a> (a) The left plots represent distributions (histograms) of human presence (Google Mobility), middle plots the raw data, and right plots locally estimated scatterplot smoothing (Loess). Dotted vertical line in “Distribution” plots indicates baseline value of human presence, separating negative values that indicate decreased human presence and positive values that indicate increased human presence when compared with the baseline. The baseline is country and weekday specific (for weekday-specific patterns, see [Fig. S5](#F_S5)).Note that Google Mobility data were unavailable for the years before the COVID-19 pandemic (i.e. before 2020) but the year 2022 was without shutdowns in the studied countries. (b-c) Distribution of # of humans at the time of escape distance trial according to Period (before and during COVID-19 shutdowns) (b) and according to year and country of data collection (c; for boxplot definition see [Fig. 2](#F_2)). First two panels (in b and c) show all data (N = `r nrow(dh)` observations), last two cases when humans were present (N = `r nrow(dhh)`); data on original scale (first and third panels) and on log-scale (second and fourth panels. Numbers in (c) indicate sample sizes. Note the lack of COVID-19 shutdown effects on # of humans in parks.
+#' 
+#'  
 #+ Fig_S5_gm_week_year, fig.width=10, fig.height=6
 g_w <- fread(here::here("Data/google_mobility.txt")) # fwrite(d, here::here('Data/data.txt'), sep ='\t')
 g_w[, Year := as.integer(substring(date, nchar(date) - 3, nchar(date)))]
@@ -2299,13 +2485,14 @@ setnames(g_w, old = "country_region", new = "Country")
 g_w[, weekday := weekdays(date_)]
 g_w[, Country := factor(Country, levels = (c("Finland", "Poland", "Czechia", "Hungary", "Australia")))]
 g_w[, weekday := factor(weekday, levels = (c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))]
+g_s5 =
 ggplot(g_w, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Year))) +
     geom_line() +
     facet_grid(rows = vars(Country), cols = vars(weekday)) +
     # scale_y_continuous(trans = 'log')+
     scale_color_manual(values = c("orange", "skyblue", "black"))
-ggsave(here::here("Outputs/Fig_S5_rev.png"), width = 8 * 2.54, height = 6 * 2.54, unit = "cm", dpi = 600)
-#'
+ggsave(here::here("Outputs/Fig_S5_rev.png"), g_s5, width = 8 * 2.54, height = 6 * 2.54, unit = "cm", dpi = 600)
+g_s5
 #' <a name="F_S5">
 #' **Figure S5 | Changes in human presence (Google Mobility) in parks across weekdays and years.**</a> Depicted are raw data connected by lines. Note that Google Mobility data were not freely available for years before the COVID-19 pandemic (i.e. before 2020) but 2022 was a year without shutdowns in the studied countries.
 #' 
@@ -2475,15 +2662,18 @@ ggplot(g_s, aes(x = StringencyIndex, y = pred, col = Country)) +
     axis.text = element_text(, size = 6),
     axis.title = element_text(size = 7)
   )
-p  
+
 if(save_plot==TRUE){
 ggsave(here::here("Outputs/Fig_5_rev_widht_70mm.png"), p + theme(plot.subtitle = element_blank()), width = 7, height = 6, unit = "cm", dpi = 600)
 }
+
+p
+
 #' <a name="F_5">
-#' **Figure 5 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (stringency index).**</a> Lines with shaded areas represent predictions with 95%CIs from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and stringency index as a random slope (Table [S3](#T_S3)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and stringency index.
+#' **Figure 5 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (stringency index).**</a> Lines with shaded areas represent predictions with 95%CIs from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and stringency index as a random slope (Table [S3a](#T_S3a)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and stringency index.
 #' 
-#' <a name="T_S3">
-#' **Table S3 | Google Mobility in relation to stringency index**</a>
+#' <a name="T_S3a">
+#' **Table S3a | Google Mobility in relation to stringency index**</a>
 ll = list()
 s[, year_weekday := paste(Year, weekday)]
 
@@ -2539,7 +2729,7 @@ out_g_s[, effect := gsub("scale\\(Year\\)", "year", effect)]
 out_g_s[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
 out_g_s[, effect := gsub("year_weekday", "weekday within year", effect)]
 out_g_s[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
-fwrite(file = here::here("Outputs/Table_S3_rev.csv"), out_g_s)
+fwrite(file = here::here("Outputs/Table_S3a_rev.csv"), out_g_s)
 
 out_g_s$error_structure = out_g_s$response = NULL
 out_g_s[model!="", model:=c('Finland', 
@@ -2554,135 +2744,8 @@ out_g_s %>%
 #' 
 #' ***
 #' 
-#' ### Exploration of # of humans
-#+ Fig_S6_hp_dist, fig.width=9, fig.height = 5
-# nrow(dh[Human == 0])
-# nrow(dh[Human > 0])
-hd1 <-
-  ggplot(dh, aes(x = Human, col = Period, fill = Period)) +
-  geom_histogram(position = "dodge") + 
-  labs(tag = "a)", subtitle = "All data\nOriginal-scale", xlab ="# of humans", ylab = '# of escape distance trials' )+
-  scale_color_manual(values = c("orange", "skyblue")) +
-  scale_fill_manual(values = c("orange", "skyblue"))
-  
-hd2 <-
-  ggplot(dh, aes(x = Human + 0.01, col = Period, fill = Period)) +
-  geom_histogram(position = "dodge") +
-  scale_x_continuous(trans = "log10",
-    breaks = c(0.01, 1, 10, 50),
-    labels = c(0, 1, 10, 50)
-  ) +
-  labs(tag = "b)", subtitle = "All data\nLog-scale", xlab ="# of humans", ylab = '# of escape distance trials' )+
-  scale_color_manual(values = c("orange", "skyblue")) +
-  scale_fill_manual(values = c("orange", "skyblue"))
-
-hd3 <-
-  ggplot(dhh, aes(x = Human, col = Period, fill = Period)) +
-  geom_histogram(position = "dodge") +
-  labs(tag = "c)", subtitle = ">0 data\nOriginal-scale", xlab ="# of humans", ylab = '# of escape distance trials' )+
-  scale_color_manual(values = c("orange", "skyblue")) +
-  scale_fill_manual(values = c("orange", "skyblue"))
-
-hd4 <-
-  ggplot(dhh, aes(x = Human, col = Period, fill = Period)) +
-  geom_histogram(position = "dodge") +
-  scale_x_continuous(trans = "log10"
-  ) +
-  labs(tag = "d)", subtitle = ">0 data\nLog-scale", xlab ="# of humans", ylab = '# of escape distance trials' )+
-  scale_color_manual(values = c("orange", "skyblue")) +
-  scale_fill_manual(values = c("orange", "skyblue"))
-
-hd1234 <- ggarrange(
-  hd1 + rremove("ylab") + rremove("xlab"), hd2 + rremove("ylab") + rremove("xlab"),
-  hd3 + rremove("ylab") + rremove("xlab"), hd4 + rremove("ylab") + rremove("xlab"),
-  ncol = 2, nrow = 2, common.legend = TRUE, legend = "right"
-)
-annotate_figure(hd1234,
-  left = textGrob("# of escape distance trials", rot = 90, gp = gpar(cex = 1)),
-  bottom = textGrob("# of humans", gp = gpar(cex = 1), hjust = 1)
-)
-ggsave(file = here::here("Outputs/Fig_S_hp_dist.png"), width = 9, height = 5)
-
-#' <a name="F_S6">
-#' **Figure S6_hp_dist | Distribution of # of humans  at the time of escape distance trial.**</a> Color indicates Period. (a, c) Data on original scale, (b,d) on log-scale. Depicted are all data (a-b; N = `r nrow(dh)` observations) and only cases when humans were present (c-d; N = `r nrow(dhh)`).
-
-#+ Fig_S7_hp_C, fig.width=27*0.393701, fig.height = 8*0.393701
-dh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
-dh[, Year_ := factor(Year, levels = rev(c("2018", "2019", "2020", "2021")))]
-dh_N <- dh[, .N, by = c("Country", "Year_")]
-dh_N[, n_pos := 70]
-
-dhh[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
-dhh[, Year_ := factor(Year, levels = rev(c("2018", "2019", "2020", "2021")))]
-dhh_N <- dhh[, .N, by = c("Country", "Year_")]
-dhh_N[, n_pos := 100]
-width_ <- 1
-
-h1 <- ggplot(dh, aes(col = Year_, x = Human, y = Country)) +
-  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
-  scale_x_continuous(name = "# of humans", lim = c(0, 100)) +
-  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
-  labs(subtitle = "All data\n(original scale) ")
-
-h2 <- ggplot(dh, aes(col = Year_, x = Human + 0.01, y = Country)) +
-  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
-  scale_x_continuous(
-    trans = "log10", name = "# of humans",
-    breaks = trans_breaks("log10", function(x) 10^x),
-    labels = trans_format("log10", math_format(10^.x))
-  ) +
-  guides(col = guide_legend(title = "Year", , reverse = TRUE)) +
-  labs(subtitle = "\n(log-scale)") +
-  geom_text(data = dh_N, aes(x = n_pos, label = N, y = Country, col = Year_), vjust = 1, size = 2, position = position_dodge2(width_, preserve = "single")) +
-  theme(
-    axis.title.y = element_blank(),
-    axis.text.y = element_blank()
-  )
-
-h3 <- ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
-  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
-  scale_x_continuous(name = "# of humans", lim = c(0, 100)) +
-  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
-  labs(subtitle = ">0 data\n(original scale)") +
-  theme(
-    axis.title.y = element_blank(),
-    axis.text.y = element_blank()
-  )
-
-h4 <- ggplot(dhh, aes(col = Year_, x = Human, y = Country)) +
-  geom_boxplot(position = position_dodge2(width_, preserve = "single")) +
-  scale_x_continuous(
-    trans = "log10", name = "# of humans",
-    breaks = trans_breaks("log10", function(x) 10^x),
-    labels = trans_format("log10", math_format(10^.x))
-  ) +
-  guides(col = guide_legend(title = "Year", reverse = TRUE)) +
-  labs(subtitle = "\n(log-scale)") +
-  geom_text(data = dhh_N, aes(x = n_pos, label = N, y = Country, col = Year_), vjust = 1, size = 2, position = position_dodge2(width_, preserve = "single")) +
-  theme(
-    axis.title.y = element_blank(),
-    axis.text.y = element_blank()
-  )
-
-h1234 <- ggarrange(
-  h1 + rremove("xlab") , h2 +  rremove("xlab"),
-  h3 +  rremove("xlab"), h4 + rremove("xlab"),
-  ncol = 4, nrow = 1, 
-  common.legend = TRUE, legend = "right",
-  widths = c(1.35, 1, 1, 1)
-)
-annotate_figure(h1234,
-  bottom = textGrob("# of humans", gp = gpar(cex = 1))
-)
-
-ggsave(file = here::here("Outputs/Fig_S7_hp_C.png"), width = 27, height = 8, units = "cm")
-#' <a name="F_S7_hp_C">
-#' **Figure S7_hp_C | Number of humans at the time of obseration per country and year.**</a> First two panels are based on all data, last two panels only use trials where humans were present. Numbers indicate sample sizes. Note the lack of COVID-19 shutdown effects.
-#' 
-#' ***
-#' 
 #' ### Number of humans ~ stringency & Google Mobility
-#+ Fig_S8_h, fig.width=12*0.393701, fig.height = 12*0.393701
+#+ Fig_6, fig.width=12*0.393701, fig.height = 12*0.393701
 sh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
 ssh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
 
@@ -3025,12 +3088,12 @@ p_hs_o <-
     strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
   )
 #p_hs_o
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_HS_temp_rev_widht_70mm_v2_origi.png"), p_hs_o #+ theme(plot.subtitle = element_blank())
-    ,
-    width = 10, height = 4.5, unit = "cm", dpi = 600
-  )
-}
+#if (save_plot == TRUE) {
+#  ggsave(here::here("Outputs/Fig_HS_temp_rev_widht_70mm_v2_origi.png"), p_hs_o #+ theme(plot.subtitle = element_blank())
+#    ,
+#    width = 10, height = 4.5, unit = "cm", dpi = 600
+#  )
+#}
 
 # ln stringency
 p_hs_ln = ggplot(h_s_ln, aes(x = StringencyIndex, y = pred, col = Country)) +
@@ -3084,12 +3147,12 @@ p_hs_ln = ggplot(h_s_ln, aes(x = StringencyIndex, y = pred, col = Country)) +
     strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
   )
 #p_hs_ln
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_HS_ln.png"), p_hs_ln #+ theme(plot.subtitle = element_blank())
-    ,
-    width = 10, height = 4.5, unit = "cm", dpi = 600
-  )
-}
+#if (save_plot == TRUE) {
+#  ggsave(here::here("Outputs/Fig_HS_ln.png"), p_hs_ln #+ theme(plot.subtitle = element_blank())
+#    ,
+#    width = 10, height = 4.5, unit = "cm", dpi = 600
+#  )
+#}
 
 # original google
 p_hg_o <-
@@ -3144,12 +3207,12 @@ p_hg_o <-
     strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
   )
 #p_hg_o
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_HG_rev_widht_70mm_v2_origi.png"), p_hg_o #+ theme(plot.subtitle = element_blank())
-    ,
-    width = 10, height = 4.5, unit = "cm", dpi = 600
-  )
-}
+#if (save_plot == TRUE) {
+#  ggsave(here::here("Outputs/Fig_HG_rev_widht_70mm_v2_origi.png"), p_hg_o #+ theme(plot.subtitle = element_blank())
+#    ,
+#    width = 10, height = 4.5, unit = "cm", dpi = 600
+#  )
+#}
 
 # ln google
 p_hg_ln <- ggplot(h_g_ln, aes(x = parks_percent_change_from_baseline, y = pred, col = Country)) +
@@ -3203,12 +3266,12 @@ p_hg_ln <- ggplot(h_g_ln, aes(x = parks_percent_change_from_baseline, y = pred, 
     strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"))
   )
 #p_hg_ln
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_GS_ln.png"), p_hs_ln #+ theme(plot.subtitle = element_blank())
-    ,
-    width = 10, height = 4.5, unit = "cm", dpi = 600
-  )
-}
+#if (save_plot == TRUE) {
+#  ggsave(here::here("Outputs/Fig_GS_ln.png"), p_hs_ln #+ theme(plot.subtitle = element_blank())
+#    ,
+#    width = 10, height = 4.5, unit = "cm", dpi = 600
+#  )
+#}
 
 # combine & export
 sshh <- ggarrange(
@@ -3217,16 +3280,232 @@ sshh <- ggarrange(
   ncol = 2, nrow = 2
   ) + theme(plot.margin = margin(r = 2)) 
 
-annotate_figure(sshh,
+fig_6 = annotate_figure(sshh,
   left = textGrob("# of humans", rot = 90, gp = gpar(cex = 0.6))
 )
-ggsave(file = here::here("Outputs/Fig_S8_h.png"), width = 12, height = 12, units = "cm")
 
-#' <a name="F_S8_h">
-#' **Figure S8_h | Human numbers in association with stringency of antipandemic governmental restrictions (stringency index) and daily human presence in parks (Google Mobility).**</a> Dots represent individual data points (a, c on original scale; b, d on ln-scale), jittered to increase visibility, lines with shaded areas predictions with 95%CIs from mixed effect models  controlled for the year (in case of Finland and Hungary) and non-independence of data points by including weekday within the year as random intercept and stringency index or Google Mobility as a random slope (Table S4_h). Note the generally negative but weak association between human presence and stringency index.
+if (save_plot == TRUE) {
+ggsave(file = here::here("Outputs/Fig_6.png"), fig_6, width = 12, height = 12, units = "cm")
+}
+
+fig_6
+
+#' <a name="F_6">
+#' **Figure 6 | Human numbers in association with stringency of antipandemic governmental restrictions (stringency index) and daily human presence in parks (Google Mobility).**</a> Dots represent individual data points (a, c on original scale; b, d on ln-scale), jittered to increase visibility. Lines with shaded areas represent predictions with 95%CIs from mixed effect models controlled for the year (in case of Finland and Hungary) and non-independence of data points by including weekday within the year as random intercept and stringency index or Google Mobility as a random slope (Table [S3b](T_S3b), [S3c](T_S3c), [S3d](T_S3d), [S3e](T_S3e)). Note the generally negative but weak association between human presence and stringency index.
 #' 
 #' ***
 #' 
+#' <a name="T_S3b">
+#' **Table S3b | Number of humans in relation to stringency index**</a>
+llb = list()
+s[, year_weekday := paste(Year, weekday)]
+
+shf <- sh[Country == "Finland"]
+shfi_ <- lmer(scale(Human) ~
+  scale(Year) +
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | year_weekday),
+data = shf, REML = FALSE
+)
+llb[[1]] = m_out(name = "Table S3b - FI", dep = "# of humans", model = shfi_, nsim = 5000)
+
+shc <- sh[Country == "Czechia"]
+shcz_ <- lmer(scale(Human) ~
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | weekday),
+data = shc, REML = FALSE
+)
+llb[[2]] = m_out(name = "Table S3b - CZ", dep = "# of humans", model = shcz_, nsim = 5000)
+
+sh_h <- sh[Country == "Hungary"]
+shhu_ <- lmer(scale(Human) ~
+  scale(Year) +
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | year_weekday),
+data = sh_h, REML = FALSE
+)
+llb[[3]] = m_out(name = "Table S3b - HU", dep = "# of humans", model = shhu_, nsim = 5000)
+
+out_t3b = data.table(do.call(rbind, llb))
+out_t3b[is.na(out_t3b)] <- ""
+out_t3b$R2_mar = out_t3b$R2_con = NULL
+out_t3b[, effect := gsub("scale\\(Year\\)", "year", effect)]
+out_t3b[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+out_t3b[, effect := gsub("year_weekday", "weekday within year", effect)]
+out_t3b[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+fwrite(file = here::here("Outputs/Table_S3b_rev.csv"), out_t3b)
+
+out_t3b$error_structure = out_t3b$response = NULL
+out_t3b[model != "", model := c(
+  "Finland",
+  "Czechia",
+  "Hungary"
+)]
+setnames(out_t3b, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "lower", "upper"))
+out_t3b %>%
+  kbl() %>%
+  kable_paper("hover", full_width = F)
+#'
+#' ***
+#'
+#' <a name="T_S3c">
+#' **Table S3c | Number of humans (ln-transformed) in relation to stringency index**</a>
+llc = list()
+
+shf <- sh[Country == "Finland"]
+shfi_ln_ <- lmer(scale(log(Human+0.01)) ~
+  scale(Year) +
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | year_weekday),
+data = shf, REML = FALSE
+)
+llc[[1]] = m_out(name = "Table S3c - FI", dep = "# of humans (ln)", model = shfi_ln_, nsim = 5000)
+
+shc <- sh[Country == "Czechia"]
+shcz_ln_ <- lmer(scale(log(Human+0.01))~
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | weekday),
+data = shc, REML = FALSE
+)
+llc[[2]] = m_out(name = "Table S3c - CZ", dep = "# of humans (ln)", model = shcz_ln_, nsim = 5000)
+
+sh_h <- sh[Country == "Hungary"]
+shhu_ln_ <- lmer(scale(log(Human+0.01)) ~
+  scale(Year) +
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | year_weekday),
+data = sh_h, REML = FALSE
+)
+llc[[3]] = m_out(name = "Table S3c - HU", dep = "# of humans (ln)", model = shhu_ln_, nsim = 5000)
+
+out_t3c = data.table(do.call(rbind, llc))
+out_t3c[is.na(out_t3c)] <- ""
+out_t3c$R2_mar = out_t3c$R2_con = NULL
+out_t3c[, effect := gsub("scale\\(Year\\)", "year", effect)]
+out_t3c[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+out_t3c[, effect := gsub("year_weekday", "weekday within year", effect)]
+out_t3c[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+fwrite(file = here::here("Outputs/Table_S3c_rev.csv"), out_t3c)
+
+out_t3c$error_structure = out_t3b$response = NULL
+out_t3c[model != "", model := c(
+  "Finland",
+  "Czechia",
+  "Hungary"
+)]
+setnames(out_t3c, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "lower", "upper"))
+out_t3c %>%
+  kbl() %>%
+  kable_paper("hover", full_width = F)
+#'
+#' ***
+#' 
+#' <a name="T_S3d">
+#' **Table S3d | Number of humans in relation to Google Mobility**</a>
+lld = list()
+
+sshf <- ssh[Country == "Finland"]
+shfi_g <- lmer(scale(Human) ~
+  scale(Year) +
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | year_weekday),
+data = sshf, REML = FALSE
+)
+lld[[1]] = m_out(name = "Table S3d - FI", dep = "# of humans", model = shfi_g, nsim = 5000)
+
+sshc <- ssh[Country == "Czechia"]
+shcz_g <- lmer(scale(Human) ~
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | weekday),
+data = sshc, REML = FALSE
+)
+lld[[2]] = m_out(name = "Table S3d - CZ", dep = "# of humans", model = shcz_g, nsim = 5000)
+
+ssh_h <- ssh[Country == "Hungary"]
+shhu_g <- lmer(scale(Human) ~
+  scale(Year) +
+  scale(StringencyIndex) +
+  (scale(StringencyIndex) | year_weekday),
+data = ssh_h, REML = FALSE
+)
+lld[[3]] = m_out(name = "Table S3d - HU", dep = "# of humans", model = shhu_g, nsim = 5000)
+
+out_t3d = data.table(do.call(rbind, lld))
+out_t3d[is.na(out_t3d)] <- ""
+out_t3d$R2_mar = out_t3d$R2_con = NULL
+out_t3d[, effect := gsub("scale\\(Year\\)", "year", effect)]
+out_t3d[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+out_t3d[, effect := gsub("year_weekday", "weekday within year", effect)]
+out_t3d[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+fwrite(file = here::here("Outputs/Table_S3d_rev.csv"), out_t3d)
+
+out_t3d$error_structure = out_t3d$response = NULL
+out_t3d[model != "", model := c(
+  "Finland",
+  "Czechia",
+  "Hungary"
+)]
+setnames(out_t3d, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "lower", "upper"))
+out_t3d %>%
+  kbl() %>%
+  kable_paper("hover", full_width = F)
+#'
+#' ***
+#'
+#' <a name="T_S3e">
+#' **Table S3e | Number of humans (ln-transformed) in relation to Google Mobility**</a>
+lld = list()
+
+sshf <- ssh[Country == "Finland"]
+shfi_g_ln <- lmer(scale(log(Human + 0.01)) ~
+  scale(Year) +
+  scale(parks_percent_change_from_baseline) +
+  (scale(parks_percent_change_from_baseline) | year_weekday),
+data = sshf, REML = FALSE
+)
+lld[[1]] = m_out(name = "Table S3e - FI", dep = "# of humans (ln)", model = shfi_g_ln, nsim = 5000)
+
+sshc <- ssh[Country == "Czechia"]
+shcz_g_ln <- lmer(scale(log(Human + 0.01)) ~
+  scale(parks_percent_change_from_baseline) +
+  (scale(parks_percent_change_from_baseline) | weekday),
+data = sshc, REML = FALSE
+)
+lld[[2]] = m_out(name = "Table S3e - CZ", dep = "# of humans (ln)", model = shcz_g_ln, nsim = 5000)
+
+ssh_h <- ssh[Country == "Hungary"]
+shhu_g_ln <- lmer(scale(log(Human + 0.01)) ~
+  scale(Year) +
+  scale(parks_percent_change_from_baseline) +
+  (scale(parks_percent_change_from_baseline) | year_weekday),
+data = ssh_h, REML = FALSE
+)
+lld[[3]] = m_out(name = "Table S3e - HU", dep = "# of humans (ln)", model = shhu_g_ln, nsim = 5000)
+
+out_t3e = data.table(do.call(rbind, lle))
+out_t3e[is.na(out_t3e)] <- ""
+out_t3e$R2_mar = out_t3e$R2_con = NULL
+out_t3e[, effect := gsub("scale\\(Year\\)", "year", effect)]
+out_t3e[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+out_t3e[, effect := gsub("year_weekday", "weekday within year", effect)]
+out_t3e[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+fwrite(file = here::here("Outputs/Table_S3e_rev.csv"), out_t3e)
+
+out_t3e$error_structure = out_t3e$response = NULL
+out_t3e[model != "", model := c(
+  "Finland",
+  "Czechia",
+  "Hungary"
+)]
+setnames(out_t3e, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "lower", "upper"))
+out_t3e %>%
+  kbl() %>%
+  kable_paper("hover", full_width = F)
+#'
+#' ***
+#'
+#' *** 
+#'
 #' ### Effect sizes for stringency, Google Mobility & # of humans
 # predictions for fig and table for stringency
  # full
@@ -4061,9 +4340,9 @@ m_ass(name = "Table S6 - PL b", mo = phx, dat = dh[Country == "Poland"], fixed =
           axis.title = element_text(size = 7)
       )
 
-  if(save_plot==TRUE){
-  ggsave(here::here("Outputs/Fig_S6a_Stringency.png"), gs6a, width = 8, height = 6.5, unit = "cm", dpi = 600)
-  }
+  #if(save_plot==TRUE){
+  #ggsave(here::here("Outputs/Fig_S6a_Stringency.png"), gs6a, width = 8, height = 6.5, unit = "cm", dpi = 600)
+  #}
 
 # b
 load(here::here("Data/dat_est_Google_rev.Rdata"))
@@ -4136,9 +4415,9 @@ ggplot(ogo, aes(x = estimate, y = Country, col = Country, shape = control_for_st
         axis.text.y = element_text(colour = "black", size = 7),
         axis.title = element_text(size = 7)
     )
-if(save_plot==TRUE){
-ggsave(here::here("Outputs/Fig_S6b_Google_rev_width_CustomLocusZoom_v2.png"), gs6b, width = 8, height = 6.5, unit = "cm", dpi = 600)
-}
+#if(save_plot==TRUE){
+#ggsave(here::here("Outputs/Fig_S6b_Google_rev_width_CustomLocusZoom_v2.png"), gs6b, width = 8, height = 6.5, unit = "cm", dpi = 600)
+#}
 
 # c
 load(here::here("Data/dat_est_numberOFhumans_rev.Rdata")) # load(here::here("Data/dat_est_humans_rev_no_2018-CZ.Rdata"))
@@ -4214,9 +4493,8 @@ gs6c <-
     axis.text.y = element_text(colour = "black", size = 7),
     axis.title = element_text(size = 7)
   )
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S6c_numberOFhumans.png"), gs6c, width = 8, height = 6.5, unit = "cm", dpi = 600)
-  # ggsave(here::here("Outputs/Fig_S6c_human_rev_width_CustomLocusZoom_v2_no2018CZ.png"), gs6c, width = 8, height = 6.5, unit = "cm", dpi = 600)
+#if (save_plot == TRUE) {
+  #ggsave(here::here("Outputs/Fig_S6c_numberOFhumans.png"), gs6c, width = 8, height = 6.5, unit = "cm", #dpi = 600) # ggsave(here::here("Outputs/Fig_S6c_human_rev_width_CustomLocusZoom_v2_no2018CZ.png"), gs6c, width = 8, height = 6.5, unit = "cm", dpi = 600)
 }
 
 # combine
@@ -4351,11 +4629,11 @@ gs2 <-
 
 gsg2 <- ggplotGrob(gs2) # gg$layout$name
 gsgx2 <- gtable_filter_remove(gsg2, name = paste0("axis-b-", c(2, 4), "-9"), trim = FALSE)
-grid.draw(gsgx2)
+
 if(save_plot==TRUE){
 ggsave(here::here("Outputs/Fig_S7_width-152mm.png"), gsgx2, width = 15.24, height = 19, unit = "cm", dpi = 600)
 }
-#'
+grid.draw(gsgx2)
 #' <a name="F_S7"></a>
 #' **Figure S7 | Species-specific avian tolerance towards humans in relation to stringency of antipandemic governmental restrictions during COVID-19 shutdowns quantified as a stringency index.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of governmental stringency index in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of *ggplot2* package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Note, the y-axes is on the log-scale, some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
 #'
@@ -4398,10 +4676,11 @@ gt2 <-
 
 gtg2 <- ggplotGrob(gt2) # gg$layout$name
 gtgx2 <- gtable_filter_remove(gtg2, name = c("axis-b-2-9", "axis-b-5-8"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
-grid.draw(gtgx2)
+
 if(save_plot==TRUE){
 ggsave(here::here("Outputs/Fig_S7_width-152mm_Google.png"), gtgx2, width = 15.24, height = 19, unit = "cm", dpi = 600)
 }
+grid.draw(gtgx2)
 #' <a name="F_S8">
 #' **Figure S8 | Species-specific avian tolerance towards humans in relation to Google Mobility.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of Google Mobility for parks in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
 #'
@@ -4445,10 +4724,11 @@ gh2 <-
 
 gth2 <- ggplotGrob(gh2) # gg$layout$name
 gthx2 <- gtable_filter_remove(gth2, name = c("axis-b-2-6", "axis-b-4-6", "axis-b-6-5"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
-grid.draw(gthx2)
+
 if (save_plot == TRUE) {
   ggsave(here::here("Outputs/Fig_S9_width-152mm_humans.png"), gthx2, width = 15.24, height = 6*19/9, unit = "cm", dpi = 600)
 }
+grid.draw(gthx2)
 #' <a name="F_S9">
 #' **Figure S9 | Species-specific avian tolerance towards humans in relation to # of humans.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) with the # of humans withiin 50m radius. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations and where # of humans was estimated.
 #'
