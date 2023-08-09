@@ -1,14 +1,14 @@
-**Description of the primary data from:**   
+### Description of the primary data from:
 
-"Urban birds' flight responses were unaffected by the COVID-19 shutdowns"  
+[Urban birds' flight responses were unaffected by the COVID-19 shutdowns](https://doi.org/10.1101/2022.07.15.500232) 
 
-by Peter Mikula, Martin Bulla, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht  
+by Peter Mikula, [Martin Bulla](https://martinbulla.github.io), Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht  
 
 https://doi.org/10.1101/2022.07.15.500232  
 
 ***  
 
-**WHEN USING** the data, **PLEASE CITE** both the [paper](https://doi.org/10.1101/2022.07.15.500232) and this repository (Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023), *Supporting information for 'Urban birds’ flight responses were largely unaffected by the COVID-19 shutdowns', GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/)).  
+**WHEN USING** the data, **PLEASE CITE** both the [paper](https://doi.org/10.1101/2022.07.15.500232) and this repository (Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023), *Supporting information for 'Urban birds’ flight responses were largely unaffected by the COVID-19 shutdowns'*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/)).  
 
 ***
 

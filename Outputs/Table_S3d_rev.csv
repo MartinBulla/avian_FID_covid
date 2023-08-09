@@ -1,0 +1,18 @@
+model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
+Table S3d - FI,# of humans,Gaussian,322,fixed,(Intercept),-0.04,-0.199,0.113
+"","","","",fixed,year,0.024,-0.146,0.19
+"","","","",fixed,Google Mobility,0.055,-0.089,0.201
+"","","","",random,weekday within year (Intercept),0%,0%,4%
+"","","","",random,Google Mobility (slope) | weekday within year,0%,0%,4%
+"","","","",random,Residual,100%,93%,101%
+Table S3d - CZ,# of humans,Gaussian,916,fixed,(Intercept),0.137,-0.435,0.708
+"","","","",fixed,Google Mobility,0.089,-0.597,0.791
+"","","","",random,weekday (Intercept),4%,38%,79%
+"","","","",random,Google Mobility (slope) | weekday,4%,38%,79%
+"","","","",random,Residual,92%,-59%,24%
+Table S3d - HU,# of humans,Gaussian,874,fixed,(Intercept),-0.066,-0.216,0.088
+"","","","",fixed,year,0.452,0.318,0.586
+"","","","",fixed,Google Mobility,-0.171,-0.322,-0.015
+"","","","",random,weekday within year (Intercept),1%,-4%,8%
+"","","","",random,Google Mobility (slope) | weekday within year,1%,-4%,8%
+"","","","",random,Residual,99%,84%,108%
