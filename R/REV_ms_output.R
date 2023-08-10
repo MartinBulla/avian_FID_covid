@@ -286,7 +286,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
        n = 3+nrow(l)-1+length(fixed)+length(categ) +  nt +  ns
      
        if(PNG == TRUE){
-        png(paste(outdir,name, ".png", sep=""), width=width_,height=height_,units="in",res=600) # width = 6
+        png(paste(outdir,name, ".png", sep=""), width=width_,height=height_,units="in",res=300) # width = 6; res = 150 ok for html
         par(mfrow=c(4, n_col),tcl = -0.08, cex = 0.5, cex.main = 0.9,#ceiling(n/n_col),n_col)
             oma = c(1,1,4,1),
             mar = c(2, 2, 2, 1), mgp=c(1,0,0)
@@ -325,7 +325,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                           log_ = grepl("log",rownames(summary(mo)$coef)[2:length(unique(scatter))]), stringsAsFactors = FALSE)
           for (i in 1:length(fixed)){
               jj =fixed[i] # jj = fixed[1]
-              print(jj)
+              #print(jj)
               variable=dat[, ..jj][[1]]
               if(trans[i]=='log'){
               scatter.smooth(resid(mo)~log(variable),xlab=paste('log(',jj,')',sep=''), col = 'grey');abline(h=0, lwd=1, lty = 2, col ='red')
@@ -531,14 +531,14 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' - [_runRmarkdown.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/_runRmarkdown.R) generates htmls from the following R-script:  
 #' - [REV_ms_output.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items  
 #' <br />
-#' [**Data**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data): raw data (for their desciption 
+#' [**Data**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data): raw data (for their description 
 #'see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses  
-#' - [model_sim](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/model_sim): posterior simulations for given models  
-#' - [Pics](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/Pics): phylopic pictures used in the graphs
+#' - [model_sim](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/model_sim/): posterior simulations for given models  
+#' - [Pics](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/Pics/): phylopic pictures used in the graphs
 #'  
 #' [**Outputs**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Outputs/): separate files of all outputs used in the manuscript and this Supplement
 #'  
-#' [LICENSE](https://github.com/MartinBulla/avian_FID_covid/tree/main/LICENSE): terms of reuse - applicable only after this work is published as a preprint or in a scientific journal, until then the data are not available for reuse.
+#' [LICENSE](https://github.com/MartinBulla/avian_FID_covid/tree/main/LICENSE.txt): terms of reuse - applicable only after this work is published as a preprint or in a scientific journal, until then the data are not available for reuse.
 #'  
 #' ***
 #' 
@@ -782,7 +782,7 @@ est_px[, control_for_starting_distance := "no"]
   out_FID_c[, effect := gsub("scale\\(Covid\\)", "Period", effect)]
   out_FID_c[, effect := gsub("scale\\(Year\\)", "year", effect)]
   out_FID_c[, effect := gsub("scale\\(log\\(SD\\)\\)", "starting distance (ln)", effect)]
-  out_FID_c[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+  out_FID_c[, effect := gsub("scale\\(Temp\\)", "temperature", effect)]
   out_FID_c[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
   out_FID_c[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
   out_FID_c[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
@@ -1614,7 +1614,7 @@ out_FID_c %>%
        coord_fixed(ratio = 0.05, xlim = c(-0.23, 0.15)) +
        # scale_shape(guide = guide_legend(reverse = TRUE)) +
        # scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2,2, by = 1), labels = seq(-2,2, by = 1)) +
-       labs(y = NULL, x = "Google Mobility\n[Standardised effect sizes on\nflight initiation distances]", tag = "c)") + # title = "b) Effect of ") +
+       labs(y = NULL, x = "Google Mobility", tag = "c)") + # title = "b) Effect of ") +
        # ylim(c(0,100))+
        # coord_flip()+
        theme_bw() +
@@ -1702,7 +1702,7 @@ out_FID_c %>%
      grid.draw(rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_), ggplotGrob(gh0_)))
 
 #' <a name="F_S1">
-#' **Figure S1 | Comparing estimates from alternative models.**</a> Changes in avian tolerance towards humans in response to (**a**) Period (before vs during the COVID-19 shutdowns) (**b**) stringency of governmental measures, (**c**) Google Mobility and (**d**) number of humans during an escape distance trial. The dots with horizontal lines represent the estimated standardised effect size and their 95% confidence intervals based on the joint posterior distribution of 5,000 simulated values generated by the **sim** function  from the *arm* R-package (Gelman et al. 2016) from the output of the mixed models (for details see [Table S2](#T_S2a)). The name of each effect size highlights the corresponding model in [Table S2a](#T_S2a) for (a), [Table S2b](#T_S2b) for (b), [Table S2c](#T_S2c) for (c) and [Table S2d](#T_S2d) for (d), the random structure of the specific model, if applicable, the condition used to reduce the dataset, and sample size. Depicted are effect sizes based on full (01) and reduced datasets with ≥5 (02) or ≥10 observations per species and period (03). [Here](Outputs/modelAss/) for plots of model assumptions. Note that effect sizes are small and estimates close to zero.
+#' **Figure S1 | Comparing estimates from alternative models.**</a> Changes in avian tolerance towards humans in response to (**a**) Period (before vs during the COVID-19 shutdowns) (**b**) stringency of governmental measures, (**c**) Google Mobility and (**d**) number of humans during an escape distance trial. The dots with horizontal lines represent the estimated standardised effect size and their 95% confidence intervals based on the joint posterior distribution of 5,000 simulated values generated by the **sim** function  from the *arm* R-package (Gelman et al. 2016) from the output of the mixed models (for details see [Table S2](#T_S2a)). The name of each effect size highlights the corresponding model in [Table S2a](#T_S2a) for (a), [Table S2b](#T_S2b) for (b), [Table S2c](#T_S2c) for (c) and [Table S2d](#T_S2d) for (d), the random structure of the specific model, if applicable, the condition used to reduce the dataset, and sample size. Depicted are effect sizes based on full (01) and reduced datasets with ≥5 (02) or ≥10 observations per species and period (03). For plots of model assumptions see [below](#MS_TS1). Note that effect sizes are small and estimates close to zero.
 #'
 #'   
 #'  
@@ -1728,7 +1728,7 @@ out_FID_c %>%
     out1[, effect := gsub("scale\\(Covid\\)", "Period", effect)]
     out1[, effect := gsub("scale\\(Year\\)", "year", effect)]
     out1[, effect := gsub("scale\\(log\\(SD\\)\\)", "starting distance (ln)", effect)]
-    out1[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+    out1[, effect := gsub("scale\\(Temp\\)", "temperature", effect)]
     out1[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
     out1[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
     out1[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
@@ -1770,10 +1770,10 @@ out_FID_c %>%
 
     out2 = rbind(m01a_, m01b_, m01c_, m02a_, m02b_, m02c_, m03a_, m03b_, m03c_, fill = TRUE)
     out2[is.na(out2)] = ""
-    out2[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+    out2[, effect := gsub("scale\\(StringencyIndex\\)", "Stringency index", effect)]
     out2[, effect := gsub("scale\\(Year\\)", "year", effect)]
     out2[, effect := gsub("scale\\(log\\(SD\\)\\)", "starting distance (ln)", effect)]
-    out2[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+    out2[, effect := gsub("scale\\(Temp\\)", "temperature", effect)]
     out2[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
     out2[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
     out2[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
@@ -1784,7 +1784,7 @@ out_FID_c %>%
     out2[, effect := gsub("sp_day_year", "species within day & year", effect)]
     out2[, effect := gsub("IDLocality", "site", effect)]
     out2[, effect := gsub("sp_loc", "species within site", effect)]
-    out2[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+    out2[type == "random" & grepl("Stringency index", effect, fixed = TRUE), effect := paste("Stringency index (slope) |", gsub(" Stringency index", "", effect))]
     out2$R2_mar = out2$R2_con = NULL
 
     fwrite(file = here::here("Outputs/Table_S2b.csv"), out2)
@@ -1820,7 +1820,7 @@ out_FID_c %>%
       out3[, effect := gsub("scale\\(parks_percent_change_from_baseline\\)", "Google Mobility", effect)]
       out3[, effect := gsub("scale\\(Year\\)", "year", effect)]
       out3[, effect := gsub("scale\\(log\\(SD\\)\\)", "starting distance (ln)", effect)]
-      out3[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+      out3[, effect := gsub("scale\\(Temp\\)", "temperature", effect)]
       out3[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
       out3[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
       out3[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
@@ -1865,7 +1865,7 @@ out_FID_c %>%
       out4[, effect := gsub("scale\\(Human\\)", "# of humans", effect)]
       out4[, effect := gsub("scale\\(Year\\)", "year", effect)]
       out4[, effect := gsub("scale\\(log\\(SD\\)\\)", "starting distance (ln)", effect)]
-      out4[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+      out4[, effect := gsub("scale\\(Temp\\)", "temperature", effect)]
       out4[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
       out4[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
       out4[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
@@ -1886,8 +1886,6 @@ out_FID_c %>%
           kbl() %>%
           kable_paper("hover", full_width = F)
 #' Note that (1a) model is the one reported in the Fig. [S6](#F_S6).
-#' 
-# TODO: modelAss
 #'
 #' ***
 #' 
@@ -1897,7 +1895,7 @@ d[, sin_rad := sin(rad)]
 d[, cos_rad := cos(rad)]
 
 dp <- d[, c("Covid", "StringencyIndex", "parks_percent_change_from_baseline", "Human", "SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day")]
-setnames(dp, old = c("Covid", "StringencyIndex", "parks_percent_change_from_baseline", "Human", "SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day"), new = c("Period", "Stringency Index", "Google Moility", "# of humans", "Starting distance\nln(m)", "Flock size\nln(m)", "Body mass\nln(m)", "Sine\nof radians", "Cosine\nof radians", "Temperature\n°C", "Day"))
+setnames(dp, old = c("Covid", "StringencyIndex", "parks_percent_change_from_baseline", "Human", "SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day"), new = c("Period", "Stringency Index", "Google Mobility", "# of humans", "Starting distance\nln(m)", "Flock size\nln()", "Body mass\nln(g)", "Sine\nof radians", "Cosine\nof radians", "Temperature\n°C", "Day"))
 
 # dp <- d[, c("SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day")]
 # setnames(dp, old = c("SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day"), new = c("Starting distance\nln(m)", "Flock size\nln(m)", "Body mass\nln(m)", "Sine\nof radians", "Cosine\nof radians", "Temperature\n°C", "Day"))
@@ -2324,7 +2322,7 @@ fig_4a <- annotate_figure(g123,
 hd1 <-
   ggplot(dh, aes(x = Human, fill = Period)) +
   geom_histogram(position = "dodge", color = NA) +
-  labs(subtitle = "All data\nOriginal-scale", xlab = "# of humans", ylab = "# of escape distance trials") +
+  labs(subtitle = "All data\n(original-scale)", xlab = "# of humans", ylab = "# of escape distance trials") +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   annotate("text", x = 10, y = 900, label = "Before COVID-19 shutdowns", col = "orange", size = 1.8, hjust = 0) +
@@ -2343,7 +2341,7 @@ hd2 <-
   scale_y_continuous(expand = c(0, 0)) +
   # scale_color_manual(values = c("orange", "skyblue")) +
   scale_fill_manual(values = c("orange", "skyblue")) +
-  labs(subtitle = "\nLog-scale", xlab = "# of humans", ylab = "# of escape distance trials")
+  labs(subtitle = "\n(log-scale)", xlab = "# of humans", ylab = "# of escape distance trials")
 
 hd3 <-
   ggplot(dhh, aes(x = Human, col = Period, fill = Period)) +
@@ -2352,7 +2350,7 @@ hd3 <-
   scale_y_continuous(expand = c(0, 0)) +
   # scale_color_manual(values = c("orange", "skyblue")) +
   scale_fill_manual(values = c("orange", "skyblue")) +
-  labs(subtitle = ">0 data\nOriginal-scale", xlab = "# of humans", ylab = "# of escape distance trials")
+  labs(subtitle = ">0 data\n(original-scale)", xlab = "# of humans", ylab = "# of escape distance trials")
 
 hd4 <-
   ggplot(dhh, aes(x = Human, col = Period, fill = Period)) +
@@ -2361,8 +2359,7 @@ hd4 <-
   # scale_y_continuous(expand = c(0,0)) +
   scale_color_manual(values = c("orange", "skyblue")) +
   scale_fill_manual(values = c("orange", "skyblue")) +
-  labs(subtitle = "\nLog-scale", xlab = "# of humans", ylab = "# of escape distance trials")
-
+  labs(subtitle = "\n(log-scale)", xlab = "# of humans", ylab = "# of escape distance trials")
 
 hd1234_w <- ggarrange(
   hd1 + theme_mb2 + rremove("ylab") + rremove("xlab"), hd2 + theme_mb2 + rremove("ylab") + rremove("xlab"),
@@ -2504,20 +2501,20 @@ g_s5
 #' 
 #' ***
 #' 
-#' ### Google Mobility ~ stringency
+#' ### Google Mobility ~ Stringency index
 #+ Fig_5_gsfig_pred, fig.width=7/2.5, fig.height = 6/2.5
 # Predictions 
 l = list()
- sc = s[Country == "Czechia"]
+ sscz = ss[Country == "Czechia"]
  cz <- lmer(parks_percent_change_from_baseline ~
     StringencyIndex + 
    (scale(StringencyIndex)|weekday),
  # (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
- data = sc, REML = FALSE
+ data = sscz, REML = FALSE
  )
  bsim <- sim(cz, n.sim = nsim)
  v <- apply(bsim@fixef, 2, quantile, prob = c(0.5))
- newD <- data.frame(StringencyIndex = seq(min(sc$StringencyIndex), max(sc$StringencyIndex), length.out = 100)) # values to predict for
+ newD <- data.frame(StringencyIndex = seq(min(sscz$StringencyIndex), max(sscz$StringencyIndex), length.out = 100)) # values to predict for
  X <- model.matrix(~StringencyIndex, data = newD) # exactly the model which was used has to be specified here
  newD$pred <- (X %*% v)
  predmatrix <- matrix(nrow = nrow(newD), ncol = nsim)
@@ -2529,7 +2526,7 @@ l = list()
  l[[1]] = newD
  
  s[, year_weekday :=paste(Year, weekday)]
- sf = s[Country == "Finland"]
+ sf = ss[Country == "Finland"]
  fi <- lmer(parks_percent_change_from_baseline ~
     Year+
     StringencyIndex + 
@@ -2551,7 +2548,7 @@ l = list()
  newD$Year = NULL
  l[[2]] = newD
 
- s_h <- s[Country == "Hungary"]
+ s_h <- ss[Country == "Hungary"]
  hu <- lmer(parks_percent_change_from_baseline ~
      Year +
      StringencyIndex +
@@ -2574,7 +2571,7 @@ l = list()
  newD$Year <- NULL
  l[[3]] <- newD
  
- sp <- s[Country == "Poland"]
+ sp <- ss[Country == "Poland"]
  pl <- lmer(parks_percent_change_from_baseline ~
      Year +
      StringencyIndex +
@@ -2596,7 +2593,7 @@ l = list()
  newD$Year <- NULL
  l[[4]] <- newD
 
- sa <- s[Country == "Australia"]
+ sa <- ss[Country == "Australia"]
  au <- lmer(parks_percent_change_from_baseline ~
      Year +
      StringencyIndex +
@@ -2676,10 +2673,10 @@ ggsave(here::here("Outputs/Fig_5_rev_widht_70mm.png"), p + theme(plot.subtitle =
 p
 
 #' <a name="F_5">
-#' **Figure 5 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (stringency index).**</a> Lines with shaded areas represent predictions with 95%CIs from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and stringency index as a random slope (Table [S3a](#T_S3a)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and stringency index.
+#' **Figure 5 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (Stringency index).**</a> Lines with shaded areas represent predictions with 95%CIs from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and Stringency index as a random slope (Table [S3a](#T_S3a)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and Stringency index.
 #' 
 #' <a name="T_S3a">
-#' **Table S3a | Google Mobility in relation to stringency index**</a>
+#' **Table S3a | Google Mobility in relation to Stringency index**</a>
 ll = list()
 
 ssf = ss[Country == "Finland"]
@@ -2700,11 +2697,11 @@ data = ssp, REML = FALSE
 )
 ll[[2]] = m_out(name = "Table S3 - PL", dep = "Google Mobility", model = pl, nsim = 5000)
 
-ssc = ss[Country == "Czechia"]
+sscz = ss[Country == "Czechia"]
 cz <- lmer(scale(parks_percent_change_from_baseline) ~
   scale(StringencyIndex) +
   (scale(StringencyIndex) | weekday),
-data = ssc, REML = FALSE
+data = sscz, REML = FALSE
 )
 ll[[3]] = m_out(name = "Table S3 - CZ", dep = "Google Mobility", model = cz, nsim = 5000)
 
@@ -2731,9 +2728,9 @@ out_g_s = data.table(do.call(rbind, ll))
 out_g_s[is.na(out_g_s)] <- ""
 out_g_s$R2_mar = out_g_s$R2_con = NULL
 out_g_s[, effect := gsub("scale\\(Year\\)", "year", effect)]
-out_g_s[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+out_g_s[, effect := gsub("scale\\(StringencyIndex\\)", "Stringency index", effect)]
 out_g_s[, effect := gsub("year_weekday", "weekday within year", effect)]
-out_g_s[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+out_g_s[type == "random" & grepl("Stringency index", effect, fixed = TRUE), effect := paste("Stringency index (slope) |", gsub(" Stringency index", "", effect))]
 fwrite(file = here::here("Outputs/Table_S3a_rev.csv"), out_g_s)
 
 out_g_s$error_structure = out_g_s$response = NULL
@@ -2749,7 +2746,7 @@ out_g_s %>%
 #' 
 #' ***
 #' 
-#' ### Number of humans ~ stringency & Google Mobility
+#' ### Number of humans ~ Stringency index & Google Mobility
 #+ Fig_6, fig.width=12*0.393701, fig.height = 12*0.393701
 sh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
 ssh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
@@ -3296,12 +3293,12 @@ ggsave(file = here::here("Outputs/Fig_6.png"), fig_6, width = 12, height = 12, u
 fig_6
 
 #' <a name="F_6">
-#' **Figure 6 | Human numbers in association with stringency of antipandemic governmental restrictions (stringency index, left) and daily human presence in parks (Google Mobility, right).**</a> Dots represent individual data points (**top** panels on original scale, *bottom* on ln-scale), jittered to increase visibility. Lines with shaded areas represent predictions with 95%CIs from mixed effect models controlled for the year (in case of Finland and Hungary) and non-independence of data points by including weekday within the year as random intercept and stringency index or Google Mobility as a random slope (Table [S3b](T_S3b), [S3c](T_S3c), [S3d](T_S3d), [S3e](T_S3e)). Note the weak (with exception of Czechia) and country specific associations.
+#' **Figure 6 | Human numbers in association with stringency of antipandemic governmental restrictions (Stringency index, left) and daily human presence in parks (Google Mobility, right).**</a> Dots represent individual data points (**top** panels on original scale, **bottom** on ln-scale), jittered to increase visibility. Lines with shaded areas represent predictions with 95%CIs from mixed effect models controlled for the year (in case of Finland and Hungary) and non-independence of data points by including weekday within the year as a random intercept and Stringency index or Google Mobility as a random slope (Table [S3b](#T_S3b), [S3c](#T_S3c), [S3d](#T_S3d), [S3e](#T_S3e)). Note the weak and country-specific associations.
 #' 
 #' ***
 #' 
 #' <a name="T_S3b">
-#' **Table S3b | Number of humans in relation to stringency index**</a>
+#' **Table S3b | Number of humans in relation to Stringency index**</a>
 llb = list()
 
 shf <- sh[Country == "Finland"]
@@ -3336,9 +3333,9 @@ out_t3b = data.table(do.call(rbind, llb))
 out_t3b[is.na(out_t3b)] <- ""
 out_t3b$R2_mar = out_t3b$R2_con = NULL
 out_t3b[, effect := gsub("scale\\(Year\\)", "year", effect)]
-out_t3b[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+out_t3b[, effect := gsub("scale\\(StringencyIndex\\)", "Stringency index", effect)]
 out_t3b[, effect := gsub("year_weekday", "weekday within year", effect)]
-out_t3b[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+out_t3b[type == "random" & grepl("Stringency index", effect, fixed = TRUE), effect := paste("Stringency index (slope) |", gsub(" Stringency index", "", effect))]
 fwrite(file = here::here("Outputs/Table_S3b_rev.csv"), out_t3b)
 
 out_t3b$error_structure = out_t3b$response = NULL
@@ -3355,7 +3352,7 @@ out_t3b %>%
 #' ***
 #'
 #' <a name="T_S3c">
-#' **Table S3c | Number of humans (ln-transformed) in relation to stringency index**</a>
+#' **Table S3c | Number of humans (ln-transformed) in relation to Stringency index**</a>
 llc = list()
 
 shf <- sh[Country == "Finland"]
@@ -3388,9 +3385,9 @@ out_t3c = data.table(do.call(rbind, llc))
 out_t3c[is.na(out_t3c)] <- ""
 out_t3c$R2_mar = out_t3c$R2_con = NULL
 out_t3c[, effect := gsub("scale\\(Year\\)", "year", effect)]
-out_t3c[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+out_t3c[, effect := gsub("scale\\(StringencyIndex\\)", "Stringency index", effect)]
 out_t3c[, effect := gsub("year_weekday", "weekday within year", effect)]
-out_t3c[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+out_t3c[type == "random" & grepl("Stringency index", effect, fixed = TRUE), effect := paste("Stringency index (slope) |", gsub(" Stringency index", "", effect))]
 fwrite(file = here::here("Outputs/Table_S3c_rev.csv"), out_t3c)
 
 out_t3c$error_structure = out_t3b$response = NULL
@@ -3515,7 +3512,7 @@ out_t3e %>%
 #'
 #' ***
 #'
-#' ### Effect sizes for stringency, Google Mobility & # of humans
+#' ### Effect sizes for Stringency index, Google Mobility & # of humans
 # predictions for fig and table for stringency
  # full
  mss <- lmer(scale(log(FID)) ~
@@ -3759,10 +3756,10 @@ est_psx[, control_for_starting_distance := "no"]
   out_FID_s <- rbind(mss_out, msx_out, fss_out, fsx_out, pss_out, psx_out, css_out, csx_out, hss_out, hsx_out, ass_out, asx_out, fill = TRUE)
   out_FID_s[is.na(out_FID_s)] <- ""
   out_FID_s$R2_mar = out_FID_s$R2_con = NULL
-  out_FID_s[, effect := gsub("scale\\(StringencyIndex\\)", "stringency index", effect)]
+  out_FID_s[, effect := gsub("scale\\(StringencyIndex\\)", "Stringency index", effect)]
   out_FID_s[, effect := gsub("scale\\(Year\\)", "year", effect)]
   out_FID_s[, effect := gsub("scale\\(log\\(SD\\)", "starting distance (ln)", effect)]
-  out_FID_s[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+  out_FID_s[, effect := gsub("scale\\(Temp\\)", "temperature", effect)]
   out_FID_s[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
   out_FID_s[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
   out_FID_s[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
@@ -3772,7 +3769,7 @@ est_psx[, control_for_starting_distance := "no"]
   out_FID_s[, effect := gsub("sp_day_year", "species within day & year", effect)]
   out_FID_s[, effect := gsub("IDLocality", "site", effect)]
   out_FID_s[, effect := gsub("sp_loc", "species within site", effect)]
-  out_FID_s[type == "random" & grepl("stringency index", effect, fixed = TRUE), effect := paste("stringency index (slope) |", gsub(" stringency index", "", effect))]
+  out_FID_s[type == "random" & grepl("Stringency index", effect, fixed = TRUE), effect := paste("Stringency index (slope) |", gsub(" Stringency index", "", effect))]
   fwrite(file = here::here("Outputs/Table_S4_rev.csv"), out_FID_s)
 
 # predictions for Fig and Table - Google Mobility
@@ -4021,7 +4018,7 @@ est_pgx[, control_for_starting_distance := "no"]
   out_FID_g[, effect := gsub("scale\\(parks_percent_change_from_baseline\\)", "Google Mobility", effect)]
   out_FID_g[, effect := gsub("scale\\(Year\\)", "year", effect)]
   out_FID_g[, effect := gsub("scale\\(log\\(SD\\)", "starting distance (ln)", effect)]
-  out_FID_g[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+  out_FID_g[, effect := gsub("scale\\(Temp\\)", "temperature", effect)]
   out_FID_g[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
   out_FID_g[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
   out_FID_g[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
@@ -4031,7 +4028,7 @@ est_pgx[, control_for_starting_distance := "no"]
   out_FID_g[, effect := gsub("sp_day_year", "species within day & year", effect)]
   out_FID_g[, effect := gsub("IDLocality", "site", effect)]
   out_FID_g[, effect := gsub("sp_loc", "species within site", effect)]
-  out_FID_g[, effect := paste("Google Mobility (slope) |", gsub(" Google Mobility", "", effect))]
+  out_FID_g[, effect := gsub("Google Mobility (slope) | country", "country Google Mobility", effect)]
   fwrite(file = here::here("Outputs/Table_S5_rev.csv"), out_FID_g)
 
 # predictions for Fig and Table - # of humans
@@ -4234,7 +4231,7 @@ out_FID_h[is.na(out_FID_h)] <- ""
 out_FID_h[, effect := gsub("scale\\(Human\\)", "# of humans present", effect)]
 out_FID_h[, effect := gsub("scale\\(Year\\)", "year", effect)]
 out_FID_h[, effect := gsub("scale\\(log\\(SD\\)", "starting distance (ln)", effect)]
-out_FID_h[, effect := gsub("scale\\(Temp\\)", "temperaturre", effect)]
+out_FID_h[, effect := gsub("scale\\(Temp\\)", "temperature", effect)]
 out_FID_h[, effect := gsub("scale\\(log\\(FlockSize\\)\\)", "flock size (ln)", effect)]
 out_FID_h[, effect := gsub("scale\\(log\\(BodyMass\\)\\)", "body mass (ln)", effect)]
 out_FID_h[, effect := gsub("scale\\(sin\\(rad\\)\\)", "time (sine of radians)", effect)]
@@ -4530,12 +4527,12 @@ gg_S6
 
 #'
 #' <a name="F_S6">
-#' **Figure S6 | Changes in avian tolerance towards humans in response to (a) stringency of governmental measures, (b) Google Mobility and (c) number of humans during escape distance trial.**</a> The dots with horizontal lines represent estimated standardised effect size and their 95% confidence intervals, the numbers sample sizes. **For the country-specific and "All"**, the effect sizes and 95% confidence intervals come from the joint posterior distribution of 5000 simulated values generated by the sim function from the arm package (Gelman et al. 2022) using the mixed model outputs controlled for starting distance of the observer (filled circles) or not (empty circles; Table [S4](#T_S4), [S5](#T_S5) and [S6](#T_S6)). The models were further controlled for year, flock size (ln-transfomred), body size (ln-transformed), temperature (also a proxy for a day within the breeding season: r~Pearson~ = `r round(cor(d$Temp,d$Day_),2)`; Fig. [S2](#F_S2)), and time of a day, as well as for the non-independence of data points by fitting random intercepts of weekday, genus, species, species at a given day and year, country (in All - a global mixed model), site, and species within a site, while fitting, in case of "All" (global model on all countries) stringency index, Google Mobility or number of humans as a random slope within country (i.e. allowing for different effect in each country). Fitting stringency index or Google Mobility as random slope at other random intercepts produces similar results (Fig. [S1b-dc](#F_S1), Table [S2b](#T_S2b), [S2c](#T_S2c) & [S2d](#T_S2d)). The multicollinearity was small as correlations between predictors were weak (Fig. [S2](#F_S2)). **For the "Combined"**, the estimate and 95% confidence interval represent the meta-analytical mean based on the country estimates and their standard deviation (from the country-specific models), and sample size per country. Stringency index data were sourced from ([Hale et al. 2021](https://ourworldindata.org/covid-stringency-index)), Google Mobility from [Google Mobility Reports](https://www.google.com/covid19/mobility) and their analyses were restricted to data collected in the Period during the COVID-19 shutdowns. Number of humans was collected at the time of escape distance trial as number of humans within a 50 meter radius and includes data before and during COVID-19 shutdownd (Fig. [S6_hp_dist]](#F_S6_hp_dist) and [S7_hp_C](S7_hp_C)).
+#' **Figure S6 | Changes in avian tolerance towards humans in response to (a) stringency of governmental measures, (b) Google Mobility and (c) number of humans during escape distance trial.**</a> The dots with horizontal lines represent estimated standardised effect size and their 95% confidence intervals, the numbers sample sizes. **For the country-specific and "All"**, the effect sizes and 95% confidence intervals come from the joint posterior distribution of 5000 simulated values generated by the sim function from the arm package (Gelman et al. 2022) using the mixed model outputs controlled for starting distance of the observer (filled circles) or not (empty circles; Table [S4](#T_S4), [S5](#T_S5) and [S6](#T_S6)). The models were further controlled for year, flock size (ln-transfomred), body size (ln-transformed), temperature (also a proxy for a day within the breeding season: r~Pearson~ = `r round(cor(d$Temp,d$Day_),2)`; Fig. [S2](#F_S2)), and time of a day, as well as for the non-independence of data points by fitting random intercepts of weekday, genus, species, species at a given day and year, country (in All - a global mixed model), site, and species within a site, while fitting, in case of "All" (global model on all countries) Stringency index, Google Mobility or number of humans as a random slope within country (i.e. allowing for different effect in each country). Fitting Stringency index or Google Mobility as random slope at other random intercepts produces similar results (Fig. [S1b-c](#F_S1), Table [S2b](#T_S2b), [S2c](#T_S2c) & [S2d](#T_S2d)). The multicollinearity was small as correlations between predictors were weak (Fig. [S2](#F_S2)). **For the "Combined"**, the estimate and 95% confidence interval represent the meta-analytical mean based on the country estimates and their standard deviation (from the country-specific models), and sample size per country. Stringency index data were sourced from ([Hale et al. 2021](https://ourworldindata.org/covid-stringency-index)), Google Mobility from [Google Mobility Reports](https://www.google.com/covid19/mobility) and their analyses were restricted to data collected in the Period during the COVID-19 shutdowns. Number of humans was collected at the time of escape distance trial as number of humans within a 50 meter radius and includes data before and during COVID-19 shutdowns.
 #'  
 #'   
 #'
 #' <a name="T_S4">
-#' **Table S4 | Escape distance in relation to stringency index**</a>
+#' **Table S4 | Escape distance in relation to Stringency index**</a>
 out_FID_s$error_structure = out_FID_s$response = NULL
 out_FID_s[model != "", model := c(
   "All countries", "All countries, without starting distance",
@@ -4587,7 +4584,7 @@ out_FID_h %>%
 #'
 #' ***
 #'
-#' ### Species trends for stringency, Google Mobility, and # of humans
+#' ### Species trends for Stringency index, Google Mobility, and # of humans
 #+ Fig_S7_species_string, fig.width=6, fig.height = 7.5
 ss_sp <- s[Nsp > 9]
 ss_sp[, sp2 := gsub(" ", "\n", sp)]
@@ -4628,7 +4625,7 @@ ggsave(here::here("Outputs/Fig_S7_width-152mm.png"), gsgx2, width = 15.24, heigh
 }
 grid.draw(gsgx2)
 #' <a name="F_S7">
-#' **Figure S7 | Species-specific avian tolerance towards humans in relation to stringency of antipandemic governmental restrictions during COVID-19 shutdowns quantified as a stringency index.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of governmental stringency index in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of *ggplot2* package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Note, the y-axes is on the log-scale, some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
+#' **Figure S7 | Species-specific avian tolerance towards humans in relation to stringency of antipandemic governmental restrictions during COVID-19 shutdowns quantified as a Stringency index.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of governmental Stringency index in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of *ggplot2* package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Note, the y-axes is on the log-scale, some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
 #'
 #+ Fig_S8_species_google, fig.width=6, fig.height = 7.5
 ss[, NspC := .N, by = "sp_country"]
@@ -4723,7 +4720,7 @@ if (save_plot == TRUE) {
 }
 grid.draw(gthx2)
 #' <a name="F_S9">
-#' **Figure S9 | Species-specific avian tolerance towards humans in relation to # of humans.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) with the # of humans withiin 50m radius. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations and where # of humans was estimated.
+#' **Figure S9 | Species-specific avian tolerance towards humans in relation to # of humans.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) with the # of humans within 50m radius. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations and where # of humans was estimated.
 #'
 #' ***
 #'
@@ -5129,7 +5126,7 @@ h_v_r <- (VarCorr(mH_yes, summary = FALSE)$residual$sd)^2
 ts5 <- data.table(
   "Residuals\nfrom" = c(
     "Table S2a - model 01a (Period)",
-    "Table S2b - model 01a (stringency index)",
+    "Table S2b - model 01a (Stringency index)",
     "Table S2c - model 01a (Google Mobility)",
     "Table S2d - model 01a (# of humans)"
   ),
@@ -5169,6 +5166,7 @@ ts5 %>%
 #' 
 #' ### Model assumptions
 #+ mode_ass_png, eval = FALSE, results = 'hide', warning=FALSE
+# generates pngs with model assumptions that are later loaded within the html
 # Table S1
 m_ass(name = "Table S1 - full a", mo = ms, dat = d, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
 m_ass(name = "Table S1 - full b", mo = mx, dat = d, fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
@@ -5242,7 +5240,7 @@ m_ass(name = "Table S2d - 3c", mo = mh03c, dat = dh[Nsp > 9], fixed = c("SD", "F
 # Table S3a
 m_ass(name = "Table S3a - FI", mo = fi, dat = ssf, fixed = c("Year", "StringencyIndex"), trans = c("", ""), outdir = here::here("Outputs/modelAss/"))
 m_ass(name = "Table S3a - PL", mo = pl, dat = ssp, fixed = c("Year", "StringencyIndex"), trans = c("", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S3a - CZ", mo = cz, dat = ssc, fixed = c("Year", "StringencyIndex"), trans = c("", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S3a - CZ", mo = cz, dat = sscz, fixed = c("StringencyIndex"), trans = c(""), outdir = here::here("Outputs/modelAss/"))
 m_ass(name = "Table S3a - HU", mo = hu, dat = ss_h, fixed = c("Year", "StringencyIndex"), trans = c("", ""), outdir = here::here("Outputs/modelAss/"))
 m_ass(name = "Table S3a - AU", mo = au, dat = ssa, fixed = c("Year", "StringencyIndex"), trans = c("", ""), outdir = here::here("Outputs/modelAss/"))
 
@@ -5309,7 +5307,7 @@ m_ass(name = "Table S6 - PL b", mo = phx, dat = dh[Country == "Poland"], fixed =
 #' Titles indicate specific models from specific Tables and highlight the model formula in lmer syntax   
 #' <br />
 #'  
-#' #### for Table S1 | Escape distance in relations to Period, given country  
+#' #### for Table S1 | Escape distance in relations to Period, given country  {#MS_TS1}
 knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - full a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - full b.png"))
 
@@ -5388,7 +5386,7 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S2d - 3b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2d - 3c.png"))
 #' <br />
 #'   
-#' #### for Table S3a  | Google Mobility in relation to stringency index  
+#' #### for Table S3a  | Google Mobility in relation to Stringency index
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - PL.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - CZ.png"))
@@ -5396,13 +5394,13 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - HU.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - AU.png"))
 #' <br />
 #'   
-#' #### for Table S3b  | Number of humans in relation to stringency index  
+#' #### for Table S3b  | Number of humans in relation to Stringency index
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3b - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3b - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3b - HU.png"))
 #' <br />
 #'   
-#' #### for Table S3c | Number of humans (ln-transformed) in relation to stringency index  
+#' #### for Table S3c | Number of humans (ln-transformed) in relation to Stringency index  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3c - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3c - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3c - HU.png"))
@@ -5420,7 +5418,7 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S3e - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3e - HU.png"))
 #' <br />
 #'   
-#' #### for Table S4 | Escape distance in relation to stringency index  
+#' #### for Table S4 | Escape distance in relation to Stringency index  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - full a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - full b.png"))
 
