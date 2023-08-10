@@ -5308,7 +5308,8 @@ m_ass(name = "Table S6 - PL b", mo = phx, dat = dh[Country == "Poland"], fixed =
 
 #' Titles indicate specific models from specific Tables and highlight the model formula in lmer syntax   
 #' <br />
-#' #### for Table S1 | Escape distance in relations to Period, given country
+#'  
+#' #### for Table S1 | Escape distance in relations to Period, given country  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - full a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - full b.png"))
 
@@ -5327,7 +5328,8 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - HU b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - AU a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - AU b.png"))
 #' <br />
-#' #### for Table S2a | Alternative models on escape distance given Period
+#'  
+#' #### for Table S2a | Alternative models on escape distance given Period  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2a - 1a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2a - 1b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2a - 1c.png"))
@@ -5342,12 +5344,12 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S2a - 3a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2a - 3b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2a - 3c.png"))
 #' <br />
-#' #### for Table S2b | Alternative models on escape distance given Stringency index
+#'  
+#' #### for Table S2b | Alternative models on escape distance given Stringency index  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 1a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 1b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 1c.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 1d.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 1e.png"))
+
 
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 2a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 2b.png"))
@@ -5357,7 +5359,8 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 3a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 3b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2b - 3c.png"))
 #' <br />
-#' #### for Table S2c | Alternative models on escape distance given Google Mobility
+#'   
+#' #### for Table S2c | Alternative models on escape distance given Google Mobility  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2c - 1a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2c - 1b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2c - 1c.png"))
@@ -5369,8 +5372,9 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S2c - 2c.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2c - 3a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2c - 3b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2c - 3c.png"))
-#' <br />
-#' #### for Table S2d | Alternative models on escape distance given # of humans
+#' <br />  
+#'    
+#' #### for Table S2d | Alternative models on escape distance given # of humans  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2d - 1a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2d - 1b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2d - 1c.png"))
@@ -5383,34 +5387,40 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S2d - 3a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2d - 3b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S2d - 3c.png"))
 #' <br />
-#' #### for Table S3a  | Google Mobility in relation to stringency index
+#'   
+#' #### for Table S3a  | Google Mobility in relation to stringency index  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - PL.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - HU.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3a - AU.png"))
 #' <br />
-#' #### for Table S3b  | Number of humans in relation to stringency index
+#'   
+#' #### for Table S3b  | Number of humans in relation to stringency index  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3b - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3b - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3b - HU.png"))
 #' <br />
-#' #### for Table S3c | Number of humans (ln-transformed) in relation to stringency index
+#'   
+#' #### for Table S3c | Number of humans (ln-transformed) in relation to stringency index  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3c - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3c - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3c - HU.png"))
 #' <br />
+#'   
 #' #### for Table S3d  | Number of humans in relation to Google Mobility
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3d - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3d - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3d - HU.png"))
 #' <br />
-#' #### for Table S3e  | Number of humans (ln-transformed) in relation to Google Mobility
+#'   
+#' #### for Table S3e  | Number of humans (ln-transformed) in relation to Google Mobility  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3e - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3e - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3e - HU.png"))
 #' <br />
-#' #### for Table S4 | Escape distance in relation to stringency index
+#'   
+#' #### for Table S4 | Escape distance in relation to stringency index  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - full a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - full b.png"))
 
@@ -5429,7 +5439,8 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - HU b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - AU a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - AU b.png"))
 #' <br />
-#' #### for Table S5 | Escape distance in relations to Google Mobility
+#'   
+#' #### for Table S5 | Escape distance in relations to Google Mobility  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - full a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - full b.png"))
 
@@ -5448,7 +5459,8 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - HU b.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - AU a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - AU b.png"))
 #' <br />
-#' #### for Table S6 | Escape distance in relation to # of humans
+#'   
+#' #### for Table S6 | Escape distance in relation to # of humans  
 knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - full a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - full b.png"))
 
@@ -5463,7 +5475,7 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - CZ b.png"))
 
 knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - HU a.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - HU b.png"))
-#'
+#'  
 #' *** 
 #' 
 #' ### References

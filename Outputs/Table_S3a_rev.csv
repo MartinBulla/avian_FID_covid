@@ -1,10 +1,10 @@
 model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
-Table S3 - FI,Google Mobility,Gaussian,322,fixed,(Intercept),-0.259,-1.026,0.523
-"","","","",fixed,year,0.936,0.453,1.436
-"","","","",fixed,stringency index,-0.273,-1.013,0.499
-"","","","",random,weekday within year (Intercept),-16%,47%,54%
-"","","","",random,stringency index (slope) | weekday within year,-16%,47%,54%
-"","","","",random,Residual,131%,-7%,5%
+Table S3 - FI,Google Mobility,Gaussian,322,fixed,(Intercept),-0.337,-1.138,0.487
+"","","","",fixed,year,0.93,0.45,1.428
+"","","","",fixed,stringency index,-0.283,-1.049,0.517
+"","","","",random,weekday within year (Intercept),-20%,48%,53%
+"","","","",random,stringency index (slope) | weekday within year,-20%,48%,53%
+"","","","",random,Residual,140%,-7%,5%
 Table S3 - PL,Google Mobility,Gaussian,329,fixed,(Intercept),0.016,-0.617,0.636
 "","","","",fixed,year,0.776,0.015,1.537
 "","","","",fixed,stringency index,0.023,-0.362,0.408
