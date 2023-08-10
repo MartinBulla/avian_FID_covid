@@ -6,8 +6,8 @@ Table S2b - 1a,Escape distance,Gaussian,3676,fixed,(Intercept),-0.077,-0.326,0.1
 "","","","",fixed,body mass (ln),0.023,-0.045,0.09
 "","","","",fixed,time (sine of radians),-0.019,-0.061,0.022
 "","","","",fixed,time (cosine of radians),-0.004,-0.04,0.032
-"","","","",fixed,temperaturre,-0.007,-0.048,0.035
-"","","","",fixed,stringency index,0.016,-0.153,0.175
+"","","","",fixed,temperature,-0.007,-0.048,0.035
+"","","","",fixed,Stringency index,0.016,-0.153,0.175
 "","","","",random,species within day & year (Intercept),5%,3%,7%
 "","","","",random,species within site (Intercept),5%,3%,6%
 "","","","",random,species (Intercept),7%,6%,9%
@@ -15,7 +15,7 @@ Table S2b - 1a,Escape distance,Gaussian,3676,fixed,(Intercept),-0.077,-0.326,0.1
 "","","","",random,genus (Intercept),4%,4%,4%
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,country (Intercept),2%,-16%,16%
-"","","","",random,stringency index (slope) | country,2%,-16%,16%
+"","","","",random,Stringency index (slope) | country,2%,-16%,16%
 "","","","",random,Residual,67%,45%,96%
 Table S2b - 1b,Escape distance,Gaussian,3676,fixed,(Intercept),-0.07,-0.334,0.178
 "","","","",fixed,year,0.019,-0.029,0.067
@@ -24,17 +24,17 @@ Table S2b - 1b,Escape distance,Gaussian,3676,fixed,(Intercept),-0.07,-0.334,0.17
 "","","","",fixed,body mass (ln),0.017,-0.05,0.084
 "","","","",fixed,time (sine of radians),-0.019,-0.061,0.022
 "","","","",fixed,time (cosine of radians),-0.004,-0.04,0.031
-"","","","",fixed,temperaturre,-0.007,-0.049,0.036
-"","","","",fixed,stringency index,0.006,-0.162,0.171
+"","","","",fixed,temperature,-0.007,-0.049,0.036
+"","","","",fixed,Stringency index,0.006,-0.162,0.171
 "","","","",random,species within day & year (Intercept),5%,3%,7%
 "","","","",random,species within site (Intercept),5%,3%,7%
 "","","","",random,species (Intercept),7%,5%,8%
 "","","","",random,site (Intercept),8%,6%,10%
 "","","","",random,genus (Intercept),0%,-1%,4%
-"","","","",random,stringency index (slope) | genus,0%,-1%,4%
+"","","","",random,Stringency index (slope) | genus,0%,-1%,4%
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,country (Intercept),2%,-15%,15%
-"","","","",random,stringency index (slope) | country,2%,-15%,15%
+"","","","",random,Stringency index (slope) | country,2%,-15%,15%
 "","","","",random,Residual,70%,44%,100%
 Table S2b - 1c,Escape distance,Gaussian,3676,fixed,(Intercept),-0.107,-0.281,0.066
 "","","","",fixed,year,-0.003,-0.052,0.045
@@ -43,11 +43,11 @@ Table S2b - 1c,Escape distance,Gaussian,3676,fixed,(Intercept),-0.107,-0.281,0.0
 "","","","",fixed,body mass (ln),-0.024,-0.053,0.005
 "","","","",fixed,time (sine of radians),-0.039,-0.081,0.004
 "","","","",fixed,time (cosine of radians),0.005,-0.031,0.042
-"","","","",fixed,temperaturre,0.004,-0.038,0.045
-"","","","",fixed,stringency index,0.021,-0.133,0.179
+"","","","",fixed,temperature,0.004,-0.038,0.045
+"","","","",fixed,Stringency index,0.021,-0.133,0.179
 "","","","",random,site (Intercept),11%,10%,11%
 "","","","",random,country (Intercept),1%,-7%,8%
-"","","","",random,stringency index (slope) | country,1%,-7%,8%
+"","","","",random,Stringency index (slope) | country,1%,-7%,8%
 "","","","",random,Residual,88%,74%,103%
 Table S2b - 2a,Escape distance,Gaussian,3573,fixed,(Intercept),-0.156,-0.445,0.137
 "","","","",fixed,year,0.022,-0.026,0.072
@@ -56,8 +56,8 @@ Table S2b - 2a,Escape distance,Gaussian,3573,fixed,(Intercept),-0.156,-0.445,0.1
 "","","","",fixed,body mass (ln),-0.024,-0.101,0.051
 "","","","",fixed,time (sine of radians),-0.019,-0.061,0.023
 "","","","",fixed,time (cosine of radians),-0.007,-0.043,0.028
-"","","","",fixed,temperaturre,-0.008,-0.05,0.035
-"","","","",fixed,stringency index,0.018,-0.147,0.193
+"","","","",fixed,temperature,-0.008,-0.05,0.035
+"","","","",fixed,Stringency index,0.018,-0.147,0.193
 "","","","",random,species within day & year (Intercept),5%,3%,7%
 "","","","",random,species within site (Intercept),4%,3%,7%
 "","","","",random,site (Intercept),7%,5%,9%
@@ -65,7 +65,7 @@ Table S2b - 2a,Escape distance,Gaussian,3573,fixed,(Intercept),-0.156,-0.445,0.1
 "","","","",random,genus (Intercept),2%,2%,2%
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,country (Intercept),3%,-22%,20%
-"","","","",random,stringency index (slope) | country,3%,-22%,20%
+"","","","",random,Stringency index (slope) | country,3%,-22%,20%
 "","","","",random,Residual,65%,39%,104%
 Table S2b - 2b,Escape distance,Gaussian,3573,fixed,(Intercept),-0.154,-0.447,0.144
 "","","","",fixed,year,0.021,-0.029,0.07
@@ -74,17 +74,17 @@ Table S2b - 2b,Escape distance,Gaussian,3573,fixed,(Intercept),-0.154,-0.447,0.1
 "","","","",fixed,body mass (ln),-0.031,-0.107,0.046
 "","","","",fixed,time (sine of radians),-0.02,-0.06,0.023
 "","","","",fixed,time (cosine of radians),-0.007,-0.043,0.029
-"","","","",fixed,temperaturre,-0.008,-0.05,0.035
-"","","","",fixed,stringency index,0.019,-0.152,0.191
+"","","","",fixed,temperature,-0.008,-0.05,0.035
+"","","","",fixed,Stringency index,0.019,-0.152,0.191
 "","","","",random,species within day & year (Intercept),5%,3%,7%
 "","","","",random,species within site (Intercept),4%,3%,7%
 "","","","",random,site (Intercept),7%,5%,9%
 "","","","",random,species (Intercept),11%,8%,13%
 "","","","",random,genus (Intercept),0%,-1%,2%
-"","","","",random,stringency index (slope) | genus,0%,-1%,2%
+"","","","",random,Stringency index (slope) | genus,0%,-1%,2%
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,country (Intercept),3%,-20%,19%
-"","","","",random,stringency index (slope) | country,3%,-20%,19%
+"","","","",random,Stringency index (slope) | country,3%,-20%,19%
 "","","","",random,Residual,67%,38%,106%
 Table S2b - 2c,Escape distance,Gaussian,3573,fixed,(Intercept),-0.11,-0.283,0.067
 "","","","",fixed,year,-0.001,-0.05,0.047
@@ -93,11 +93,11 @@ Table S2b - 2c,Escape distance,Gaussian,3573,fixed,(Intercept),-0.11,-0.283,0.06
 "","","","",fixed,body mass (ln),-0.027,-0.056,0.001
 "","","","",fixed,time (sine of radians),-0.038,-0.079,0.003
 "","","","",fixed,time (cosine of radians),0.001,-0.035,0.039
-"","","","",fixed,temperaturre,0.003,-0.038,0.045
-"","","","",fixed,stringency index,0.024,-0.142,0.188
+"","","","",fixed,temperature,0.003,-0.038,0.045
+"","","","",fixed,Stringency index,0.024,-0.142,0.188
 "","","","",random,site (Intercept),10%,10%,10%
 "","","","",random,country (Intercept),1%,-7%,8%
-"","","","",random,stringency index (slope) | country,1%,-7%,8%
+"","","","",random,Stringency index (slope) | country,1%,-7%,8%
 "","","","",random,Residual,88%,73%,105%
 Table S2b - 3a,Escape distance,Gaussian,3425,fixed,(Intercept),-0.14,-0.461,0.166
 "","","","",fixed,year,0.027,-0.022,0.077
@@ -106,8 +106,8 @@ Table S2b - 3a,Escape distance,Gaussian,3425,fixed,(Intercept),-0.14,-0.461,0.16
 "","","","",fixed,body mass (ln),0.023,-0.067,0.11
 "","","","",fixed,time (sine of radians),-0.012,-0.053,0.031
 "","","","",fixed,time (cosine of radians),-0.009,-0.046,0.029
-"","","","",fixed,temperaturre,-0.011,-0.056,0.032
-"","","","",fixed,stringency index,0.016,-0.151,0.191
+"","","","",fixed,temperature,-0.011,-0.056,0.032
+"","","","",fixed,Stringency index,0.016,-0.151,0.191
 "","","","",random,species within day & year (Intercept),5%,3%,7%
 "","","","",random,species within site (Intercept),5%,3%,7%
 "","","","",random,site (Intercept),8%,5%,10%
@@ -115,7 +115,7 @@ Table S2b - 3a,Escape distance,Gaussian,3425,fixed,(Intercept),-0.14,-0.461,0.16
 "","","","",random,genus (Intercept),3%,3%,3%
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,country (Intercept),2%,-21%,20%
-"","","","",random,stringency index (slope) | country,2%,-21%,20%
+"","","","",random,Stringency index (slope) | country,2%,-21%,20%
 "","","","",random,Residual,67%,39%,105%
 Table S2b - 3b,Escape distance,Gaussian,3425,fixed,(Intercept),-0.135,-0.445,0.179
 "","","","",fixed,year,0.027,-0.023,0.077
@@ -124,17 +124,17 @@ Table S2b - 3b,Escape distance,Gaussian,3425,fixed,(Intercept),-0.135,-0.445,0.1
 "","","","",fixed,body mass (ln),0.02,-0.064,0.11
 "","","","",fixed,time (sine of radians),-0.012,-0.055,0.031
 "","","","",fixed,time (cosine of radians),-0.009,-0.046,0.028
-"","","","",fixed,temperaturre,-0.011,-0.054,0.031
-"","","","",fixed,stringency index,0.015,-0.156,0.183
+"","","","",fixed,temperature,-0.011,-0.054,0.031
+"","","","",fixed,Stringency index,0.015,-0.156,0.183
 "","","","",random,species within day & year (Intercept),5%,3%,7%
 "","","","",random,species within site (Intercept),4%,3%,7%
 "","","","",random,site (Intercept),8%,5%,11%
 "","","","",random,species (Intercept),10%,7%,11%
 "","","","",random,genus (Intercept),0%,0%,2%
-"","","","",random,stringency index (slope) | genus,0%,0%,2%
+"","","","",random,Stringency index (slope) | genus,0%,0%,2%
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,country (Intercept),3%,-23%,21%
-"","","","",random,stringency index (slope) | country,3%,-23%,21%
+"","","","",random,Stringency index (slope) | country,3%,-23%,21%
 "","","","",random,Residual,67%,36%,110%
 Table S2b - 3c,Escape distance,Gaussian,3425,fixed,(Intercept),-0.107,-0.291,0.071
 "","","","",fixed,year,0.005,-0.043,0.055
@@ -143,9 +143,9 @@ Table S2b - 3c,Escape distance,Gaussian,3425,fixed,(Intercept),-0.107,-0.291,0.0
 "","","","",fixed,body mass (ln),-0.019,-0.049,0.011
 "","","","",fixed,time (sine of radians),-0.03,-0.073,0.011
 "","","","",fixed,time (cosine of radians),-0.001,-0.039,0.037
-"","","","",fixed,temperaturre,-0.002,-0.046,0.041
-"","","","",fixed,stringency index,0.02,-0.137,0.182
+"","","","",fixed,temperature,-0.002,-0.046,0.041
+"","","","",fixed,Stringency index,0.02,-0.137,0.182
 "","","","",random,site (Intercept),11%,11%,11%
 "","","","",random,country (Intercept),1%,-8%,8%
-"","","","",random,stringency index (slope) | country,1%,-8%,8%
+"","","","",random,Stringency index (slope) | country,1%,-8%,8%
 "","","","",random,Residual,87%,73%,105%

@@ -1,30 +1,30 @@
 model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
 Table S3 - FI,Google Mobility,Gaussian,322,fixed,(Intercept),-0.337,-1.138,0.487
 "","","","",fixed,year,0.93,0.45,1.428
-"","","","",fixed,stringency index,-0.283,-1.049,0.517
+"","","","",fixed,Stringency index,-0.283,-1.049,0.517
 "","","","",random,weekday within year (Intercept),-20%,48%,53%
-"","","","",random,stringency index (slope) | weekday within year,-20%,48%,53%
+"","","","",random,Stringency index (slope) | weekday within year,-20%,48%,53%
 "","","","",random,Residual,140%,-7%,5%
 Table S3 - PL,Google Mobility,Gaussian,329,fixed,(Intercept),0.016,-0.617,0.636
 "","","","",fixed,year,0.776,0.015,1.537
-"","","","",fixed,stringency index,0.023,-0.362,0.408
+"","","","",fixed,Stringency index,0.023,-0.362,0.408
 "","","","",random,weekday within year (Intercept),47%,44%,49%
-"","","","",random,stringency index (slope) | weekday within year,47%,44%,49%
+"","","","",random,Stringency index (slope) | weekday within year,47%,44%,49%
 "","","","",random,Residual,6%,2%,13%
 Table S3 - CZ,Google Mobility,Gaussian,1054,fixed,(Intercept),-0.002,-0.508,0.523
-"","","","",fixed,stringency index,-0.221,-0.619,0.189
+"","","","",fixed,Stringency index,-0.221,-0.619,0.189
 "","","","",random,weekday (Intercept),23%,-166%,40%
-"","","","",random,stringency index (slope) | weekday,23%,-166%,40%
+"","","","",random,Stringency index (slope) | weekday,23%,-166%,40%
 "","","","",random,Residual,54%,21%,433%
 Table S3 - HU,Google Mobility,Gaussian,874,fixed,(Intercept),0.242,-0.262,0.755
 "","","","",fixed,year,-0.001,-0.454,0.475
-"","","","",fixed,stringency index,-1.27,-1.949,-0.578
+"","","","",fixed,Stringency index,-1.27,-1.949,-0.578
 "","","","",random,weekday within year (Intercept),48%,24%,49%
-"","","","",random,stringency index (slope) | weekday within year,48%,24%,49%
+"","","","",random,Stringency index (slope) | weekday within year,48%,24%,49%
 "","","","",random,Residual,4%,2%,53%
 Table S3 - AU,Google Mobility,Gaussian,1065,fixed,(Intercept),0.526,0.007,1.07
 "","","","",fixed,year,0.441,0.244,0.642
-"","","","",fixed,stringency index,-0.541,-0.848,-0.238
+"","","","",fixed,Stringency index,-0.541,-0.848,-0.238
 "","","","",random,weekday within year (Intercept),-40%,44%,65%
-"","","","",random,stringency index (slope) | weekday within year,-40%,44%,65%
+"","","","",random,Stringency index (slope) | weekday within year,-40%,44%,65%
 "","","","",random,Residual,180%,-30%,13%

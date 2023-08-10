@@ -5,7 +5,7 @@ Table S2a - 1a,Escape distance,Gaussian,6369,fixed,(Intercept),0.08,-0.136,0.293
 "","","","",fixed,body mass (ln),0.047,-0.019,0.113
 "","","","",fixed,time (sine of radians),0.022,-0.006,0.049
 "","","","",fixed,time (cosine of radians),0.029,0.005,0.052
-"","","","",fixed,temperaturre,-0.001,-0.029,0.029
+"","","","",fixed,temperature,-0.001,-0.029,0.029
 "","","","",fixed,Period,-0.032,-0.195,0.124
 "","","","",random,species within day & year (Intercept),8%,6%,9%
 "","","","",random,species within site (Intercept),5%,4%,5%
@@ -24,7 +24,7 @@ Table S2a - 1b,Escape distance,Gaussian,6369,fixed,(Intercept),0.071,-0.153,0.3
 "","","","",fixed,body mass (ln),0.047,-0.019,0.113
 "","","","",fixed,time (sine of radians),0.021,-0.008,0.048
 "","","","",fixed,time (cosine of radians),0.027,0.005,0.05
-"","","","",fixed,temperaturre,-0.001,-0.029,0.028
+"","","","",fixed,temperature,-0.001,-0.029,0.028
 "","","","",fixed,Period,-0.048,-0.204,0.113
 "","","","",random,species within day & year (Intercept),12%,7%,14%
 "","","","",random,species within site (Intercept),0%,0%,1%
@@ -46,7 +46,7 @@ Table S2a - 1c,Escape distance,Gaussian,6369,fixed,(Intercept),0.012,-0.155,0.17
 "","","","",fixed,body mass (ln),0.024,-0.007,0.055
 "","","","",fixed,time (sine of radians),0.014,-0.015,0.043
 "","","","",fixed,time (cosine of radians),0.027,0.005,0.051
-"","","","",fixed,temperaturre,-0.004,-0.033,0.027
+"","","","",fixed,temperature,-0.004,-0.033,0.027
 "","","","",fixed,Period,-0.043,-0.208,0.132
 "","","","",random,species within day & year (Intercept),12%,7%,13%
 "","","","",random,species within site (Intercept),1%,0%,12%
@@ -66,7 +66,7 @@ Table S2a - 1d,Escape distance,Gaussian,6369,fixed,(Intercept),0.084,-0.124,0.29
 "","","","",fixed,body mass (ln),0.047,-0.02,0.115
 "","","","",fixed,time (sine of radians),0.022,-0.006,0.049
 "","","","",fixed,time (cosine of radians),0.028,0.006,0.052
-"","","","",fixed,temperaturre,0,-0.028,0.028
+"","","","",fixed,temperature,0,-0.028,0.028
 "","","","",fixed,Period,-0.032,-0.198,0.13
 "","","","",random,species within day & year (Intercept),8%,6%,9%
 "","","","",random,species within site (Intercept),0%,0%,4%
@@ -86,7 +86,7 @@ Table S2a - 1e,Escape distance,Gaussian,6369,fixed,(Intercept),0.079,-0.128,0.28
 "","","","",fixed,body mass (ln),0.048,-0.017,0.115
 "","","","",fixed,time (sine of radians),0.021,-0.007,0.05
 "","","","",fixed,time (cosine of radians),0.024,0.001,0.047
-"","","","",fixed,temperaturre,-0.005,-0.033,0.022
+"","","","",fixed,temperature,-0.005,-0.033,0.022
 "","","","",fixed,Period,-0.032,-0.208,0.143
 "","","","",random,species within day & year (Intercept),7%,6%,8%
 "","","","",random,species within site (Intercept),5%,4%,5%
@@ -104,7 +104,7 @@ Table S2a - 2a,Escape distance,Gaussian,5261,fixed,(Intercept),0.162,-0.18,0.518
 "","","","",fixed,body mass (ln),-0.013,-0.121,0.094
 "","","","",fixed,time (sine of radians),0.027,-0.002,0.057
 "","","","",fixed,time (cosine of radians),0.036,0.012,0.061
-"","","","",fixed,temperaturre,-0.005,-0.038,0.027
+"","","","",fixed,temperature,-0.005,-0.038,0.027
 "","","","",fixed,Period,-0.033,-0.206,0.142
 "","","","",random,species within day & year (Intercept),7%,4%,9%
 "","","","",random,species within site (Intercept),3%,2%,4%
@@ -123,7 +123,7 @@ Table S2a - 2b,Escape distance,Gaussian,5261,fixed,(Intercept),0.162,-0.191,0.50
 "","","","",fixed,body mass (ln),-0.01,-0.123,0.1
 "","","","",fixed,time (sine of radians),0.027,-0.001,0.057
 "","","","",fixed,time (cosine of radians),0.037,0.012,0.062
-"","","","",fixed,temperaturre,-0.005,-0.038,0.028
+"","","","",fixed,temperature,-0.005,-0.038,0.028
 "","","","",fixed,Period,-0.033,-0.204,0.142
 "","","","",random,species within day & year (Intercept),9%,4%,11%
 "","","","",random,species within site (Intercept),0%,0%,2%
@@ -145,7 +145,7 @@ Table S2a - 2c,Escape distance,Gaussian,5261,fixed,(Intercept),0.152,-0.189,0.49
 "","","","",fixed,body mass (ln),-0.011,-0.117,0.098
 "","","","",fixed,time (sine of radians),0.027,-0.002,0.056
 "","","","",fixed,time (cosine of radians),0.032,0.007,0.056
-"","","","",fixed,temperaturre,-0.011,-0.042,0.02
+"","","","",fixed,temperature,-0.011,-0.042,0.02
 "","","","",fixed,Period,-0.035,-0.213,0.142
 "","","","",random,species within day & year (Intercept),7%,5%,9%
 "","","","",random,species within site (Intercept),3%,2%,4%
@@ -163,7 +163,7 @@ Table S2a - 3a,Escape distance,Gaussian,5107,fixed,(Intercept),0.13,-0.213,0.479
 "","","","",fixed,body mass (ln),0.004,-0.107,0.114
 "","","","",fixed,time (sine of radians),0.027,-0.003,0.057
 "","","","",fixed,time (cosine of radians),0.034,0.008,0.059
-"","","","",fixed,temperaturre,-0.007,-0.039,0.026
+"","","","",fixed,temperature,-0.007,-0.039,0.026
 "","","","",fixed,Period,-0.032,-0.208,0.139
 "","","","",random,species within day & year (Intercept),7%,4%,9%
 "","","","",random,species within site (Intercept),3%,2%,4%
@@ -182,7 +182,7 @@ Table S2a - 3b,Escape distance,Gaussian,5107,fixed,(Intercept),0.143,-0.193,0.48
 "","","","",fixed,body mass (ln),0.012,-0.106,0.131
 "","","","",fixed,time (sine of radians),0.027,-0.002,0.057
 "","","","",fixed,time (cosine of radians),0.034,0.008,0.059
-"","","","",fixed,temperaturre,-0.007,-0.041,0.026
+"","","","",fixed,temperature,-0.007,-0.041,0.026
 "","","","",fixed,Period,-0.03,-0.21,0.143
 "","","","",random,species within day & year (Intercept),9%,3%,11%
 "","","","",random,species within site (Intercept),0%,0%,2%
@@ -204,7 +204,7 @@ Table S2a - 3c,Escape distance,Gaussian,5107,fixed,(Intercept),0.123,-0.224,0.49
 "","","","",fixed,body mass (ln),0.006,-0.105,0.117
 "","","","",fixed,time (sine of radians),0.026,-0.003,0.056
 "","","","",fixed,time (cosine of radians),0.029,0.004,0.054
-"","","","",fixed,temperaturre,-0.014,-0.046,0.018
+"","","","",fixed,temperature,-0.014,-0.046,0.018
 "","","","",fixed,Period,-0.029,-0.2,0.156
 "","","","",random,species within day & year (Intercept),7%,5%,9%
 "","","","",random,species within site (Intercept),3%,2%,4%
