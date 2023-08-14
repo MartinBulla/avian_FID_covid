@@ -534,10 +534,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' - [REV_ms_output.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items  
 #' <br />
 #' [**Data**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data):  
-#' - raw data (for their description see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md)  
-#' - manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses  
-#' - [posterior model simulations](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/model_sim/):
-#' - [Pics](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/Pics/): phylopic pictures used in the graphs
+#' - *raw data* (for their description see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md)  
+#' - *manipulated data* (starting with 'dat_') generated with R-scripts and used in the further analyses  
+#' - [*posterior model simulations*](https://osf.io/at85z/)
+#' - [*phylopic pictures*](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/Pics/) used in the graphs
 #'  
 #' [**Outputs**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Outputs/): separate files of all outputs used in the manuscript and this Supplement
 #'  
