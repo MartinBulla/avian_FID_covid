@@ -1484,11 +1484,11 @@ out_FID_c %>%
     est_mh03c = est_out(mh03c, "03c) (1|Year) + (1|genus) + (1|sp_day_year) + (scale(Human) | Country) + (1 | IDLocality) +(1|sp_loc); >9/specie")
 
     # export
-      save(file = here::here("Data/Fig_S2_estimates.Rdata"), 
+      save(file = here::here("Data/dat_Fig_S2_estimates.Rdata"), 
       est_m1a, est_m1b, est_m1c, est_m1d, est_m1e, est_m2a, est_m2b, est_m2c, est_m3a, est_m3b, est_m3c, 
       est_m01a, est_m01b, est_m01c, est_m02a, est_m02b, est_m02c, est_m03a, est_m03b, est_m03c, 
       est_mg01a, est_mg01b, est_mg01c, est_mg02a, est_mg02b, est_mg02c, est_mg03a, est_mg03b, est_mg03c,
-      est_mh01a, est_mh01b, est_mh01c, est_mh02a, est_mh02b, est_mh02c, est_mh03a, est_mh03b, est_mh03c) # load(here::here("Data/Fig_S2_estimates.Rdata"))
+      est_mh01a, est_mh01b, est_mh01c, est_mh02a, est_mh02b, est_mh02c, est_mh03a, est_mh03b, est_mh03c) # load(here::here("Data/dat_Fig_S2_estimates.Rdata"))
      
      # prepare plot for Period
      xs = rbind(est_m1a, est_m1b, est_m1c, est_m1d, est_m1e, est_m2a, est_m2b, est_m2c, est_m3a, est_m3b, est_m3c)
@@ -5099,15 +5099,15 @@ bayes_factor(mH_no, mH_yes)
 post_prob(mH_yes, mH_no)
 
 # export models
-save(file = 'Data/rev_DAT_brms_P.Rdata', mP_no, mP_yes)
-save(file = 'Data/rev_DAT_brms_S.Rdata', m_no, m_yes)
-save(file = 'Data/rev_DAT_brms_G.Rdata', mG_no, mG_yes)
-save(file = 'Data/rev_DAT_brms_H.Rdata', mH_no, mH_yes)
+save(file = 'Data/dat_brms_P.Rdata', mP_no, mP_yes)
+save(file = 'Data/dat_brms_S.Rdata', m_no, m_yes)
+save(file = 'Data/dat_brms_G.Rdata', mG_no, mG_yes)
+save(file = 'Data/dat_brms_H.Rdata', mH_no, mH_yes)
 
-load(here::here("Data/rev_DAT_brms_P.Rdata"))
-load(here::here("Data/rev_DAT_brms_S.Rdata"))
-load(here::here("Data/rev_DAT_brms_G.Rdata"))
-load(here::here("Data/rev_DAT_brms_H.Rdata"))
+load(here::here("Data/dat_brms_P.Rdata"))
+load(here::here("Data/dat_brms_S.Rdata"))
+load(here::here("Data/dat_brms_G.Rdata"))
+load(here::here("Data/dat_brms_H.Rdata"))
 
 v_sc <- (VarCorr(mP_yes, summary = FALSE)$scinam$sd)^2
 v_sp <- (VarCorr(mP_yes, summary = FALSE)$Species$sd)^2
