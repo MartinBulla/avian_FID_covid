@@ -144,7 +144,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     # for Supplementary Table output based on sim
       m_out = function(model = m, type = "mixed", 
         name = "define", dep = "define", fam = 'Gaussian',
-        round_ = 3, nsim = 5000, aic = FALSE, save_sim = here::here('Data/model_sim/'), back_tran = FALSE, perc_ = 1){
+        round_ = 3, nsim = 5000, aic = FALSE, save_sim = here::here('Data/model_sim/'), back_tran = FALSE, perc_ = 1, R2 = TRUE){
           # perc_ 1 = proportion or 100%
         bsim = sim(model, n.sim=nsim)  
         
@@ -268,7 +268,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
             aicc = AICc(model)
             x[1, AICc := aicc] 
         }
-        if(type == "mixed" & nrow(x[type=='random' & estimate_r =='0%'])==0){
+        if(type == "mixed" & nrow(x[type=='random' & estimate_r =='0%'])==0 & R2 == TRUE){
           R2_mar = as.numeric(r2_nakagawa(model)$R2_marginal)
           R2_con = as.numeric(r2_nakagawa(model)$R2_conditional)
           x[1, R2_mar := R2_mar]
@@ -3419,7 +3419,7 @@ shfi_g <- lmer(scale(Human) ~
   (scale(parks_percent_change_from_baseline) | year_weekday),
 data = sshf, REML = FALSE
 )
-lld[[1]] = m_out(name = "Table S3d - FI", dep = "# of humans", model = shfi_g, nsim = 5000)
+lld[[1]] = m_out(name = "Table S3d - FI", dep = "# of humans", model = shfi_g, nsim = 5000, R2 = FALSE)
 lld[[1]]$R2_mar <- lld[[1]]$R2_con <- NULL
 
 sshc <- ssh[Country == "Czechia"]
