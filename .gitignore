@@ -19,6 +19,7 @@
 freeze/
 .DS_Store
 .Rproj.user
+model_sim/
 Obrazky - phylopic/
 for_Peto.Rdata
 *_cache/
