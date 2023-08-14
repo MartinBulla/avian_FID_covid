@@ -516,7 +516,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' ***
 #' 
 #' ### Introduction
-#' To facilitate transparency, the following document contains example code used to generate the results of the manuscript. Thus, apart from the supplementary figures and tables, below we display also main text figures. The figures and tables are ordered according to their appearance in the main text. The code is displayed upon clicking the "code" icon at the top right, above each display item. Continuous variables were  standardised by subtracting the mean and dividing by the standard deviation. For descriptions of variables see Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232). 'Residual' in tables indicates residual variance.
+#' To facilitate transparency, the following document contains example code used to generate the results of the manuscript. Thus, apart from the supplementary figures and tables, below we display also main text figures and plot of model assumptions. The figures and tables are ordered according to their appearance in the main text. 
+#' 
+#' The code is displayed upon clicking the "code" icon at the top right, above each display item. Continuous variables were  standardised by subtracting the mean and dividing by the standard deviation. For descriptions of variables see Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232). 'Residual' in tables indicates residual variance.
 #' 
 #' When using this content **PLEASE CITE** the [paper](https://doi.org/10.1101/2022.07.15.500232) and this repository (Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023), *Supporting information for 'Urban birds’ flight responses were largely unaffected by the COVID-19 shutdowns', GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/)).
 #' 
@@ -525,15 +527,16 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' ***
 #' 
 #' ### Repository: files & folders
-#' [**Supplementary information**, including code](https://martinbulla.github.io/avian_FID_covid/): the current html document with supplementary informatiion, figures and tables.   
+#' [**Supplementary information**, including code](https://martinbulla.github.io/avian_FID_covid/): the current html document with supplementary informatiion, figures and tables and plot of [model assumptions](#MS_).
 #'  
 #' [**R**](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/)-scripts used in the analysis:  
 #' - [_runRmarkdown.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/_runRmarkdown.R) generates htmls from the following R-script:  
-#' - [REV_ms_output.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items  
+#' - [REV_ms_output.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items  
 #' <br />
-#' [**Data**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data): raw data (for their description 
-#'see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md) and manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses  
-#' - [model_sim](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/model_sim/): posterior simulations for given models  
+#' [**Data**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data):  
+#' - raw data (for their description see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md)  
+#' - manipulated data (starting with 'DAT_') generated with R-scripts and used in the further analyses  
+#' - [posterior model simulations](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/model_sim/):
 #' - [Pics](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/Pics/): phylopic pictures used in the graphs
 #'  
 #' [**Outputs**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Outputs/): separate files of all outputs used in the manuscript and this Supplement
@@ -2686,7 +2689,7 @@ fi <- lmer(scale(parks_percent_change_from_baseline) ~
   (scale(StringencyIndex) | year_weekday),
 data = ssf, REML = FALSE
 )
-ll[[1]] = m_out(name = "Table S3 - FI", dep = "Google Mobility", model = fi, nsim = 5000)
+ll[[1]] = m_out(name = "Table S3a - FI", dep = "Google Mobility", model = fi, nsim = 5000)
 
 ssp <- ss[Country == "Poland"]
 pl <- lmer(scale(parks_percent_change_from_baseline) ~
@@ -2695,7 +2698,7 @@ pl <- lmer(scale(parks_percent_change_from_baseline) ~
   (scale(StringencyIndex) | year_weekday),
 data = ssp, REML = FALSE
 )
-ll[[2]] = m_out(name = "Table S3 - PL", dep = "Google Mobility", model = pl, nsim = 5000)
+ll[[2]] = m_out(name = "Table S3a - PL", dep = "Google Mobility", model = pl, nsim = 5000)
 
 sscz = ss[Country == "Czechia"]
 cz <- lmer(scale(parks_percent_change_from_baseline) ~
@@ -2703,7 +2706,7 @@ cz <- lmer(scale(parks_percent_change_from_baseline) ~
   (scale(StringencyIndex) | weekday),
 data = sscz, REML = FALSE
 )
-ll[[3]] = m_out(name = "Table S3 - CZ", dep = "Google Mobility", model = cz, nsim = 5000)
+ll[[3]] = m_out(name = "Table S3a - CZ", dep = "Google Mobility", model = cz, nsim = 5000)
 
 ss_h <- ss[Country == "Hungary"]
 hu <- lmer(scale(parks_percent_change_from_baseline) ~
@@ -2712,7 +2715,7 @@ hu <- lmer(scale(parks_percent_change_from_baseline) ~
   (scale(StringencyIndex) | year_weekday),
 data = ss_h, REML = FALSE
 )
-ll[[4]] = m_out(name = "Table S3 - HU", dep = "Google Mobility", model = hu, nsim = 5000)
+ll[[4]] = m_out(name = "Table S3a - HU", dep = "Google Mobility", model = hu, nsim = 5000)
 
 ssa <- ss[Country == "Australia"]
 au <- lmer(scale(parks_percent_change_from_baseline) ~
@@ -2722,7 +2725,7 @@ au <- lmer(scale(parks_percent_change_from_baseline) ~
 # (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
 data = ssa, REML = FALSE
 )
-ll[[5]] = m_out(name = "Table S3 - AU", dep = "Google Mobility", model = au, nsim = 5000)
+ll[[5]] = m_out(name = "Table S3a - AU", dep = "Google Mobility", model = au, nsim = 5000)
 
 out_g_s = data.table(do.call(rbind, ll))
 out_g_s[is.na(out_g_s)] <- ""
@@ -5164,7 +5167,7 @@ ts5 %>%
 #'
 #'*** 
 #' 
-#' ### Model assumptions
+#' ### Model assumptions  {#MS_}
 #+ mode_ass_png, eval = FALSE, results = 'hide', warning=FALSE
 # generates pngs with model assumptions that are later loaded within the html
 # Table S1
