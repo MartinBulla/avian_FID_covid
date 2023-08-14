@@ -1906,7 +1906,7 @@ setnames(dp, old = c("Covid", "StringencyIndex", "parks_percent_change_from_base
 # setnames(dp, old = c("SD_ln", "flock_ln", "body_ln", "sin_rad", "cos_rad", "Temp", "Day"), new = c("Starting distance\nln(m)", "Flock size\nln(m)", "Body mass\nln(m)", "Sine\nof radians", "Cosine\nof radians", "Temperature\n°C", "Day"))
 
 #if (save_plot == TRUE) {
-#  png(here::here("Outputs/Fig_S1_rev.png"), width = 19, height = 19, units = "cm", bg = "transparent", res = 600)
+#  png(here::here("Outputs/Fig_S2_rev.png"), width = 19, height = 19, units = "cm", bg = "transparent", res = 600)
 #  chart.Correlation(dp, histogram = TRUE, pch = 19, alpha = 0.5)
 #  mtext("Single observations", side = 3, line = 3)
 #  dev.off()
@@ -4673,7 +4673,7 @@ gtg2 <- ggplotGrob(gt2) # gg$layout$name
 gtgx2 <- gtable_filter_remove(gtg2, name = c("axis-b-2-9", "axis-b-5-8"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
 
 if(save_plot==TRUE){
-ggsave(here::here("Outputs/Fig_S7_width-152mm_Google.png"), gtgx2, width = 15.24, height = 19, unit = "cm", dpi = 600)
+ggsave(here::here("Outputs/Fig_S8_width-152mm_Google.png"), gtgx2, width = 15.24, height = 19, unit = "cm", dpi = 600)
 }
 grid.draw(gtgx2)
 #' <a name="F_S8">
@@ -5155,12 +5155,12 @@ ts5 <- data.table(
   )
 )
 #save(file = "Data/T_S7.Rdata", ts5)
-fwrite(file = "Data/T_S7.csv", ts5)
+fwrite(file = "Data/Table_S7.csv", ts5)
 
 #+t_s7, echo=FALSE,results='hide', warning=FALSE, message=FALSE
 #' <a name="T_S7">
 #' **Table S7 | Are residuals confounded by phylogeny? Comparison of models on residulas without and with control for phylogeny.**</a>
-ts5 = fread(here::here('Outputs/T_S7.csv'))
+ts5 = fread(here::here('Outputs/Table_S7.csv'))
 ts5 %>%
   kbl(align=c('l', 'r', 'r','r')) %>%
   kable_paper("hover", full_width = F)
