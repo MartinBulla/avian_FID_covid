@@ -1,6 +1,6 @@
 ## Supporting information for "[Urban birds' flight responses were largely unaffected by the COVID-19 shutdowns](https://doi.org/10.1101/2022.07.15.500232)"  
 
-When using this content **PLEASE CITE** the [paper](https://doi.org/10.1101/2022.07.15.500232) and this repository ([1](#1)).  
+When using this content **PLEASE CITE** the [paper](https://doi.org/10.1101/2022.07.15.500232) and this repository[<sup>1</sup>](#1).  
 
 ### **Content**
 [Supplement with code](https://martinbulla.github.io/avian_FID_covid/)  
@@ -20,4 +20,4 @@ When using this content **PLEASE CITE** the [paper](https://doi.org/10.1101/2022
 
 ***
 
-<a name="#1"></a>(1) Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023), *Supporting information for 'Urban birds’ flight responses were largely unaffected by the COVID-19 shutdowns'*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/).
+<a name="#1">(1)</a> Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023), *Supporting information for 'Urban birds’ flight responses were largely unaffected by the COVID-19 shutdowns'*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/).
