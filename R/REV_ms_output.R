@@ -536,9 +536,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' - [REV_ms_output.R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items  
 #' <br />
 #' [**Data**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data):  
-#' - *raw data* (for their description see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md)  
+#' - *raw data* (for their description see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md))   
 #' - *manipulated data* (starting with 'dat_') generated with R-scripts and used in the further analyses  
-#' - [*posterior model simulations*](https://osf.io/at85z/)
+#' - [*posterior model simulations*](https://osf.io/at85z/) - located at OSF
 #' - [*phylopic pictures*](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/Pics/) used in the graphs
 #'  
 #' [**Outputs**](https://github.com/MartinBulla/avian_FID_covid/tree/main/Outputs/): separate files of all outputs used in the manuscript and this Supplement
@@ -3420,7 +3420,6 @@ shfi_g <- lmer(scale(Human) ~
 data = sshf, REML = FALSE
 )
 lld[[1]] = m_out(name = "Table S3d - FI", dep = "# of humans", model = shfi_g, nsim = 5000, R2 = FALSE)
-lld[[1]]$R2_mar <- lld[[1]]$R2_con <- NULL
 
 sshc <- ssh[Country == "Czechia"]
 shcz_g <- lmer(scale(Human) ~
@@ -3428,8 +3427,7 @@ shcz_g <- lmer(scale(Human) ~
   (scale(parks_percent_change_from_baseline) | weekday),
 data = sshc, REML = FALSE
 )
-lld[[2]] = m_out(name = "Table S3d - CZ", dep = "# of humans", model = shcz_g, nsim = 5000)
-lld[[2]]$R2_mar = lld[[2]]$R2_con = NULL
+lld[[2]] = m_out(name = "Table S3d - CZ", dep = "# of humans", model = shcz_g, nsim = 5000, , R2 = FALSE)
 
 ssh_h <- ssh[Country == "Hungary"]
 shhu_g <- lmer(scale(Human) ~
@@ -3438,12 +3436,10 @@ shhu_g <- lmer(scale(Human) ~
   (scale(parks_percent_change_from_baseline) | year_weekday),
 data = ssh_h, REML = FALSE
 )
-lld[[3]] = m_out(name = "Table S3d - HU", dep = "# of humans", model = shhu_g, nsim = 5000)
-lld[[3]]$R2_mar <- lld[[3]]$R2_con <- NULL
+lld[[3]] = m_out(name = "Table S3d - HU", dep = "# of humans", model = shhu_g, nsim = 5000, R2 = FALSE)
 
 out_t3d = data.table(do.call(rbind, lld))
 out_t3d[is.na(out_t3d)] <- ""
-out_t3d$R2_mar = out_t3d$R2_con = NULL
 out_t3d[, effect := gsub("scale\\(Year\\)", "year", effect)]
 out_t3d[, effect := gsub("scale\\(parks_percent_change_from_baseline\\)", "Google Mobility", effect)]
 out_t3d[, effect := gsub("year_weekday", "weekday within year", effect)]
