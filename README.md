@@ -8,6 +8,7 @@ When using this content **PLEASE CITE** the [paper](https://doi.org/10.1101/2022
 [R](https://github.com/MartinBulla/avian_FID_covid/tree/main/R/) - scripts used in the analysis:
 - "_runRmarkdown.R" generates htmls from the following R-script:  
 - "REV_ms_output.R" R-script used to generate the [Supplement](https://martinbulla.github.io/avian_FID_covid/), contains all scripts used to generate the paper outputs, including the display items    
+
 [Data](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data):  
 - *raw data* (for their desciption see [READ_ME](https://github.com/MartinBulla/avian_FID_covid/tree/main/Data/READ_ME.md))  
 - *manipulated data* (starting with 'dat_') generated with R-scripts and used in the further analyses  
