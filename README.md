@@ -1,4 +1,4 @@
-## Supporting information for "[Urban birds' flight responses were largely unaffected by the COVID-19 shutdowns](https://doi.org/10.1101/2022.07.15.500232)"  
+## Supporting information for "[Urban birds’ tolerance towards humans was largely unaffected by the COVID-19 shutdowns](https://doi.org/10.1101/2022.07.15.500232)"  
 
 When using this content **PLEASE CITE** the [paper](https://doi.org/10.1101/2022.07.15.500232) and this repository[<sup>1</sup>](#1).  
 

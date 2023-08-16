@@ -1,5 +1,5 @@
 #' ---
-#' title: <font size="2">Supporting code, figures and tables for</font><br><font size="5">Urban birds' flight responses were largely unaffected by the COVID-19 shutdowns</font>
+#' title: <font size="2">Supporting code, figures and tables for</font><br><font size="5">Urban birds’ tolerance towards humans was largely unaffected by the COVID-19 shutdowns</font>
 #' author: <font size="2">Peter Mikula, Martin Bulla, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht</font><br><br><font size="2">created by Martin Bulla</font><br>
 #' date: <font size="1.5">`r Sys.time()`</font>
 #' output:
@@ -524,7 +524,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' 
 #' Questions can be directed to bulla.mar@gmail.com & petomikula158@gmail.com
 #' 
-#' <a name="1"></a>(1) Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023). *Supporting information for 'Urban birds’ flight responses were largely unaffected by the COVID-19 shutdowns'*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/).
+#' <a name="1"></a>(1) Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023). *Supporting information for "Urban birds’ tolerance towards humans was largely unaffected by the COVID-19 shutdowns"*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/).
+#' 
 #' 
 #' ***
 #' 
