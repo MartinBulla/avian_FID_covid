@@ -1972,7 +1972,7 @@ ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
     axis.text.y = element_text(colour = "grey30", size = 6)
   )
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_2_rev_v3.png"), g_f2, width = 18, height = 16, units = "cm")
+  ggsave(here::here("Outputs/Fig_2_width-180mm.png"), g_f2, width = 18, height = 16, units = "cm")
 }
 
 g_f2
@@ -2112,7 +2112,7 @@ ggx_gen <- gtable_filter_remove(gg_gen,
   trim = FALSE
 )
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_3_width-122mm_col_grey_rev.png"), ggx_gen, width = 4.8, height = 4.5, dpi = 600) # 12.2cm # with label inside
+  ggsave(here::here("Outputs/Fig_3_width-122mm.png"), ggx_gen, width = 4.8, height = 4.5, dpi = 600) # 12.2cm # with label inside
 }
 grid.draw(ggx_gen)
 #'
@@ -2673,7 +2673,7 @@ ggplot(g_s, aes(x = StringencyIndex, y = pred, col = Country)) +
   )
 
 if(save_plot==TRUE){
-ggsave(here::here("Outputs/Fig_5_rev_widht_70mm.png"), p + theme(plot.subtitle = element_blank()), width = 7, height = 6, unit = "cm", dpi = 600)
+ggsave(here::here("Outputs/Fig_5_width-70mm.png"), p + theme(plot.subtitle = element_blank()), width = 7, height = 6, unit = "cm", dpi = 600)
 }
 
 p
@@ -3293,7 +3293,7 @@ fig_6 = annotate_figure(sshh,
 )
 
 if (save_plot == TRUE) {
-ggsave(file = here::here("Outputs/Fig_6.png"), fig_6, width = 12, height = 12, units = "cm")
+ggsave(file = here::here("Outputs/Fig_6_width-120mm.png"), fig_6, width = 12, height = 12, units = "cm")
 }
 
 fig_6
