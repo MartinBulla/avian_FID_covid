@@ -1,13 +1,13 @@
 model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
-Table S2c - 1a,Escape distance,Gaussian,3644,fixed,(Intercept),0.024,-0.094,0.143
-"","","","",fixed,year,0.018,-0.022,0.06
-"","","","",fixed,starting distance (ln),0.499,0.467,0.529
+Table S2c - 1a,Escape distance,Gaussian,3644,fixed,(Intercept),0.025,-0.096,0.145
+"","","","",fixed,year,0.018,-0.023,0.06
+"","","","",fixed,starting distance (ln),0.499,0.466,0.531
 "","","","",fixed,flock size (ln),-0.001,-0.027,0.025
-"","","","",fixed,body mass (ln),0.023,-0.044,0.089
-"","","","",fixed,time (sine of radians),-0.009,-0.051,0.032
+"","","","",fixed,body mass (ln),0.024,-0.044,0.092
+"","","","",fixed,time (sine of radians),-0.009,-0.049,0.032
 "","","","",fixed,time (cosine of radians),0.011,-0.023,0.045
-"","","","",fixed,temperature,0.021,-0.016,0.059
-"","","","",fixed,Google Mobility,-0.1,-0.231,0.028
+"","","","",fixed,temperature,0.021,-0.017,0.059
+"","","","",fixed,Google Mobility,-0.1,-0.229,0.032
 "","","","",random,species within day & year (Intercept),6%,5%,6%
 "","","","",random,species within site (Intercept),5%,4%,5%
 "","","","",random,species (Intercept),7%,7%,8%
@@ -17,18 +17,18 @@ Table S2c - 1a,Escape distance,Gaussian,3644,fixed,(Intercept),0.024,-0.094,0.14
 "","","","",random,country (Intercept),1%,-3%,4%
 "","","","",random,Google Mobility (slope) | country,1%,-3%,4%
 "","","","",random,Residual,68%,61%,78%
-Table S2c - 1b,Escape distance,Gaussian,3644,fixed,(Intercept),0.024,-0.091,0.141
-"","","","",fixed,year,0.019,-0.022,0.06
-"","","","",fixed,starting distance (ln),0.498,0.468,0.53
-"","","","",fixed,flock size (ln),-0.001,-0.027,0.025
-"","","","",fixed,body mass (ln),0.026,-0.039,0.093
-"","","","",fixed,time (sine of radians),-0.009,-0.051,0.031
-"","","","",fixed,time (cosine of radians),0.01,-0.023,0.044
-"","","","",fixed,temperature,0.021,-0.016,0.059
-"","","","",fixed,Google Mobility,-0.102,-0.231,0.029
+Table S2c - 1b,Escape distance,Gaussian,3644,fixed,(Intercept),0.024,-0.094,0.145
+"","","","",fixed,year,0.019,-0.022,0.059
+"","","","",fixed,starting distance (ln),0.499,0.467,0.529
+"","","","",fixed,flock size (ln),-0.002,-0.029,0.024
+"","","","",fixed,body mass (ln),0.026,-0.041,0.09
+"","","","",fixed,time (sine of radians),-0.009,-0.049,0.031
+"","","","",fixed,time (cosine of radians),0.009,-0.024,0.044
+"","","","",fixed,temperature,0.022,-0.015,0.06
+"","","","",fixed,Google Mobility,-0.099,-0.229,0.031
 "","","","",random,species within day & year (Intercept),6%,5%,6%
 "","","","",random,species within site (Intercept),5%,4%,5%
-"","","","",random,species (Intercept),7%,7%,7%
+"","","","",random,species (Intercept),7%,6%,7%
 "","","","",random,site (Intercept),9%,9%,9%
 "","","","",random,genus (Intercept),0%,-1%,4%
 "","","","",random,Google Mobility (slope) | genus,0%,-1%,4%
@@ -36,28 +36,28 @@ Table S2c - 1b,Escape distance,Gaussian,3644,fixed,(Intercept),0.024,-0.091,0.14
 "","","","",random,country (Intercept),1%,-4%,4%
 "","","","",random,Google Mobility (slope) | country,1%,-4%,4%
 "","","","",random,Residual,71%,59%,81%
-Table S2c - 1c,Escape distance,Gaussian,3644,fixed,(Intercept),-0.056,-0.144,0.029
-"","","","",fixed,year,0.013,-0.026,0.051
+Table S2c - 1c,Escape distance,Gaussian,3644,fixed,(Intercept),-0.056,-0.14,0.029
+"","","","",fixed,year,0.013,-0.026,0.052
 "","","","",fixed,starting distance (ln),0.559,0.527,0.591
-"","","","",fixed,flock size (ln),-0.022,-0.048,0.004
-"","","","",fixed,body mass (ln),-0.024,-0.053,0.005
-"","","","",fixed,time (sine of radians),-0.033,-0.073,0.009
-"","","","",fixed,time (cosine of radians),0.021,-0.014,0.055
-"","","","",fixed,temperature,0.032,-0.006,0.069
-"","","","",fixed,Google Mobility,-0.085,-0.21,0.032
-"","","","",random,site (Intercept),11%,10%,12%
-"","","","",random,country (Intercept),0%,-1%,2%
-"","","","",random,Google Mobility (slope) | country,0%,-1%,2%
+"","","","",fixed,flock size (ln),-0.022,-0.047,0.005
+"","","","",fixed,body mass (ln),-0.023,-0.052,0.004
+"","","","",fixed,time (sine of radians),-0.033,-0.074,0.008
+"","","","",fixed,time (cosine of radians),0.021,-0.014,0.056
+"","","","",fixed,temperature,0.031,-0.006,0.069
+"","","","",fixed,Google Mobility,-0.087,-0.203,0.033
+"","","","",random,site (Intercept),11%,10%,13%
+"","","","",random,country (Intercept),1%,-1%,2%
+"","","","",random,Google Mobility (slope) | country,1%,-1%,2%
 "","","","",random,Residual,88%,83%,92%
-Table S2c - 2a,Escape distance,Gaussian,3545,fixed,(Intercept),-0.029,-0.167,0.109
-"","","","",fixed,year,0.019,-0.022,0.062
-"","","","",fixed,starting distance (ln),0.49,0.459,0.523
-"","","","",fixed,flock size (ln),0.005,-0.022,0.03
-"","","","",fixed,body mass (ln),-0.019,-0.092,0.054
-"","","","",fixed,time (sine of radians),-0.01,-0.051,0.033
-"","","","",fixed,time (cosine of radians),0.009,-0.025,0.044
-"","","","",fixed,temperature,0.022,-0.016,0.059
-"","","","",fixed,Google Mobility,-0.097,-0.231,0.039
+Table S2c - 2a,Escape distance,Gaussian,3545,fixed,(Intercept),-0.03,-0.165,0.11
+"","","","",fixed,year,0.02,-0.023,0.062
+"","","","",fixed,starting distance (ln),0.49,0.458,0.521
+"","","","",fixed,flock size (ln),0.004,-0.022,0.031
+"","","","",fixed,body mass (ln),-0.02,-0.095,0.055
+"","","","",fixed,time (sine of radians),-0.009,-0.049,0.032
+"","","","",fixed,time (cosine of radians),0.009,-0.026,0.043
+"","","","",fixed,temperature,0.02,-0.016,0.057
+"","","","",fixed,Google Mobility,-0.097,-0.228,0.035
 "","","","",random,species within day & year (Intercept),6%,5%,6%
 "","","","",random,species within site (Intercept),4%,4%,5%
 "","","","",random,site (Intercept),9%,8%,9%
@@ -67,84 +67,84 @@ Table S2c - 2a,Escape distance,Gaussian,3545,fixed,(Intercept),-0.029,-0.167,0.1
 "","","","",random,country (Intercept),0%,-5%,5%
 "","","","",random,Google Mobility (slope) | country,0%,-5%,5%
 "","","","",random,Residual,69%,59%,80%
-Table S2c - 2b,Escape distance,Gaussian,3545,fixed,(Intercept),-0.036,-0.169,0.095
-"","","","",fixed,year,0.019,-0.024,0.061
+Table S2c - 2b,Escape distance,Gaussian,3545,fixed,(Intercept),-0.035,-0.169,0.099
+"","","","",fixed,year,0.019,-0.023,0.062
 "","","","",fixed,starting distance (ln),0.49,0.459,0.523
-"","","","",fixed,flock size (ln),0.005,-0.023,0.031
-"","","","",fixed,body mass (ln),-0.029,-0.1,0.038
-"","","","",fixed,time (sine of radians),-0.01,-0.052,0.032
-"","","","",fixed,time (cosine of radians),0.01,-0.025,0.044
-"","","","",fixed,temperature,0.021,-0.018,0.06
-"","","","",fixed,Google Mobility,-0.092,-0.227,0.045
+"","","","",fixed,flock size (ln),0.004,-0.022,0.032
+"","","","",fixed,body mass (ln),-0.03,-0.103,0.04
+"","","","",fixed,time (sine of radians),-0.011,-0.051,0.032
+"","","","",fixed,time (cosine of radians),0.009,-0.024,0.043
+"","","","",fixed,temperature,0.021,-0.017,0.059
+"","","","",fixed,Google Mobility,-0.091,-0.226,0.041
 "","","","",random,species within day & year (Intercept),5%,5%,6%
 "","","","",random,species within site (Intercept),4%,4%,5%
 "","","","",random,site (Intercept),8%,8%,8%
-"","","","",random,species (Intercept),16%,15%,17%
+"","","","",random,species (Intercept),16%,14%,17%
 "","","","",random,genus (Intercept),0%,0%,0%
 "","","","",random,Google Mobility (slope) | genus,0%,0%,0%
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,country (Intercept),0%,-5%,4%
 "","","","",random,Google Mobility (slope) | country,0%,-5%,4%
 "","","","",random,Residual,66%,56%,77%
-Table S2c - 2c,Escape distance,Gaussian,3545,fixed,(Intercept),-0.055,-0.142,0.029
-"","","","",fixed,year,0.014,-0.024,0.054
-"","","","",fixed,starting distance (ln),0.552,0.518,0.584
+Table S2c - 2c,Escape distance,Gaussian,3545,fixed,(Intercept),-0.056,-0.143,0.03
+"","","","",fixed,year,0.014,-0.025,0.054
+"","","","",fixed,starting distance (ln),0.551,0.519,0.583
 "","","","",fixed,flock size (ln),-0.017,-0.044,0.01
-"","","","",fixed,body mass (ln),-0.026,-0.056,0.004
-"","","","",fixed,time (sine of radians),-0.033,-0.074,0.009
-"","","","",fixed,time (cosine of radians),0.018,-0.017,0.054
-"","","","",fixed,temperature,0.031,-0.008,0.07
-"","","","",fixed,Google Mobility,-0.084,-0.199,0.038
+"","","","",fixed,body mass (ln),-0.027,-0.056,0.004
+"","","","",fixed,time (sine of radians),-0.033,-0.074,0.008
+"","","","",fixed,time (cosine of radians),0.018,-0.017,0.052
+"","","","",fixed,temperature,0.031,-0.008,0.069
+"","","","",fixed,Google Mobility,-0.083,-0.206,0.032
 "","","","",random,site (Intercept),11%,9%,12%
 "","","","",random,country (Intercept),0%,-1%,2%
 "","","","",random,Google Mobility (slope) | country,0%,-1%,2%
-"","","","",random,Residual,89%,84%,93%
-Table S2c - 3a,Escape distance,Gaussian,3399,fixed,(Intercept),-0.02,-0.174,0.128
-"","","","",fixed,year,0.027,-0.018,0.072
-"","","","",fixed,starting distance (ln),0.487,0.453,0.52
-"","","","",fixed,flock size (ln),0.002,-0.025,0.03
-"","","","",fixed,body mass (ln),0.026,-0.06,0.11
-"","","","",fixed,time (sine of radians),0.001,-0.041,0.042
-"","","","",fixed,time (cosine of radians),0.008,-0.028,0.043
+"","","","",random,Residual,88%,84%,93%
+Table S2c - 3a,Escape distance,Gaussian,3399,fixed,(Intercept),-0.022,-0.175,0.133
+"","","","",fixed,year,0.026,-0.017,0.071
+"","","","",fixed,starting distance (ln),0.487,0.455,0.521
+"","","","",fixed,flock size (ln),0.002,-0.026,0.028
+"","","","",fixed,body mass (ln),0.025,-0.06,0.112
+"","","","",fixed,time (sine of radians),0.001,-0.041,0.043
+"","","","",fixed,time (cosine of radians),0.008,-0.027,0.042
 "","","","",fixed,temperature,0.022,-0.018,0.061
-"","","","",fixed,Google Mobility,-0.108,-0.232,0.015
+"","","","",fixed,Google Mobility,-0.106,-0.236,0.018
 "","","","",random,species within day & year (Intercept),6%,5%,6%
 "","","","",random,species within site (Intercept),4%,4%,5%
 "","","","",random,site (Intercept),9%,8%,9%
 "","","","",random,species (Intercept),7%,6%,9%
-"","","","",random,genus (Intercept),3%,3%,4%
+"","","","",random,genus (Intercept),3%,2%,4%
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,country (Intercept),0%,-5%,4%
 "","","","",random,Google Mobility (slope) | country,0%,-5%,4%
 "","","","",random,Residual,70%,60%,81%
-Table S2c - 3b,Escape distance,Gaussian,3399,fixed,(Intercept),-0.011,-0.136,0.111
-"","","","",fixed,year,0.031,-0.011,0.072
-"","","","",fixed,starting distance (ln),0.487,0.454,0.52
-"","","","",fixed,flock size (ln),0.002,-0.023,0.029
-"","","","",fixed,body mass (ln),0.037,-0.046,0.119
-"","","","",fixed,time (sine of radians),-0.002,-0.044,0.04
-"","","","",fixed,time (cosine of radians),0.008,-0.027,0.042
-"","","","",fixed,temperature,0.024,-0.017,0.063
-"","","","",fixed,Google Mobility,-0.126,-0.256,0.009
+Table S2c - 3b,Escape distance,Gaussian,3399,fixed,(Intercept),-0.011,-0.128,0.112
+"","","","",fixed,year,0.031,-0.012,0.072
+"","","","",fixed,starting distance (ln),0.486,0.454,0.518
+"","","","",fixed,flock size (ln),0.002,-0.025,0.029
+"","","","",fixed,body mass (ln),0.038,-0.045,0.121
+"","","","",fixed,time (sine of radians),-0.003,-0.044,0.039
+"","","","",fixed,time (cosine of radians),0.008,-0.027,0.043
+"","","","",fixed,temperature,0.023,-0.017,0.062
+"","","","",fixed,Google Mobility,-0.128,-0.258,0.002
 "","","","",random,species within day & year (Intercept),6%,5%,6%
 "","","","",random,species within site (Intercept),4%,4%,5%
-"","","","",random,site (Intercept),9%,9%,9%
+"","","","",random,site (Intercept),9%,9%,10%
 "","","","",random,species (Intercept),8%,7%,9%
 "","","","",random,genus (Intercept),0%,-1%,4%
 "","","","",random,Google Mobility (slope) | genus,0%,-1%,4%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,country (Intercept),1%,-2%,3%
-"","","","",random,Google Mobility (slope) | country,1%,-2%,3%
+"","","","",random,country (Intercept),1%,-2%,4%
+"","","","",random,Google Mobility (slope) | country,1%,-2%,4%
 "","","","",random,Residual,69%,58%,79%
-Table S2c - 3c,Escape distancey,Gaussian,3399,fixed,(Intercept),-0.068,-0.156,0.023
+Table S2c - 3c,Escape distancey,Gaussian,3399,fixed,(Intercept),-0.066,-0.153,0.022
 "","","","",fixed,year,0.022,-0.019,0.063
-"","","","",fixed,starting distance (ln),0.549,0.517,0.583
-"","","","",fixed,flock size (ln),-0.019,-0.047,0.008
-"","","","",fixed,body mass (ln),-0.019,-0.049,0.011
-"","","","",fixed,time (sine of radians),-0.024,-0.066,0.019
+"","","","",fixed,starting distance (ln),0.548,0.518,0.582
+"","","","",fixed,flock size (ln),-0.018,-0.047,0.009
+"","","","",fixed,body mass (ln),-0.019,-0.048,0.012
+"","","","",fixed,time (sine of radians),-0.023,-0.065,0.018
 "","","","",fixed,time (cosine of radians),0.015,-0.021,0.052
-"","","","",fixed,temperature,0.029,-0.01,0.069
-"","","","",fixed,Google Mobility,-0.091,-0.205,0.022
+"","","","",fixed,temperature,0.03,-0.009,0.069
+"","","","",fixed,Google Mobility,-0.09,-0.208,0.028
 "","","","",random,site (Intercept),11%,10%,13%
 "","","","",random,country (Intercept),0%,0%,2%
 "","","","",random,Google Mobility (slope) | country,0%,0%,2%

@@ -1,18 +1,18 @@
 model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
-Table S3c - FI,# of humans (ln),Gaussian,354,fixed,(Intercept),-0.167,-0.5,0.165
-"","","","",fixed,year,0.349,0.071,0.615
-"","","","",fixed,Stringency index,-0.164,-0.507,0.165
-"","","","",random,weekday within year (Intercept),6%,-71%,27%
-"","","","",random,Stringency index (slope) | weekday within year,6%,-71%,27%
-"","","","",random,Residual,87%,45%,243%
-Table S3c - CZ,# of humans (ln),Gaussian,916,fixed,(Intercept),0,-0.138,0.146
-"","","","",fixed,Stringency index,0.293,-0.157,0.746
-"","","","",random,weekday (Intercept),3%,-10%,28%
-"","","","",random,Stringency index (slope) | weekday,3%,-10%,28%
-"","","","",random,Residual,95%,44%,120%
-Table S3c - HU,# of humans (ln),Gaussian,874,fixed,(Intercept),-0.123,-0.353,0.113
-"","","","",fixed,year,0.352,0.149,0.551
-"","","","",fixed,Stringency index,0.192,-0.094,0.481
-"","","","",random,weekday within year (Intercept),1%,-87%,21%
-"","","","",random,Stringency index (slope) | weekday within year,1%,-87%,21%
-"","","","",random,Residual,99%,57%,274%
+Table S3c - FI,# of humans (ln),Gaussian,354,fixed,(Intercept),-0.166,-0.493,0.154
+"","","","",fixed,year,0.345,0.074,0.618
+"","","","",fixed,Stringency index,-0.169,-0.499,0.181
+"","","","",random,weekday within year (Intercept),6%,-72%,27%
+"","","","",random,Stringency index (slope) | weekday within year,6%,-72%,27%
+"","","","",random,Residual,88%,45%,243%
+Table S3c - CZ,# of humans (ln),Gaussian,916,fixed,(Intercept),-0.001,-0.141,0.144
+"","","","",fixed,Stringency index,0.295,-0.166,0.748
+"","","","",random,weekday (Intercept),3%,-11%,28%
+"","","","",random,Stringency index (slope) | weekday,3%,-11%,28%
+"","","","",random,Residual,95%,44%,121%
+Table S3c - HU,# of humans (ln),Gaussian,874,fixed,(Intercept),-0.122,-0.357,0.117
+"","","","",fixed,year,0.35,0.158,0.559
+"","","","",fixed,Stringency index,0.19,-0.092,0.465
+"","","","",random,weekday within year (Intercept),0%,-83%,21%
+"","","","",random,Stringency index (slope) | weekday within year,0%,-83%,21%
+"","","","",random,Residual,99%,58%,265%

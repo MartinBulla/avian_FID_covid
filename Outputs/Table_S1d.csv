@@ -1,0 +1,160 @@
+model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
+Table S1d - FI a,Escape distance,Gaussian,1019,fixed,(Intercept),-0.04,-0.315,0.229
+"","","","",fixed,starting distance (ln),0.281,0.228,0.335
+"","","","",fixed,flock size (ln),-0.049,-0.099,0.003
+"","","","",fixed,body mass (ln),0.089,-0.072,0.25
+"","","","",fixed,time (sine of radians),0.085,0.023,0.147
+"","","","",fixed,time (cosine of radians),0.031,-0.026,0.089
+"","","","",fixed,temperature,-0.079,-0.148,-0.01
+"","","","",fixed,Period,-0.152,-0.335,0.028
+"","","","",random,species within day & year (Intercept),10%,9%,11%
+"","","","",random,species within site (Intercept),6%,5%,6%
+"","","","",random,site (Intercept),1%,0%,3%
+"","","","",random,Period (slope) | site,1%,0%,3%
+"","","","",random,species (Intercept),4%,3%,4%
+"","","","",random,genus (Intercept),10%,7%,14%
+"","","","",random,weekday (Intercept),0%,0%,1%
+"","","","",random,year (Intercept),6%,1%,11%
+"","","","",random,Residual,61%,50%,72%
+Table S1d - FI b,Escape distance,Gaussian,1019,fixed,(Intercept),-0.129,-0.464,0.216
+"","","","",fixed,flock size (ln),-0.017,-0.072,0.037
+"","","","",fixed,body mass (ln),0.198,0.025,0.378
+"","","","",fixed,time (sine of radians),0.095,0.029,0.159
+"","","","",fixed,time (cosine of radians),0.03,-0.03,0.092
+"","","","",fixed,temperature,-0.076,-0.146,-0.003
+"","","","",fixed,Period,-0.129,-0.364,0.112
+"","","","",random,species within day & year (Intercept),9%,7%,10%
+"","","","",random,species within site (Intercept),7%,6%,7%
+"","","","",random,site (Intercept),1%,1%,2%
+"","","","",random,Period (slope) | site,1%,1%,2%
+"","","","",random,species (Intercept),7%,5%,8%
+"","","","",random,genus (Intercept),10%,7%,13%
+"","","","",random,weekday (Intercept),1%,0%,1%
+"","","","",random,year (Intercept),9%,2%,16%
+"","","","",random,Residual,56%,44%,68%
+Table S1d - PL a,Escape distance,Gaussian,762,fixed,(Intercept),0.147,-0.112,0.41
+"","","","",fixed,starting distance (ln),0.48,0.419,0.54
+"","","","",fixed,flock size (ln),0.012,-0.043,0.068
+"","","","",fixed,body mass (ln),-0.071,-0.174,0.031
+"","","","",fixed,time (sine of radians),-0.035,-0.118,0.051
+"","","","",fixed,time (cosine of radians),-0.011,-0.102,0.079
+"","","","",fixed,temperature,-0.111,-0.184,-0.04
+"","","","",fixed,Period,0.12,-0.111,0.358
+"","","","",random,species within day & year (Intercept),8%,7%,9%
+"","","","",random,species (Intercept),15%,13%,17%
+"","","","",random,genus (Intercept),0%,0%,0%
+"","","","",random,weekday (Intercept),0%,0%,1%
+"","","","",random,year (Intercept),11%,4%,21%
+"","","","",random,Residual,65%,54%,74%
+Table S1d - PL b,Escape distance,Gaussian,762,fixed,(Intercept),0.247,-0.068,0.568
+"","","","",fixed,flock size (ln),0.053,-0.006,0.116
+"","","","",fixed,body mass (ln),0.046,-0.099,0.191
+"","","","",fixed,time (sine of radians),-0.017,-0.113,0.082
+"","","","",fixed,time (cosine of radians),0,-0.102,0.101
+"","","","",fixed,temperature,-0.105,-0.186,-0.022
+"","","","",fixed,Period,0.242,-0.019,0.491
+"","","","",random,species within day & year (Intercept),11%,9%,12%
+"","","","",random,species (Intercept),26%,23%,27%
+"","","","",random,genus (Intercept),1%,1%,2%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,year (Intercept),8%,1%,19%
+"","","","",random,Residual,53%,43%,63%
+Table S1d - CZ a,Escape distancey,Gaussian,2013,fixed,(Intercept),0.113,-0.253,0.471
+"","","","",fixed,starting distance (ln),0.392,0.349,0.435
+"","","","",fixed,flock size (ln),0.005,-0.029,0.038
+"","","","",fixed,body mass (ln),0.172,0.03,0.3
+"","","","",fixed,time (sine of radians),0.05,0.002,0.098
+"","","","",fixed,time (cosine of radians),0.053,0.01,0.097
+"","","","",fixed,temperature,0.043,-0.009,0.094
+"","","","",fixed,Period,0.03,-0.288,0.36
+"","","","",random,species within day & year (Intercept),3%,2%,3%
+"","","","",random,species within site (Intercept),3%,2%,3%
+"","","","",random,species (Intercept),13%,12%,13%
+"","","","",random,site (Intercept),2%,0%,3%
+"","","","",random,Period (slope) | site,2%,0%,3%
+"","","","",random,genus (Intercept),12%,11%,11%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,year (Intercept),15%,1%,33%
+"","","","",random,Residual,52%,34%,70%
+Table S1d - CZ b,Escape distance,Gaussian,2013,fixed,(Intercept),-0.036,-0.965,0.867
+"","","","",fixed,flock size (ln),0.005,-0.03,0.04
+"","","","",fixed,body mass (ln),0.23,0.079,0.383
+"","","","",fixed,time (sine of radians),0.138,0.085,0.193
+"","","","",fixed,time (cosine of radians),0.123,0.076,0.17
+"","","","",fixed,temperature,0.035,-0.026,0.095
+"","","","",fixed,Period,0.227,-0.649,1.109
+"","","","",random,species within day & year (Intercept),2%,1%,5%
+"","","","",random,species within site (Intercept),1%,1%,2%
+"","","","",random,species (Intercept),6%,4%,10%
+"","","","",random,site (Intercept),1%,-1%,1%
+"","","","",random,Period (slope) | site,1%,-1%,1%
+"","","","",random,genus (Intercept),7%,5%,11%
+"","","","",random,weekday (Intercept),1%,0%,1%
+"","","","",random,year (Intercept),55%,17%,73%
+"","","","",random,Residual,26%,13%,58%
+Table S1d - HU a,Escape distance,Gaussian,1456,fixed,(Intercept),0.099,-0.182,0.373
+"","","","",fixed,starting distance (ln),0.484,0.437,0.53
+"","","","",fixed,flock size (ln),-0.011,-0.051,0.03
+"","","","",fixed,body mass (ln),-0.066,-0.186,0.058
+"","","","",fixed,time (sine of radians),-0.076,-0.133,-0.019
+"","","","",fixed,time (cosine of radians),-0.011,-0.061,0.036
+"","","","",fixed,temperature,-0.023,-0.085,0.038
+"","","","",fixed,Period,-0.088,-0.271,0.097
+"","","","",random,species within day & year (Intercept),5%,4%,5%
+"","","","",random,species within site (Intercept),0%,0%,0%
+"","","","",random,species (Intercept),3%,2%,3%
+"","","","",random,genus (Intercept),7%,5%,7%
+"","","","",random,site (Intercept),2%,0%,9%
+"","","","",random,Period (slope) | site,2%,0%,9%
+"","","","",random,weekday (Intercept),1%,0%,1%
+"","","","",random,year (Intercept),5%,1%,9%
+"","","","",random,Residual,76%,56%,86%
+Table S1d - HU b,Escape distance,Gaussian,1456,fixed,(Intercept),0.071,-0.33,0.498
+"","","","",fixed,flock size (ln),-0.011,-0.057,0.036
+"","","","",fixed,body mass (ln),0.185,0.002,0.367
+"","","","",fixed,time (sine of radians),-0.111,-0.175,-0.043
+"","","","",fixed,time (cosine of radians),-0.007,-0.061,0.047
+"","","","",fixed,temperature,-0.025,-0.094,0.045
+"","","","",fixed,Period,-0.105,-0.315,0.106
+"","","","",random,species within day & year (Intercept),7%,4%,8%
+"","","","",random,species within site (Intercept),0%,0%,0%
+"","","","",random,species (Intercept),2%,1%,2%
+"","","","",random,genus (Intercept),18%,14%,15%
+"","","","",random,site (Intercept),1%,0%,17%
+"","","","",random,Period (slope) | site,1%,0%,17%
+"","","","",random,weekday (Intercept),1%,0%,1%
+"","","","",random,year (Intercept),5%,1%,9%
+"","","","",random,Residual,64%,36%,75%
+Table S1d - AU a,Escape distance,Gaussian,1119,fixed,(Intercept),-0.062,-0.204,0.082
+"","","","",fixed,starting distance (ln),0.503,0.452,0.553
+"","","","",fixed,flock size (ln),0.02,-0.027,0.069
+"","","","",fixed,body mass (ln),-0.063,-0.16,0.035
+"","","","",fixed,time (sine of radians),-0.031,-0.099,0.035
+"","","","",fixed,time (cosine of radians),-0.027,-0.092,0.04
+"","","","",fixed,temperature,0.009,-0.046,0.063
+"","","","",fixed,Period,-0.008,-0.08,0.066
+"","","","",random,species within day & year (Intercept),7%,6%,8%
+"","","","",random,species within site (Intercept),13%,11%,13%
+"","","","",random,species (Intercept),14%,12%,13%
+"","","","",random,genus (Intercept),2%,1%,2%
+"","","","",random,site (Intercept),0%,-1%,9%
+"","","","",random,Period (slope) | site,0%,-1%,9%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,year (Intercept),0%,0%,0%
+"","","","",random,Residual,64%,49%,68%
+Table S1d - AU b,Escape distance,Gaussian,1119,fixed,(Intercept),-0.184,-0.425,0.057
+"","","","",fixed,flock size (ln),0.05,-0.002,0.104
+"","","","",fixed,body mass (ln),0.055,-0.074,0.176
+"","","","",fixed,time (sine of radians),-0.017,-0.097,0.064
+"","","","",fixed,time (cosine of radians),-0.006,-0.08,0.071
+"","","","",fixed,temperature,0.005,-0.058,0.066
+"","","","",fixed,Period,0.155,-0.015,0.323
+"","","","",random,species within day & year (Intercept),8%,5%,10%
+"","","","",random,species within site (Intercept),12%,8%,15%
+"","","","",random,species (Intercept),17%,14%,18%
+"","","","",random,genus (Intercept),6%,5%,6%
+"","","","",random,site (Intercept),1%,-10%,16%
+"","","","",random,Period (slope) | site,1%,-10%,16%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,year (Intercept),1%,0%,1%
+"","","","",random,Residual,55%,34%,72%

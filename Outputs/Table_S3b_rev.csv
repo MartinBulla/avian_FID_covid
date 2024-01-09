@@ -1,18 +1,18 @@
 model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
-Table S3b - FI,# of humans,Gaussian,354,fixed,(Intercept),-0.017,-0.146,0.113
-"","","","",fixed,year,0.166,-0.058,0.395
-"","","","",fixed,Stringency index,-0.123,-0.351,0.119
+Table S3b - FI,# of humans,Gaussian,354,fixed,(Intercept),-0.017,-0.15,0.104
+"","","","",fixed,year,0.172,-0.05,0.394
+"","","","",fixed,Stringency index,-0.121,-0.347,0.102
 "","","","",random,weekday within year (Intercept),0%,0%,2%
 "","","","",random,Stringency index (slope) | weekday within year,0%,0%,2%
 "","","","",random,Residual,99%,96%,101%
-Table S3b - CZ,# of humans,Gaussian,916,fixed,(Intercept),0.113,-0.283,0.499
-"","","","",fixed,Stringency index,0.299,-0.258,0.848
+Table S3b - CZ,# of humans,Gaussian,916,fixed,(Intercept),0.109,-0.276,0.487
+"","","","",fixed,Stringency index,0.294,-0.241,0.839
 "","","","",random,weekday (Intercept),23%,17%,36%
 "","","","",random,Stringency index (slope) | weekday,23%,17%,36%
 "","","","",random,Residual,54%,28%,67%
-Table S3b - HU,# of humans,Gaussian,874,fixed,(Intercept),-0.039,-0.202,0.126
-"","","","",fixed,year,0.434,0.252,0.615
-"","","","",fixed,Stringency index,0.195,-0.016,0.411
+Table S3b - HU,# of humans,Gaussian,874,fixed,(Intercept),-0.036,-0.204,0.127
+"","","","",fixed,year,0.44,0.258,0.62
+"","","","",fixed,Stringency index,0.2,-0.015,0.418
 "","","","",random,weekday within year (Intercept),2%,1%,9%
 "","","","",random,Stringency index (slope) | weekday within year,2%,1%,9%
-"","","","",random,Residual,96%,83%,98%
+"","","","",random,Residual,96%,82%,98%

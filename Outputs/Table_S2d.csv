@@ -1,159 +1,159 @@
 model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
-Table S2d - 1a,Escape distance,Gaussian,3504,fixed,(Intercept),0.243,0.013,0.47
-"","","","",fixed,starting distance (ln),0.463,0.429,0.498
-"","","","",fixed,flock size (ln),-0.021,-0.048,0.005
-"","","","",fixed,body mass (ln),0.148,0.039,0.258
-"","","","",fixed,time (sine of radians),0.02,-0.015,0.056
-"","","","",fixed,time (cosine of radians),-0.009,-0.04,0.023
-"","","","",fixed,temperature,-0.024,-0.063,0.012
-"","","","",fixed,# of humans,-0.055,-0.104,-0.006
-"","","","",random,species within day & year (Intercept),7%,7%,8%
-"","","","",random,species within site (Intercept),2%,2%,3%
-"","","","",random,site (Intercept),7%,6%,8%
-"","","","",random,species (Intercept),4%,3%,5%
-"","","","",random,genus (Intercept),14%,10%,17%
+Table S2d - 1a,Escape distance,Gaussian,3504,fixed,(Intercept),0.153,-0.197,0.495
+"","","","",fixed,starting distance (ln),0.466,0.432,0.499
+"","","","",fixed,flock size (ln),-0.021,-0.047,0.005
+"","","","",fixed,body mass (ln),0.149,0.039,0.259
+"","","","",fixed,time (sine of radians),0.023,-0.017,0.061
+"","","","",fixed,time (cosine of radians),-0.009,-0.041,0.023
+"","","","",fixed,temperature,-0.026,-0.062,0.012
+"","","","",fixed,# of humans,-0.053,-0.104,-0.001
+"","","","",random,species within day & year (Intercept),8%,5%,8%
+"","","","",random,species within site (Intercept),3%,2%,3%
+"","","","",random,site (Intercept),6%,4%,5%
+"","","","",random,species (Intercept),3%,3%,3%
+"","","","",random,genus (Intercept),13%,10%,12%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,country (Intercept),0%,0%,0%
-"","","","",random,# of humans (slope) | country,0%,0%,0%
-"","","","",random,year (Intercept),5%,3%,6%
-"","","","",random,Residual,60%,55%,66%
-Table S2d - 1b,Escape distance,Gaussian,3504,fixed,(Intercept),0.108,-0.165,0.386
+"","","","",random,country (Intercept),0%,-2%,15%
+"","","","",random,# of humans (slope) | country,0%,-2%,15%
+"","","","",random,year (Intercept),6%,4%,7%
+"","","","",random,Residual,61%,38%,69%
+Table S2d - 1b,Escape distance,Gaussian,3504,fixed,(Intercept),0.108,-0.178,0.381
 "","","","",fixed,starting distance (ln),0.469,0.434,0.503
-"","","","",fixed,flock size (ln),-0.023,-0.048,0.004
-"","","","",fixed,body mass (ln),0.084,-0.002,0.172
-"","","","",fixed,time (sine of radians),0.016,-0.019,0.052
-"","","","",fixed,time (cosine of radians),0.004,-0.029,0.033
-"","","","",fixed,temperature,-0.02,-0.055,0.014
-"","","","",fixed,# of humans,-0.056,-0.117,0.005
+"","","","",fixed,flock size (ln),-0.023,-0.048,0.003
+"","","","",fixed,body mass (ln),0.085,-0.002,0.173
+"","","","",fixed,time (sine of radians),0.015,-0.02,0.051
+"","","","",fixed,time (cosine of radians),0.003,-0.028,0.035
+"","","","",fixed,temperature,-0.021,-0.054,0.012
+"","","","",fixed,# of humans,-0.056,-0.117,0.003
 "","","","",random,# of humans (slope) | species within day & year,0%,0%,0%
-"","","","",random,species within site (Intercept),6%,5%,6%
-"","","","",random,site (Intercept),7%,6%,6%
-"","","","",random,species (Intercept),14%,13%,14%
+"","","","",random,species within site (Intercept),5%,4%,6%
+"","","","",random,site (Intercept),7%,6%,7%
+"","","","",random,species (Intercept),16%,14%,16%
 "","","","",random,# of humans (slope) | genus,0%,0%,0%
 "","","","",random,weekday (Intercept),0%,0%,1%
-"","","","",random,country (Intercept),0%,-1%,7%
-"","","","",random,# of humans (slope) | country,0%,-1%,7%
-"","","","",random,year (Intercept),5%,3%,5%
-"","","","",random,Residual,68%,54%,75%
-Table S2d - 1c,Escape distance,Gaussian,3504,fixed,(Intercept),0.176,-0.143,0.508
-"","","","",fixed,starting distance (ln),0.47,0.435,0.504
-"","","","",fixed,flock size (ln),-0.028,-0.054,-0.002
-"","","","",fixed,body mass (ln),0.211,0.097,0.323
-"","","","",fixed,time (sine of radians),0.024,-0.014,0.062
-"","","","",fixed,time (cosine of radians),-0.011,-0.044,0.022
-"","","","",fixed,temperature,-0.026,-0.063,0.012
-"","","","",fixed,# of humans,-0.054,-0.109,0.003
-"","","","",random,species within day & year (Intercept),8%,6%,9%
-"","","","",random,species within site (Intercept),4%,3%,4%
-"","","","",random,site (Intercept),6%,5%,5%
-"","","","",random,genus (Intercept),19%,16%,18%
-"","","","",random,country (Intercept),0%,-2%,9%
-"","","","",random,# of humans (slope) | country,0%,-2%,9%
-"","","","",random,year (Intercept),5%,4%,5%
-"","","","",random,Residual,58%,43%,67%
-Table S2d - 2a,Escape distance,Gaussian,3446,fixed,(Intercept),0.108,-0.113,0.326
-"","","","",fixed,starting distance (ln),0.461,0.427,0.495
-"","","","",fixed,flock size (ln),-0.019,-0.045,0.008
-"","","","",fixed,body mass (ln),0.01,-0.09,0.111
-"","","","",fixed,time (sine of radians),0.017,-0.02,0.054
-"","","","",fixed,time (cosine of radians),-0.009,-0.042,0.024
-"","","","",fixed,temperature,-0.027,-0.065,0.012
-"","","","",fixed,# of humans,-0.055,-0.106,-0.005
-"","","","",random,species within day & year (Intercept),8%,8%,9%
-"","","","",random,species within site (Intercept),2%,2%,2%
-"","","","",random,site (Intercept),8%,7%,8%
-"","","","",random,species (Intercept),5%,4%,6%
-"","","","",random,genus (Intercept),6%,4%,8%
-"","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,country (Intercept),0%,0%,0%
-"","","","",random,# of humans (slope) | country,0%,0%,0%
+"","","","",random,country (Intercept),0%,-1%,8%
+"","","","",random,# of humans (slope) | country,0%,-1%,8%
 "","","","",random,year (Intercept),5%,4%,7%
-"","","","",random,Residual,65%,60%,71%
-Table S2d - 2b,Escape distance,Gaussian,3446,fixed,(Intercept),0.004,-0.337,0.36
-"","","","",fixed,starting distance (ln),0.464,0.429,0.498
-"","","","",fixed,flock size (ln),-0.02,-0.046,0.007
-"","","","",fixed,body mass (ln),0.009,-0.095,0.113
-"","","","",fixed,time (sine of radians),0.02,-0.018,0.059
-"","","","",fixed,time (cosine of radians),-0.009,-0.042,0.024
-"","","","",fixed,temperature,-0.029,-0.065,0.009
-"","","","",fixed,# of humans,-0.054,-0.108,0
-"","","","",random,species within day & year (Intercept),9%,6%,10%
-"","","","",random,species within site (Intercept),3%,2%,3%
+"","","","",random,Residual,65%,49%,73%
+Table S2d - 1c,Escape distance,Gaussian,3504,fixed,(Intercept),0.183,-0.137,0.512
+"","","","",fixed,starting distance (ln),0.471,0.436,0.505
+"","","","",fixed,flock size (ln),-0.028,-0.054,-0.002
+"","","","",fixed,body mass (ln),0.214,0.102,0.321
+"","","","",fixed,time (sine of radians),0.024,-0.014,0.062
+"","","","",fixed,time (cosine of radians),-0.011,-0.044,0.021
+"","","","",fixed,temperature,-0.026,-0.063,0.012
+"","","","",fixed,# of humans,-0.054,-0.107,0.003
+"","","","",random,species within day & year (Intercept),8%,6%,9%
+"","","","",random,species within site (Intercept),4%,3%,5%
+"","","","",random,site (Intercept),5%,5%,5%
+"","","","",random,genus (Intercept),19%,17%,18%
+"","","","",random,country (Intercept),0%,-2%,8%
+"","","","",random,# of humans (slope) | country,0%,-2%,8%
+"","","","",random,year (Intercept),6%,1%,12%
+"","","","",random,Residual,58%,40%,68%
+Table S2d - 2a,Escape distance,Gaussian,3446,fixed,(Intercept),0,-0.34,0.37
+"","","","",fixed,starting distance (ln),0.464,0.428,0.498
+"","","","",fixed,flock size (ln),-0.019,-0.046,0.007
+"","","","",fixed,body mass (ln),0.007,-0.093,0.11
+"","","","",fixed,time (sine of radians),0.02,-0.018,0.058
+"","","","",fixed,time (cosine of radians),-0.01,-0.043,0.023
+"","","","",fixed,temperature,-0.028,-0.066,0.009
+"","","","",fixed,# of humans,-0.052,-0.105,0.002
+"","","","",random,species within day & year (Intercept),8%,5%,9%
+"","","","",random,species within site (Intercept),2%,1%,3%
 "","","","",random,site (Intercept),6%,4%,5%
-"","","","",random,species (Intercept),5%,4%,4%
+"","","","",random,species (Intercept),4%,3%,3%
+"","","","",random,genus (Intercept),6%,4%,5%
+"","","","",random,weekday (Intercept),0%,0%,0%
+"","","","",random,country (Intercept),0%,-2%,18%
+"","","","",random,# of humans (slope) | country,0%,-2%,18%
+"","","","",random,year (Intercept),7%,4%,7%
+"","","","",random,Residual,67%,38%,76%
+Table S2d - 2b,Escape distance,Gaussian,3446,fixed,(Intercept),-0.003,-0.349,0.348
+"","","","",fixed,starting distance (ln),0.464,0.427,0.499
+"","","","",fixed,flock size (ln),-0.019,-0.045,0.007
+"","","","",fixed,body mass (ln),0.01,-0.091,0.115
+"","","","",fixed,time (sine of radians),0.02,-0.018,0.059
+"","","","",fixed,time (cosine of radians),-0.01,-0.043,0.023
+"","","","",fixed,temperature,-0.028,-0.067,0.01
+"","","","",fixed,# of humans,-0.054,-0.105,-0.001
+"","","","",random,species within day & year (Intercept),9%,5%,10%
+"","","","",random,species within site (Intercept),3%,1%,3%
+"","","","",random,site (Intercept),6%,4%,5%
+"","","","",random,species (Intercept),5%,3%,4%
 "","","","",random,genus (Intercept),0%,0%,5%
 "","","","",random,# of humans (slope) | genus,0%,0%,5%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,country (Intercept),0%,-3%,13%
-"","","","",random,# of humans (slope) | country,0%,-3%,13%
-"","","","",random,year (Intercept),6%,4%,5%
-"","","","",random,Residual,71%,43%,79%
-Table S2d - 2c,Escape distance,Gaussian,3446,fixed,(Intercept),0.069,-0.263,0.401
-"","","","",fixed,starting distance (ln),0.469,0.434,0.503
-"","","","",fixed,flock size (ln),-0.028,-0.054,-0.002
-"","","","",fixed,body mass (ln),0.094,-0.011,0.198
-"","","","",fixed,time (sine of radians),0.022,-0.016,0.061
-"","","","",fixed,time (cosine of radians),-0.013,-0.045,0.021
-"","","","",fixed,temperature,-0.029,-0.067,0.009
-"","","","",fixed,# of humans,-0.052,-0.111,0.006
-"","","","",random,species within day & year (Intercept),9%,7%,10%
+"","","","",random,country (Intercept),0%,-2%,17%
+"","","","",random,# of humans (slope) | country,0%,-2%,17%
+"","","","",random,year (Intercept),7%,5%,7%
+"","","","",random,Residual,70%,35%,79%
+Table S2d - 2c,Escape distance,Gaussian,3446,fixed,(Intercept),0.071,-0.261,0.412
+"","","","",fixed,starting distance (ln),0.469,0.434,0.504
+"","","","",fixed,flock size (ln),-0.028,-0.055,-0.002
+"","","","",fixed,body mass (ln),0.094,-0.013,0.198
+"","","","",fixed,time (sine of radians),0.022,-0.017,0.062
+"","","","",fixed,time (cosine of radians),-0.013,-0.045,0.019
+"","","","",fixed,temperature,-0.028,-0.066,0.01
+"","","","",fixed,# of humans,-0.054,-0.112,0.006
+"","","","",random,species within day & year (Intercept),9%,6%,10%
 "","","","",random,species within site (Intercept),5%,3%,5%
-"","","","",random,site (Intercept),6%,5%,5%
-"","","","",random,genus (Intercept),11%,9%,10%
-"","","","",random,country (Intercept),0%,-3%,12%
-"","","","",random,# of humans (slope) | country,0%,-3%,12%
-"","","","",random,year (Intercept),6%,4%,6%
-"","","","",random,Residual,64%,45%,73%
-Table S2d - 3a,Escape distance,Gaussian,3408,fixed,(Intercept),-0.005,-0.357,0.34
-"","","","",fixed,starting distance (ln),0.458,0.423,0.491
-"","","","",fixed,flock size (ln),-0.02,-0.046,0.007
-"","","","",fixed,body mass (ln),0.022,-0.087,0.134
-"","","","",fixed,time (sine of radians),0.02,-0.018,0.058
-"","","","",fixed,time (cosine of radians),-0.009,-0.041,0.025
-"","","","",fixed,temperature,-0.028,-0.066,0.011
-"","","","",fixed,# of humans,-0.051,-0.108,0.008
-"","","","",random,species within day & year (Intercept),9%,6%,9%
-"","","","",random,species within site (Intercept),2%,2%,3%
 "","","","",random,site (Intercept),5%,4%,5%
-"","","","",random,species (Intercept),5%,4%,5%
+"","","","",random,genus (Intercept),12%,10%,11%
+"","","","",random,country (Intercept),0%,-3%,11%
+"","","","",random,# of humans (slope) | country,0%,-3%,11%
+"","","","",random,year (Intercept),6%,2%,13%
+"","","","",random,Residual,63%,41%,75%
+Table S2d - 3a,Escape distance,Gaussian,3408,fixed,(Intercept),-0.009,-0.346,0.342
+"","","","",fixed,starting distance (ln),0.458,0.425,0.491
+"","","","",fixed,flock size (ln),-0.02,-0.046,0.006
+"","","","",fixed,body mass (ln),0.019,-0.093,0.128
+"","","","",fixed,time (sine of radians),0.019,-0.018,0.058
+"","","","",fixed,time (cosine of radians),-0.009,-0.042,0.024
+"","","","",fixed,temperature,-0.028,-0.067,0.009
+"","","","",fixed,# of humans,-0.052,-0.108,0.007
+"","","","",random,species within day & year (Intercept),8%,5%,9%
+"","","","",random,species within site (Intercept),2%,1%,3%
+"","","","",random,site (Intercept),6%,4%,6%
+"","","","",random,species (Intercept),5%,4%,4%
 "","","","",random,genus (Intercept),6%,4%,6%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,country (Intercept),0%,-3%,13%
-"","","","",random,# of humans (slope) | country,0%,-3%,13%
-"","","","",random,year (Intercept),5%,4%,5%
-"","","","",random,Residual,66%,44%,76%
-Table S2d - 3b,Escape distance,Gaussian,3408,fixed,(Intercept),-0.005,-0.362,0.348
-"","","","",fixed,starting distance (ln),0.458,0.424,0.493
-"","","","",fixed,flock size (ln),-0.02,-0.046,0.007
-"","","","",fixed,body mass (ln),0.022,-0.088,0.129
-"","","","",fixed,time (sine of radians),0.02,-0.019,0.06
+"","","","",random,country (Intercept),0%,-3%,17%
+"","","","",random,# of humans (slope) | country,0%,-3%,17%
+"","","","",random,year (Intercept),6%,4%,7%
+"","","","",random,Residual,66%,38%,76%
+Table S2d - 3b,Escape distance,Gaussian,3408,fixed,(Intercept),-0.001,-0.355,0.347
+"","","","",fixed,starting distance (ln),0.458,0.423,0.492
+"","","","",fixed,flock size (ln),-0.02,-0.047,0.007
+"","","","",fixed,body mass (ln),0.023,-0.085,0.133
+"","","","",fixed,time (sine of radians),0.02,-0.02,0.058
 "","","","",fixed,time (cosine of radians),-0.008,-0.041,0.025
-"","","","",fixed,temperature,-0.028,-0.066,0.011
-"","","","",fixed,# of humans,-0.054,-0.111,0.001
-"","","","",random,species within day & year (Intercept),9%,6%,10%
-"","","","",random,species within site (Intercept),3%,2%,3%
+"","","","",fixed,temperature,-0.028,-0.066,0.009
+"","","","",fixed,# of humans,-0.054,-0.112,0.003
+"","","","",random,species within day & year (Intercept),9%,5%,10%
+"","","","",random,species within site (Intercept),3%,1%,3%
 "","","","",random,site (Intercept),6%,4%,5%
-"","","","",random,species (Intercept),6%,4%,5%
-"","","","",random,genus (Intercept),0%,0%,5%
-"","","","",random,# of humans (slope) | genus,0%,0%,5%
+"","","","",random,species (Intercept),5%,4%,4%
+"","","","",random,genus (Intercept),0%,0%,6%
+"","","","",random,# of humans (slope) | genus,0%,0%,6%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,country (Intercept),0%,-3%,13%
-"","","","",random,# of humans (slope) | country,0%,-3%,13%
-"","","","",random,year (Intercept),6%,4%,5%
-"","","","",random,Residual,71%,43%,80%
-Table S2d - 3c,Escape distancey,Gaussian,3408,fixed,(Intercept),0.057,-0.285,0.412
-"","","","",fixed,starting distance (ln),0.463,0.427,0.498
-"","","","",fixed,flock size (ln),-0.029,-0.054,-0.001
-"","","","",fixed,body mass (ln),0.108,-0.001,0.219
-"","","","",fixed,time (sine of radians),0.022,-0.019,0.061
-"","","","",fixed,time (cosine of radians),-0.012,-0.044,0.021
-"","","","",fixed,temperature,-0.028,-0.067,0.009
-"","","","",fixed,# of humans,-0.052,-0.115,0.007
-"","","","",random,species within day & year (Intercept),9%,7%,10%
-"","","","",random,species within site (Intercept),5%,3%,5%
-"","","","",random,site (Intercept),6%,5%,5%
-"","","","",random,genus (Intercept),12%,10%,11%
+"","","","",random,country (Intercept),0%,-3%,16%
+"","","","",random,# of humans (slope) | country,0%,-3%,16%
+"","","","",random,year (Intercept),7%,5%,7%
+"","","","",random,Residual,70%,36%,79%
+Table S2d - 3c,Escape distancey,Gaussian,3408,fixed,(Intercept),0.06,-0.271,0.402
+"","","","",fixed,starting distance (ln),0.463,0.428,0.497
+"","","","",fixed,flock size (ln),-0.029,-0.054,-0.002
+"","","","",fixed,body mass (ln),0.11,0,0.221
+"","","","",fixed,time (sine of radians),0.022,-0.018,0.061
+"","","","",fixed,time (cosine of radians),-0.012,-0.045,0.023
+"","","","",fixed,temperature,-0.028,-0.067,0.01
+"","","","",fixed,# of humans,-0.053,-0.113,0.008
+"","","","",random,species within day & year (Intercept),9%,6%,10%
+"","","","",random,species within site (Intercept),4%,3%,5%
+"","","","",random,site (Intercept),6%,4%,5%
+"","","","",random,genus (Intercept),13%,10%,12%
 "","","","",random,country (Intercept),0%,-3%,12%
 "","","","",random,# of humans (slope) | country,0%,-3%,12%
-"","","","",random,year (Intercept),6%,4%,6%
-"","","","",random,Residual,64%,45%,72%
+"","","","",random,year (Intercept),6%,2%,12%
+"","","","",random,Residual,62%,39%,75%
