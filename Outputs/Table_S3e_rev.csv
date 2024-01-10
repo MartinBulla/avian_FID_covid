@@ -1,18 +1,30 @@
 model,response,error_structure,N,type,effect,estimate_r,lwr_r,upr_r
-Table S3e - FI,# of humans (ln),Gaussian,322,fixed,(Intercept),-0.19,-0.443,0.054
-"","","","",fixed,year,-0.027,-0.279,0.224
-"","","","",fixed,Google Mobility,0.219,0.055,0.392
-"","","","",random,weekday within year (Intercept),0%,-6%,14%
-"","","","",random,Google Mobility (slope) | weekday within year,0%,-6%,14%
-"","","","",random,Residual,100%,71%,112%
-Table S3e - CZ,# of humans (ln),Gaussian,916,fixed,(Intercept),0.012,-0.207,0.239
-"","","","",fixed,Google Mobility,0.183,-0.359,0.736
-"","","","",random,weekday (Intercept),8%,1%,34%
-"","","","",random,Google Mobility (slope) | weekday,8%,1%,34%
-"","","","",random,Residual,83%,32%,97%
-Table S3e - HU,# of humans (ln),Gaussian,874,fixed,(Intercept),-0.036,-0.178,0.102
-"","","","",fixed,year,0.632,0.454,0.801
-"","","","",fixed,Google Mobility,-0.276,-0.427,-0.126
-"","","","",random,weekday within year (Intercept),1%,-1%,5%
-"","","","",random,Google Mobility (slope) | weekday within year,1%,-1%,5%
-"","","","",random,Residual,98%,89%,102%
+Table S3e - FI,Google Mobility,Gaussian,322,fixed,(Intercept),-0.345,-1.16,0.463
+"","","","",fixed,year,0.926,0.44,1.416
+"","","","",fixed,Stringency index,-0.267,-1.015,0.545
+"","","","",random,weekday within year (Intercept),13%,48%,53%
+"","","","",random,Stringency index (slope) | weekday within year,13%,48%,53%
+"","","","",random,Residual,74%,-7%,5%
+Table S3e - PL,Google Mobility,Gaussian,329,fixed,(Intercept),0.016,-0.619,0.625
+"","","","",fixed,year,0.779,0.014,1.508
+"","","","",fixed,Stringency index,0.023,-0.354,0.399
+"","","","",random,weekday within year (Intercept),47%,44%,49%
+"","","","",random,Stringency index (slope) | weekday within year,47%,44%,49%
+"","","","",random,Residual,6%,2%,13%
+Table S3e - CZ,Google Mobility,Gaussian,1054,fixed,(Intercept),-0.004,-0.531,0.547
+"","","","",fixed,Stringency index,-0.224,-0.634,0.196
+"","","","",random,weekday (Intercept),23%,-152%,40%
+"","","","",random,Stringency index (slope) | weekday,23%,-152%,40%
+"","","","",random,Residual,54%,21%,404%
+Table S3e - HU,Google Mobility,Gaussian,874,fixed,(Intercept),0.25,-0.265,0.772
+"","","","",fixed,year,0.007,-0.461,0.482
+"","","","",fixed,Stringency index,-1.259,-1.972,-0.57
+"","","","",random,weekday within year (Intercept),48%,15%,49%
+"","","","",random,Stringency index (slope) | weekday within year,48%,15%,49%
+"","","","",random,Residual,4%,2%,71%
+Table S3e - AU,Google Mobility,Gaussian,1065,fixed,(Intercept),0.525,-0.017,1.075
+"","","","",fixed,year,0.445,0.241,0.656
+"","","","",fixed,Stringency index,-0.543,-0.856,-0.234
+"","","","",random,weekday within year (Intercept),-30%,43%,65%
+"","","","",random,Stringency index (slope) | weekday within year,-30%,43%,65%
+"","","","",random,Residual,160%,-30%,13%

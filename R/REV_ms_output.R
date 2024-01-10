@@ -146,7 +146,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     # for Supplementary Table output based on sim
       m_out = function(model = m, type = "mixed", 
         name = "define", dep = "define", fam = 'Gaussian',
-        round_ = 3, nsim = 5000, aic = FALSE, save_sim = here::here('Data/model_sim/'), back_tran = FALSE, perc_ = 1, R2 = TRUE){
+        round_ = 3, nsim = 5000, aic = FALSE, save_sim = here::here('Data/model_sim/'), back_tran = FALSE, perc_ = 1, R2 = FALSE){
           # perc_ 1 = proportion or 100%
         bsim = sim(model, n.sim=nsim)  
         
@@ -493,6 +493,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     # limit to data with Google Mobility
     ss = s[!is.na(parks_percent_change_from_baseline)]
     ss[, country_year := paste(Country, Year)] #table(paste(s$Country, s$Year))   
+    ss[, GoogleMobility := parks_percent_change_from_baseline]
     ss[parks_percent_change_from_baseline<0, google := 'before_zero']
     ss[parks_percent_change_from_baseline>0, google := 'after_zero']
     ss[, sp_country_google:= paste(sp_country, google)]
@@ -736,16 +737,16 @@ oh <- rbind(
 save(oh, file = here::here("Data/dat_est_numberOFhumans_rev.Rdata")) # save(oh, file = here::here("Data/dat_est_humans_rev_no_2018-CZ.Rdata"))
 
 # estimatees for table
-mhs_out <- m_out(name = "Table S1a - full a", dep = "Escape distance", model = mhs, nsim = 5000)
-mhx_out <- m_out(name = "Table S1a - full b", dep = "Escape distance", model = mhx, nsim = 5000)
-chs_out <- m_out(name = "Table S1a - CZ a", dep = "Escape distance", model = chs, nsim = 5000)
-chx_out <- m_out(name = "Table S1a - CZ b", dep = "Escape distance", model = chx, nsim = 5000)
-fhs_out <- m_out(name = "Table S1a - FI a", dep = "Escape distance", model = fhs, nsim = 5000)
-fhx_out <- m_out(name = "Table S1a - FI b", dep = "Escape distance", model = fhx, nsim = 5000)
-hhs_out <- m_out(name = "Table S1a - HU a", dep = "Escape distance", model = hhs, nsim = 5000)
-hhx_out <- m_out(name = "Table S1a - HU b", dep = "Escape distance", model = hhx, nsim = 5000)
-phs_out <- m_out(name = "Table S1a - PL a", dep = "Escape distance", model = phs, nsim = 5000)
-phx_out <- m_out(name = "Table S1a - PL b", dep = "Escape distancey", model = phx, nsim = 5000)
+mhs_out <- m_out(name = "Table S1a - full a", dep = "Escape distance", model = mhs, nsim = 5000, R2 = FALSE)
+mhx_out <- m_out(name = "Table S1a - full b", dep = "Escape distance", model = mhx, nsim = 5000, R2 = FALSE)
+chs_out <- m_out(name = "Table S1a - CZ a", dep = "Escape distance", model = chs, nsim = 5000, R2 = FALSE)
+chx_out <- m_out(name = "Table S1a - CZ b", dep = "Escape distance", model = chx, nsim = 5000, R2 = FALSE)
+fhs_out <- m_out(name = "Table S1a - FI a", dep = "Escape distance", model = fhs, nsim = 5000, R2 = FALSE)
+fhx_out <- m_out(name = "Table S1a - FI b", dep = "Escape distance", model = fhx, nsim = 5000, R2 = FALSE)
+hhs_out <- m_out(name = "Table S1a - HU a", dep = "Escape distance", model = hhs, nsim = 5000, R2 = FALSE)
+hhx_out <- m_out(name = "Table S1a - HU b", dep = "Escape distance", model = hhx, nsim = 5000, R2 = FALSE)
+phs_out <- m_out(name = "Table S1a - PL a", dep = "Escape distance", model = phs, nsim = 5000, R2 = FALSE)
+phx_out <- m_out(name = "Table S1a - PL b", dep = "Escape distancey", model = phx, nsim = 5000, R2 = FALSE)
 
 out_FID_h <- rbind(mhs_out, mhx_out, fhs_out, fhx_out, phs_out, phx_out, chs_out, chx_out, hhs_out, hhx_out, fill = TRUE)
 out_FID_h[is.na(out_FID_h)] <- ""
@@ -994,18 +995,18 @@ est_pgx[, control_for_starting_distance := "no"]
             est_fgs, est_fgx)
     save(og, file = here::here('Data/dat_est_Google_rev.Rdata'))
   # estimatees for table
-  mgs_out <- m_out(name = "Table S1b - full a", dep = "Escape distance", model = mgs, nsim = 5000)
-  mgx_out <- m_out(name = "Table S1b - full b", dep = "Escape distance", model = mgx, nsim = 5000)
-  cgs_out <- m_out(name = "Table S1b - CZ a", dep = "Escape distance", model = cgs, nsim = 5000)
-  cgx_out <- m_out(name = "Table S1b - CZ b", dep = "Escape distance", model = cgx, nsim = 5000)
-  fgs_out <- m_out(name = "Table S1b - FI a", dep = "Escape distance", model = fgs, nsim = 5000)
-  fgx_out <- m_out(name = "Table S1b - FI b", dep = "Escape distance", model = fgx, nsim = 5000)
-  hgs_out <- m_out(name = "Table S1b - HU a", dep = "Escape distance", model = hgs, nsim = 5000)
-  hgx_out <- m_out(name = "Table S1b - HU b", dep = "Escape distance", model = hgx, nsim = 5000)
-  ags_out <- m_out(name = "Table S1b - AU a", dep = "Escape distance", model = ags, nsim = 5000)
-  agx_out <- m_out(name = "Table S1b - AU b", dep = "Escape distancey", model = agx, nsim = 5000)
-  pgs_out <- m_out(name = "Table S1b - PL a", dep = "Escape distance", model = pgs, nsim = 5000)
-  pgx_out <- m_out(name = "Table S1b - PL b", dep = "Escape distancey", model = pgx, nsim = 5000)
+  mgs_out <- m_out(name = "Table S1b - full a", dep = "Escape distance", model = mgs, nsim = 5000, R2 = FALSE)
+  mgx_out <- m_out(name = "Table S1b - full b", dep = "Escape distance", model = mgx, nsim = 5000, R2 = FALSE)
+  cgs_out <- m_out(name = "Table S1b - CZ a", dep = "Escape distance", model = cgs, nsim = 5000, R2 = FALSE)
+  cgx_out <- m_out(name = "Table S1b - CZ b", dep = "Escape distance", model = cgx, nsim = 5000, R2 = FALSE)
+  fgs_out <- m_out(name = "Table S1b - FI a", dep = "Escape distance", model = fgs, nsim = 5000, R2 = FALSE)
+  fgx_out <- m_out(name = "Table S1b - FI b", dep = "Escape distance", model = fgx, nsim = 5000, R2 = FALSE)
+  hgs_out <- m_out(name = "Table S1b - HU a", dep = "Escape distance", model = hgs, nsim = 5000, R2 = FALSE)
+  hgx_out <- m_out(name = "Table S1b - HU b", dep = "Escape distance", model = hgx, nsim = 5000, R2 = FALSE)
+  ags_out <- m_out(name = "Table S1b - AU a", dep = "Escape distance", model = ags, nsim = 5000, R2 = FALSE)
+  agx_out <- m_out(name = "Table S1b - AU b", dep = "Escape distancey", model = agx, nsim = 5000, R2 = FALSE)
+  pgs_out <- m_out(name = "Table S1b - PL a", dep = "Escape distance", model = pgs, nsim = 5000, R2 = FALSE)
+  pgx_out <- m_out(name = "Table S1b - PL b", dep = "Escape distancey", model = pgx, nsim = 5000, R2 = FALSE)
 
   out_FID_g <- rbind(mgs_out, mgx_out, fgs_out, fgx_out, pgs_out, pgx_out, cgs_out, cgx_out, hgs_out, hgx_out, ags_out, agx_out, fill = TRUE)
   out_FID_g[is.na(out_FID_g)] <- ""
@@ -1253,18 +1254,18 @@ est_psx[, control_for_starting_distance := "no"]
     save(os, file = here::here('Data/dat_est_Stringency_rev.Rdata'))
 
 # estimates for table
-  mss_out <- m_out(name = "Table S1c - full a", dep = "Escape distance", model = mss, nsim = 5000)
-  msx_out <- m_out(name = "Table S1c  - full b", dep = "Escape distance", model = msx, nsim = 5000)
-  css_out <- m_out(name = "Table S1c  - CZ a", dep = "Escape distance", model = css, nsim = 5000)
-  csx_out <- m_out(name = "Table S1c  - CZ b", dep = "Escape distance", model = csx, nsim = 5000)
-  fss_out <- m_out(name = "Table S1c  - FI a", dep = "Escape distance", model = fss, nsim = 5000)
-  fsx_out <- m_out(name = "Table S1c  - FI b", dep = "Escape distance", model = fsx, nsim = 5000)
-  hss_out <- m_out(name = "Table S1c  - HU a", dep = "Escape distance", model = hss, nsim = 5000)
-  hsx_out <- m_out(name = "Table S1c  - HU b", dep = "Escape distance", model = hsx, nsim = 5000)
-  ass_out <- m_out(name = "Table S1c  - AU a", dep = "Escape distance", model = ass, nsim = 5000)
-  asx_out <- m_out(name = "Table S1c  - AU b", dep = "Escape distancey", model = asx, nsim = 5000)
-  pss_out <- m_out(name = "Table S1c  - PL a", dep = "Escape distance", model = pss, nsim = 5000)
-  psx_out <- m_out(name = "Table S1c  - PL b", dep = "Escape distancey", model = psx, nsim = 5000)
+  mss_out <- m_out(name = "Table S1c - full a", dep = "Escape distance", model = mss, nsim = 5000, R2 = FALSE)
+  msx_out <- m_out(name = "Table S1c  - full b", dep = "Escape distance", model = msx, nsim = 5000, R2 = FALSE)
+  css_out <- m_out(name = "Table S1c  - CZ a", dep = "Escape distance", model = css, nsim = 5000, R2 = FALSE)
+  csx_out <- m_out(name = "Table S1c  - CZ b", dep = "Escape distance", model = csx, nsim = 5000, R2 = FALSE)
+  fss_out <- m_out(name = "Table S1c  - FI a", dep = "Escape distance", model = fss, nsim = 5000, R2 = FALSE)
+  fsx_out <- m_out(name = "Table S1c  - FI b", dep = "Escape distance", model = fsx, nsim = 5000, R2 = FALSE)
+  hss_out <- m_out(name = "Table S1c  - HU a", dep = "Escape distance", model = hss, nsim = 5000, R2 = FALSE)
+  hsx_out <- m_out(name = "Table S1c  - HU b", dep = "Escape distance", model = hsx, nsim = 5000, R2 = FALSE)
+  ass_out <- m_out(name = "Table S1c  - AU a", dep = "Escape distance", model = ass, nsim = 5000, R2 = FALSE)
+  asx_out <- m_out(name = "Table S1c  - AU b", dep = "Escape distancey", model = asx, nsim = 5000, R2 = FALSE)
+  pss_out <- m_out(name = "Table S1c  - PL a", dep = "Escape distance", model = pss, nsim = 5000, R2 = FALSE)
+  psx_out <- m_out(name = "Table S1c  - PL b", dep = "Escape distancey", model = psx, nsim = 5000, R2 = FALSE)
 
   out_FID_s <- rbind(mss_out, msx_out, fss_out, fsx_out, pss_out, psx_out, css_out, csx_out, hss_out, hsx_out, ass_out, asx_out, fill = TRUE)
   out_FID_s[is.na(out_FID_s)] <- ""
@@ -1871,7 +1872,7 @@ if (save_plot == TRUE) {
 gg_f1
 
 #' <a name="F_1">
-#' **Figure 1</a> | Avian tolerance towards humans across four temporal scales.** Avian tolerance according to human levels during (a) the escape distance trial (hourly scale) as number of humans within a 50 meter radius, (b) the day of the escape tiral as proxied by Google Mobility, (c) week of the escape trial as proxied by the stringency of governmental measures, and (d) the period of the escape trial, i.e. before vs during the COVID-19 shutdowns. (a-d) The dots with horizontal lines represent estimated standardised effect size and their 95% confidence intervals, the numbers sample sizes. For the **countries** and **'All'**, the effect sizes and 95% confidence intervals come from the joint posterior distribution of 5000 simulated values generated by the *sim* function from the *arm* package [@Gelman2022] using the mixed model outputs controlled for starting distance of the observer (`r knitr::asis_output("/U+2B24")`) or not (`r knitr::asis_output("/U+25CB")`; Table [S1a](T_S1a), [S1b](#T_S4), [S1c](#T_S5) and [S1d](#T_S6)). The models were further controlled for year (in case of Period fitted as a random intercept), flock size (ln-transfomred), body size (ln-transformed), temperature (also a proxy for a day within the breeding season: r~Pearson~ = `r round(cor(d$Temp,d$Day_),2)`; Fig. [S2](#F_S2)), and time of a day, as well as for the non-independence of data points by fitting random intercepts of weekday, genus, species, species at a given day and year, country (in "All" - a global mixed model), site, and species within a site, while fitting, in case of "All" (global model on all countries) Number of humans, Google Mobility, Stringency index, or Period as a random slope within country (i.e. allowing for different effect in each country) and in case of Period models (country-specific or 'All') also within site (i.e. allowing for different Period effect at each site). Fitting Number of humans, Google Mobility, Stringency index or Period as random slope at other random intercepts produces similar results (Fig. [S1](#F_S1), Table [S2a](#T_S2a), [S2b](#T_S2b), [S2c](#T_S2c) & [S2d](#T_S2d)). The multicollinearity was small as correlations between predictors were weak (Fig. [S2](#F_S2)). For the **'Combined'**, the estimates and 95% confidence intervals represent the meta-analytical means based on the country-specific estimates and their standard deviation (from the country-specific models), and sample size per country. Number of humans data are from before and during COVID-19 shutdowns. Google Mobility data were sourced from [Google Mobility Reports](https://www.google.com/covid19/mobility) and Stringency index data from [Hale et al. 2021](https://ourworldindata.org/covid-stringency-index), and their analyses were restricted to data collected in the Period during the COVID-19 shutdowns. Note that the effect sizes are small and estimates tend to centre around zero.
+#' **Figure 1</a> | Avian tolerance towards humans across four temporal scales.** Avian tolerance according to human levels during (a) the escape distance trial (hourly scale) as number of humans within a 50 meter radius, (b) the day of the escape tiral as proxied by Google Mobility, (c) week of the escape trial as proxied by the stringency of governmental measures, and (d) the period of the escape trial, i.e. before vs during the COVID-19 shutdowns. (a-d) The dots with horizontal lines represent estimated standardised effect size and their 95% confidence intervals, the numbers sample sizes. For the **countries** and **'All'**, the effect sizes and 95% confidence intervals come from the joint posterior distribution of 5000 simulated values generated by the *sim* function from the *arm* package ([Gelman et al 2016](https://www.cambridge.org/highereducation/books/data-analysis-using-regression-and-multilevel-hierarchical-models/32A29531C7FD730C3A68951A17C9D983#overview)) using the mixed model outputs controlled for starting distance of the observer (`r knitr::asis_output("/U+2B24")`) or not (`r knitr::asis_output("/U+25CB")`; Table [S1a](T_S1a), [S1b](#T_S4), [S1c](#T_S5) and [S1d](#T_S6)). The models were further controlled for year (in case of Period fitted as a random intercept), flock size (ln-transfomred), body size (ln-transformed), temperature (also a proxy for a day within the breeding season: r~Pearson~ = `r round(cor(d$Temp,d$Day_),2)`; Fig. [S2](#F_S2)), and time of a day, as well as for the non-independence of data points by fitting random intercepts of weekday, genus, species, species at a given day and year, country (in "All" - a global mixed model), site, and species within a site, while fitting, in case of "All" (global model on all countries) Number of humans, Google Mobility, Stringency index, or Period as a random slope within country (i.e. allowing for different effect in each country) and in case of Period models (country-specific or 'All') also within site (i.e. allowing for different Period effect at each site). Fitting Number of humans, Google Mobility, Stringency index or Period as random slope at other random intercepts, simplifying the random effects structures, or using conservative datasets produces similar results (Fig. [S1](#F_S1), Table [S2a](#T_S2a), [S2b](#T_S2b), [S2c](#T_S2c) & [S2d](#T_S2d)). The multicollinearity was small as correlations between predictors were weak (Fig. [S2](#F_S2)). For the **'Combined'**, the estimates and 95% confidence intervals represent the meta-analytical means based on the country-specific estimates and their standard deviation (from the country-specific models), and sample size per country. Number of humans data are from before and during COVID-19 shutdowns. Google Mobility data were sourced from [Google Mobility Reports](https://www.google.com/covid19/mobility) and Stringency index data from [Hale et al. 2021](https://ourworldindata.org/covid-stringency-index), and their analyses were restricted to data collected in the Period during the COVID-19 shutdowns. Note that the effect sizes are small and estimates tend to centre around zero.
 #' 
 #' <a name="T_S1a">
 #' **Table S1a | Escape distance in relation to # of humans**</a>
@@ -2738,7 +2739,7 @@ out_FID_c %>%
      grid::grid.draw(rbind(ggplotGrob(gs2_), ggplotGrob(g0_), ggplotGrob(gg0_), ggplotGrob(gh0_)))
 
 #' <a name="F_S1">
-#' **Figure S1 | Comparing estimates from alternative models.**</a> Changes in avian tolerance towards humans in response to (**a**) Period (before vs during the COVID-19 shutdowns) (**b**) stringency of governmental measures, (**c**) Google Mobility and (**d**) number of humans during an escape distance trial. The dots with horizontal lines represent the estimated standardised effect size and their 95% confidence intervals based on the joint posterior distribution of 5,000 simulated values generated by the *sim* function  from the *arm* R-package (Gelman et al. 2016) from the output of the mixed models (for details see [Table S2](#T_S2a)). The name of each effect size highlights the corresponding model in [Table S2a](#T_S2a) for (a), [Table S2b](#T_S2b) for (b), [Table S2c](#T_S2c) for (c) and [Table S2d](#T_S2d) for (d), the random structure of the specific model, if applicable, the condition used to reduce the dataset, and sample size. Depicted are effect sizes based on full (01) and reduced datasets with ≥5 (02) or ≥10 observations per species and period (03). For plots of model assumptions see [below](#MS_TS1). Note that effect sizes are small and estimates close to zero.
+#' **Figure S1 | Comparing estimates from alternative models.**</a> Changes in avian tolerance towards humans in response to (**a**) Period (before vs during the COVID-19 shutdowns) (**b**) stringency of governmental measures, (**c**) Google Mobility and (**d**) number of humans during an escape distance trial. The dots with horizontal lines represent the estimated standardised effect size and their 95% confidence intervals based on the joint posterior distribution of 5,000 simulated values generated by the *sim* function  from the *arm* R-package ([Gelman et al 2016](https://www.cambridge.org/highereducation/books/data-analysis-using-regression-and-multilevel-hierarchical-models/32A29531C7FD730C3A68951A17C9D983#overview)) from the output of the mixed models (for details see [Table S2](#T_S2a)). The name of each effect size highlights the corresponding model in [Table S2a](#T_S2a) for (a), [Table S2b](#T_S2b) for (b), [Table S2c](#T_S2c) for (c) and [Table S2d](#T_S2d) for (d), the random structure of the specific model, if applicable, the condition used to reduce the dataset, and sample size. Depicted are effect sizes based on full (01) and reduced datasets with ≥5 (02) or ≥10 observations per species and period (03). For plots of model assumptions see [below](#MS_TS1a). Note that effect sizes are small and estimates close to zero.
 #'
 #'   
 #'  
@@ -2949,12 +2950,12 @@ chart.Correlation(dp, histogram = TRUE, pch = 19, alpha = 0.5)
 mtext("Single observations", side = 3, line = 3)
 
 #' <a name="F_S2">
-#' **Figure S2 | Pairwise correlations among predictors of escape distance used in this study.**</a> On the diagonal: histograms and density lines (red) for each variable. Above diagonal: Pearson’s correlation with stars indicating significance . Below diagonal: the bivariate scatterplots, with each dot representing a single observation and a red line representing smoothed fit. Note that first four predictors were never entered togetheer in a single model with escape distance as dependent variable. Created with *chart.Correlation* function from R-package *PerformanceAnalytics* (Peterson & Carl 2020).
+#' **Figure S2 | Pairwise correlations among predictors of escape distance used in this study.**</a> On the diagonal: histograms and density lines (red) for each variable. Above diagonal: Pearson’s correlation with stars indicating significance . Below diagonal: the bivariate scatterplots, with each dot representing a single observation and a red line representing smoothed fit. Note that first four predictors were never entered togetheer in a single model with escape distance as dependent variable. Created with *chart.Correlation* function from R-package *PerformanceAnalytics* ([Peterson & Carl 2020](https://CRAN.R-project.org/package=PerformanceAnalytics)).
 #'
 #' ***
 #' 
 #' ### Species trends
-#+ Fig_S3_species_human, fig.width=6, fig.height = 7.5
+#+ Fig_S3_species_human, fig.width= 0.393701*18, fig.height = 0.393701*5 * 19 / 9
 dh[, NspC := .N, by = "sp_country"]
 dhc <- dh[NspC > 9]
 dhc[, sp2 := gsub(" ", "\n", sp)]
@@ -2969,10 +2970,10 @@ gh2 <-
   # stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
   geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = "grey20") +
   stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
-  facet_wrap(~sp2, ncol = 6) +
+  facet_wrap(~sp2, ncol = 9) +
   scale_fill_manual(values = col_gh2, guide = guide_legend(reverse = TRUE)) +
   scale_colour_manual(values = c("grey60")) +
-  scale_x_continuous("Hourly human leveles\n[# of humans]", expand = c(0, 0)) +
+  scale_x_continuous("Hourly human levels\n[# of humans]", expand = c(0, 0)) +
   scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
   coord_cartesian(xlim = c(-5, 70)) +
   # annotate("text", x = 1, y = 1, label = c(rep("", 52),"Observation"), hjust = -0.08, size = 1) +
@@ -2985,23 +2986,23 @@ gh2 <-
     strip.background = element_blank(),
     # strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
     # panel.spacing = unit(1, "mm"),
-    legend.position = c(1, 0.01),
-    legend.justification = c(1, 0.04),
+    legend.position = c(1, 0.08),
+    legend.justification = c(1, 0.08),
     legend.title = element_blank(),
     # legend.spacing.y = unit(-0.78, "cm")
     # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
     legend.spacing.y = unit(-0.9, "cm")
   )
 
-gth2 <- ggplotGrob(gh2) # gg$layout$name
-gthx2 <- gtable_filter_remove(gth2, name = c("axis-b-2-6", "axis-b-4-6", "axis-b-6-5"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
+gth2 <- ggplotGrob(gh2) # gth2$layout$name
+#gthx2 <- gtable_filter_remove(gth2, name = c("axis-b-2-4", "axis-b-4-4", "axis-b-6-4", "axis-b-8-4"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
 
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S3_width-152mm_humans.png"), gthx2, width = 15.24, height = 6 * 19 / 9, unit = "cm", dpi = 600)
+  ggsave(here::here("Outputs/Fig_S3_width-152mm_humans.png"), gth2, width = 18, height = 5 * 19 / 9, unit = "cm", dpi = 600)
 }
-grid::grid.draw(gthx2)
+grid::grid.draw(gth2)
 #' <a name="F_S3">
-#' **Figure S3 | Species-specific avian tolerance towards humans in relation to # of humans during escape trail.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) with the # of humans within 50m radius. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations and where # of humans was estimated.
+#' **Figure S3 | Species-specific avian tolerance towards humans in relation to # of humans during escape trail.**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) with the # of humans within 50m radius. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations and where # of humans was estimated.
 #'
 #+ Fig_S4_species_google, fig.width=6, fig.height = 7.5
 ss[, NspC := .N, by = "sp_country"]
@@ -3045,7 +3046,7 @@ if (save_plot == TRUE) {
 }
 grid::grid.draw(gtgx2)
 #' <a name="F_S4">
-#' **Figure S4 | Species-specific avian tolerance towards humans in relation to relaative daily human levels (Google Mobility).**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of Google Mobility for parks in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
+#' **Figure S4 | Species-specific avian tolerance towards humans in relation to relaative daily human levels (Google Mobility).**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of Google Mobility for parks in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
 #'
 #+ Fig_S5_species_string, fig.width=6, fig.height = 7.5
 ss_sp <- s[Nsp > 9]
@@ -3087,7 +3088,7 @@ if (save_plot == TRUE) {
 }
 grid::grid.draw(gsgx2)
 #' <a name="F_S5">
-#' **Figure S5 | Species-specific avian tolerance towards humans in relation to weekly human levels (stringency of antipandemic governmental restrictions during COVID-19 shutdowns quantified as a Stringency index).**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of governmental Stringency index in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of *ggplot2* package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Note, the y-axes is on the log-scale, some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
+#' **Figure S5 | Species-specific avian tolerance towards humans in relation to weekly human levels (stringency of antipandemic governmental restrictions during COVID-19 shutdowns quantified as a Stringency index).**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of governmental Stringency index in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Note, the y-axes is on the log-scale, some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
 #'
 #+ Fig_S6_species_compare, fig.width=5.3, fig.height = 7
 dxx <- d[paste(IDLocality, Species) %in% paste(pp$IDLocality, pp$Species)]
@@ -3194,7 +3195,7 @@ if (save_plot == TRUE) {
 grid::grid.draw(ggssh)
 
 #' <a name="F_S7">
-#' **Figure S7 | Variation in avian tolerance toward human numbers during escape trial across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and where # of humans was estimated. Panels are ordered alphabetically according to species names. 
+#' **Figure S7 | Variation in avian tolerance toward human numbers during escape trial across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and where # of humans was estimated. Panels are ordered alphabetically according to species names. 
 #'
 #+ Fig_S8_site_google, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
 ss[, NspL := .N, by = "sp_loc"]
@@ -3245,7 +3246,7 @@ if (save_plot == TRUE) {
 grid::grid.draw(ggssl)
 
 #' <a name="F_S8">
-#' **Figure S8 | Variation in avian tolerance toward daily human numbers (Google Mobility) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and with available Google Mobility data. Panels are ordered alphabetically according to species names.
+#' **Figure S8 | Variation in avian tolerance toward daily human numbers (Google Mobility) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and with available Google Mobility data. Panels are ordered alphabetically according to species names.
 #'
 #+ Fig_S9_site_stringency, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
 s[, NspL := .N, by = "sp_loc"]
@@ -3290,7 +3291,7 @@ if (save_plot == TRUE) {
 grid::grid.draw(ggsl)
 
 #' <a name="F_S9">
-#' **Figure S9 | Variation in avian tolerance toward weekly human numbers across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package (Wickham 2016), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and with available Stringency index data. Panels are ordered alphabetically according to species names.
+#' **Figure S9 | Variation in avian tolerance toward weekly human numbers across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and with available Stringency index data. Panels are ordered alphabetically according to species names.
 #'
 #+ Fig_S10_site_period, fig.width=8, fig.height = 6
 pxx = pp[N_during > 4 & N_before > 4]
@@ -3496,7 +3497,7 @@ g_s5
 #' ***
 #' 
 #' ### Number of humans ~ Google Mobility & Stringency index 
-#+ Fig_2, fig.width=16*0.393701, fig.height = 10*0.393701
+#+ Fig_2, fig.width=16*0.393701, fig.height = 8*0.393701
 sh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
 ssh[, Country := factor(Country, levels = (c("Finland", "Czechia", "Hungary")))]
 
@@ -3793,7 +3794,7 @@ p_hs_o <-
   # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
   geom_jitter(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
   geom_line(lwd = 1) +
-  labs(subtitle = "Original scale", y = "# of humans", x = "Stringency index") +
+  labs(subtitle = "", y = "# of humans", x = "Stringency index") +
   coord_cartesian(xlim = c(25, 75), ylim = c(0, 50)) +
   facet_wrap(~Country) +
   # scale_color_locuszoom()+
@@ -3852,7 +3853,7 @@ p_hs_ln = ggplot(h_s_ln, aes(x = StringencyIndex, y = pred, col = Country)) +
   # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
   geom_jitter(aes(y = log(Human + 0.01), fill = Country), data = sh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
   geom_line(lwd = 1) +
-  labs(subtitle = "Ln-scale", y = "# of humans", x = "Stringency index") +
+  labs(subtitle = "", y = "# of humans", x = "Stringency index") +
   coord_cartesian(xlim = c(25, 75), ylim = c(log(0.01), log(50))) +
   facet_wrap(~Country) +
   # scale_color_locuszoom()+
@@ -3912,7 +3913,7 @@ p_hg_o <-
   # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
   geom_jitter(aes(y = Human, fill = Country), data = ssh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
   geom_line(lwd = 1) +
-  labs(subtitle = "", y = "# of humans", x = "Google Mobility") +
+  labs(subtitle = "Original scale", y = "# of humans", x = "Google Mobility") +
   coord_cartesian(xlim = c(-50, 150), ylim = c(0, 50)) +
   facet_wrap(~Country) +
   # scale_color_locuszoom()+
@@ -3971,7 +3972,7 @@ p_hg_ln <- ggplot(h_g_ln, aes(x = parks_percent_change_from_baseline, y = pred, 
   # geom_point(aes(y = Human, fill = Country), data = sh, pch = 21, col = "grey20",alpha = 0.5)+
   geom_jitter(aes(y = log(Human + 0.01), fill = Country), data = ssh, pch = 21, col = "grey20", width = 0.5, height = 0.1, alpha = 0.5) +
   geom_line(lwd = 1) +
-  labs(subtitle = "", y = "# of humans", x = "Google Mobility") +
+  labs(subtitle = "Ln-scale", y = "# of humans", x = "Google Mobility") +
   coord_cartesian(xlim = c(-50, 150), ylim = c(log(0.01), log(50))) +
   facet_wrap(~Country) +
   # scale_color_locuszoom()+
@@ -4036,7 +4037,7 @@ fig_2 = annotate_figure(sshh,
 )
 
 if (save_plot == TRUE) {
-ggsave(file = here::here("Outputs/Fig_2_width-120mm.png"), fig_2, width = 16, height = 10, units = "cm")
+ggsave(file = here::here("Outputs/Fig_2_width-120mm.png"), fig_2, width = 16, height = 8, units = "cm")
 }
 
 fig_2
@@ -4057,7 +4058,7 @@ shfi_ <- lmer(scale(Human) ~
   (scale(StringencyIndex) | year_weekday),
 data = shf, REML = FALSE
 )
-llb[[1]] = m_out(name = "Table S3b - FI", dep = "# of humans", model = shfi_, nsim = 5000)
+llb[[1]] = m_out(name = "Table S3a - FI", dep = "# of humans", model = shfi_, nsim = 5000)
 
 shc <- sh[Country == "Czechia"]
 shcz_ <- lmer(scale(Human) ~
@@ -4065,7 +4066,7 @@ shcz_ <- lmer(scale(Human) ~
   (scale(StringencyIndex) | weekday),
 data = shc, REML = FALSE
 )
-llb[[2]] = m_out(name = "Table S3b - CZ", dep = "# of humans", model = shcz_, nsim = 5000)
+llb[[2]] = m_out(name = "Table S3a - CZ", dep = "# of humans", model = shcz_, nsim = 5000)
 llb[[2]]$R2_mar <- llb[[2]]$R2_con <- NULL
 
 sh_h <- sh[Country == "Hungary"]
@@ -4075,7 +4076,7 @@ shhu_ <- lmer(scale(Human) ~
   (scale(StringencyIndex) | year_weekday),
 data = sh_h, REML = FALSE
 )
-llb[[3]] = m_out(name = "Table S3b - HU", dep = "# of humans", model = shhu_, nsim = 5000)
+llb[[3]] = m_out(name = "Table S3a - HU", dep = "# of humans", model = shhu_, nsim = 5000)
 llb[[3]]$R2_mar = llb[[3]]$R2_con = NULL
 
 out_t3b = data.table(do.call(rbind, llb))
@@ -4085,7 +4086,7 @@ out_t3b[, effect := gsub("scale\\(Year\\)", "year", effect)]
 out_t3b[, effect := gsub("scale\\(StringencyIndex\\)", "Stringency index", effect)]
 out_t3b[, effect := gsub("year_weekday", "weekday within year", effect)]
 out_t3b[type == "random" & grepl("Stringency index", effect, fixed = TRUE), effect := paste("Stringency index (slope) |", gsub(" Stringency index", "", effect))]
-fwrite(file = here::here("Outputs/Table_S3b_rev.csv"), out_t3b)
+fwrite(file = here::here("Outputs/Table_S3a_rev.csv"), out_t3b)
 
 out_t3b$error_structure = out_t3b$response = NULL
 out_t3b[model != "", model := c(
@@ -4097,7 +4098,7 @@ setnames(out_t3b, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "
 out_t3b %>%
   kbl() %>%
   kable_paper("hover", full_width = F) %>%
-    scroll_box(width = "100%", height = "650px")
+    scroll_box(width = "100%")
 #'
 #' ***
 #'
@@ -4112,7 +4113,7 @@ shfi_ln_ <- lmer(scale(log(Human+0.01)) ~
   (scale(StringencyIndex) | year_weekday),
 data = shf, REML = FALSE
 )
-llc[[1]] = m_out(name = "Table S3c - FI", dep = "# of humans (ln)", model = shfi_ln_, nsim = 5000)
+llc[[1]] = m_out(name = "Table S3b - FI", dep = "# of humans (ln)", model = shfi_ln_, nsim = 5000)
 llc[[1]]$R2_mar <- llc[[1]]$R2_con <- NULL
 
 shc <- sh[Country == "Czechia"]
@@ -4121,7 +4122,7 @@ shcz_ln_ <- lmer(scale(log(Human+0.01))~
   (scale(StringencyIndex) | weekday),
 data = shc, REML = FALSE
 )
-llc[[2]] = m_out(name = "Table S3c - CZ", dep = "# of humans (ln)", model = shcz_ln_, nsim = 5000)
+llc[[2]] = m_out(name = "Table S3b - CZ", dep = "# of humans (ln)", model = shcz_ln_, nsim = 5000)
 llc[[2]]$R2_mar <- llc[[2]]$R2_con <- NULL
 
 sh_h <- sh[Country == "Hungary"]
@@ -4131,7 +4132,7 @@ shhu_ln_ <- lmer(scale(log(Human+0.01)) ~
   (scale(StringencyIndex) | year_weekday),
 data = sh_h, REML = FALSE
 )
-llc[[3]] = m_out(name = "Table S3c - HU", dep = "# of humans (ln)", model = shhu_ln_, nsim = 5000)
+llc[[3]] = m_out(name = "Table S3b - HU", dep = "# of humans (ln)", model = shhu_ln_, nsim = 5000)
 
 out_t3c = data.table(do.call(rbind, llc))
 out_t3c[is.na(out_t3c)] <- ""
@@ -4140,7 +4141,7 @@ out_t3c[, effect := gsub("scale\\(Year\\)", "year", effect)]
 out_t3c[, effect := gsub("scale\\(StringencyIndex\\)", "Stringency index", effect)]
 out_t3c[, effect := gsub("year_weekday", "weekday within year", effect)]
 out_t3c[type == "random" & grepl("Stringency index", effect, fixed = TRUE), effect := paste("Stringency index (slope) |", gsub(" Stringency index", "", effect))]
-fwrite(file = here::here("Outputs/Table_S3c_rev.csv"), out_t3c)
+fwrite(file = here::here("Outputs/Table_S3b_rev.csv"), out_t3c)
 
 out_t3c$error_structure = out_t3b$response = NULL
 out_t3c[model != "", model := c(
@@ -4152,7 +4153,7 @@ setnames(out_t3c, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "
 out_t3c %>%
   kbl() %>%
   kable_paper("hover", full_width = F) %>%
-  scroll_box(width = "100%", height = "650px")
+  scroll_box(width = "100%")
 #'
 #' ***
 #' 
@@ -4167,7 +4168,7 @@ shfi_g <- lmer(scale(Human) ~
   (scale(parks_percent_change_from_baseline) | year_weekday),
 data = sshf, REML = FALSE
 )
-lld[[1]] = m_out(name = "Table S3d - FI", dep = "# of humans", model = shfi_g, nsim = 5000, R2 = FALSE)
+lld[[1]] = m_out(name = "Table S3c - FI", dep = "# of humans", model = shfi_g, nsim = 5000, R2 = FALSE)
 
 sshc <- ssh[Country == "Czechia"]
 shcz_g <- lmer(scale(Human) ~
@@ -4175,7 +4176,7 @@ shcz_g <- lmer(scale(Human) ~
   (scale(parks_percent_change_from_baseline) | weekday),
 data = sshc, REML = FALSE
 )
-lld[[2]] = m_out(name = "Table S3d - CZ", dep = "# of humans", model = shcz_g, nsim = 5000, , R2 = FALSE)
+lld[[2]] = m_out(name = "Table S3c - CZ", dep = "# of humans", model = shcz_g, nsim = 5000, , R2 = FALSE)
 
 ssh_h <- ssh[Country == "Hungary"]
 shhu_g <- lmer(scale(Human) ~
@@ -4184,7 +4185,7 @@ shhu_g <- lmer(scale(Human) ~
   (scale(parks_percent_change_from_baseline) | year_weekday),
 data = ssh_h, REML = FALSE
 )
-lld[[3]] = m_out(name = "Table S3d - HU", dep = "# of humans", model = shhu_g, nsim = 5000, R2 = FALSE)
+lld[[3]] = m_out(name = "Table S3c - HU", dep = "# of humans", model = shhu_g, nsim = 5000, R2 = FALSE)
 
 out_t3d = data.table(do.call(rbind, lld))
 out_t3d[is.na(out_t3d)] <- ""
@@ -4192,7 +4193,7 @@ out_t3d[, effect := gsub("scale\\(Year\\)", "year", effect)]
 out_t3d[, effect := gsub("scale\\(parks_percent_change_from_baseline\\)", "Google Mobility", effect)]
 out_t3d[, effect := gsub("year_weekday", "weekday within year", effect)]
 out_t3d[type == "random" & grepl("Google Mobility", effect, fixed = TRUE), effect := paste("Google Mobility (slope) |", gsub(" Google Mobility", "", effect))]
-fwrite(file = here::here("Outputs/Table_S3d_rev.csv"), out_t3d)
+fwrite(file = here::here("Outputs/Table_S3c_rev.csv"), out_t3d)
 
 out_t3d$error_structure = out_t3d$response = NULL
 out_t3d[model != "", model := c(
@@ -4204,7 +4205,7 @@ setnames(out_t3d, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "
 out_t3d %>%
   kbl() %>%
   kable_paper("hover", full_width = F) %>%
-    scroll_box(width = "100%", height = "650px")
+    scroll_box(width = "100%")
 #'
 #' ***
 #'
@@ -4219,8 +4220,7 @@ shfi_g_ln <- lmer(scale(log(Human + 0.01)) ~
   (scale(parks_percent_change_from_baseline) | year_weekday),
 data = sshf, REML = FALSE
 )
-lle[[1]] = m_out(name = "Table S3e - FI", dep = "# of humans (ln)", model = shfi_g_ln, nsim = 5000)
-lle[[1]]$R2_mar <- lle[[1]]$R2_con <- NULL
+lle[[1]] = m_out(name = "Table S3d - FI", dep = "# of humans (ln)", model = shfi_g_ln, nsim = 5000, R2 = FALSE)
 
 sshc <- ssh[Country == "Czechia"]
 shcz_g_ln <- lmer(scale(log(Human + 0.01)) ~
@@ -4228,8 +4228,7 @@ shcz_g_ln <- lmer(scale(log(Human + 0.01)) ~
   (scale(parks_percent_change_from_baseline) | weekday),
 data = sshc, REML = FALSE
 )
-lle[[2]] = m_out(name = "Table S3e - CZ", dep = "# of humans (ln)", model = shcz_g_ln, nsim = 5000)
-lle[[2]]$R2_mar <- lle[[2]]$R2_con <- NULL
+lle[[2]] = m_out(name = "Table S3d - CZ", dep = "# of humans (ln)", model = shcz_g_ln, nsim = 5000, R2 = FALSE)
 
 ssh_h <- ssh[Country == "Hungary"]
 shhu_g_ln <- lmer(scale(log(Human + 0.01)) ~
@@ -4238,8 +4237,7 @@ shhu_g_ln <- lmer(scale(log(Human + 0.01)) ~
   (scale(parks_percent_change_from_baseline) | year_weekday),
 data = ssh_h, REML = FALSE
 )
-lle[[3]] = m_out(name = "Table S3e - HU", dep = "# of humans (ln)", model = shhu_g_ln, nsim = 5000)
-lle[[3]]$R2_mar <- lle[[3]]$R2_con <- NULL
+lle[[3]] = m_out(name = "Table S3d - HU", dep = "# of humans (ln)", model = shhu_g_ln, nsim = 5000, R2 = FALSE)
 
 out_t3e = data.table(do.call(rbind, lle))
 out_t3e[is.na(out_t3e)] <- ""
@@ -4247,7 +4245,7 @@ out_t3e[, effect := gsub("scale\\(Year\\)", "year", effect)]
 out_t3e[, effect := gsub("scale\\(parks_percent_change_from_baseline\\)", "Google Mobility", effect)]
 out_t3e[, effect := gsub("year_weekday", "weekday within year", effect)]
 out_t3e[type == "random" & grepl("Google Mobility", effect, fixed = TRUE), effect := paste("Google Mobility (slope) |", gsub(" Google Mobility", "", effect))]
-fwrite(file = here::here("Outputs/Table_S3e_rev.csv"), out_t3e)
+fwrite(file = here::here("Outputs/Table_S3d_rev.csv"), out_t3e)
 
 out_t3e$error_structure = out_t3e$response = NULL
 out_t3e[model != "", model := c(
@@ -4259,7 +4257,7 @@ setnames(out_t3e, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "
 out_t3e %>%
   kbl() %>%
   kable_paper("hover", full_width = F) %>%
-    scroll_box(width = "100%", height = "650px")
+    scroll_box(width = "100%")
 #' ***
 #'
 #' ### Google Mobility ~ Stringency index
@@ -4456,7 +4454,7 @@ fi <- lmer(
     (scale(StringencyIndex) | year_weekday),
   data = ssf, REML = FALSE
 )
-ll[[1]] <- m_out(name = "Table S3a - FI", dep = "Google Mobility", model = fi, nsim = 5000)
+ll[[1]] <- m_out(name = "Table S3e - FI", dep = "Google Mobility", model = fi, nsim = 5000, R2 = FALSE)
 
 ssp <- ss[Country == "Poland"]
 pl <- lmer(
@@ -4466,7 +4464,7 @@ pl <- lmer(
     (scale(StringencyIndex) | year_weekday),
   data = ssp, REML = FALSE
 )
-ll[[2]] <- m_out(name = "Table S3a - PL", dep = "Google Mobility", model = pl, nsim = 5000)
+ll[[2]] <- m_out(name = "Table S3e - PL", dep = "Google Mobility", model = pl, nsim = 5000, R2 = FALSE)
 
 sscz <- ss[Country == "Czechia"]
 cz <- lmer(
@@ -4475,7 +4473,7 @@ cz <- lmer(
     (scale(StringencyIndex) | weekday),
   data = sscz, REML = FALSE
 )
-ll[[3]] <- m_out(name = "Table S3a - CZ", dep = "Google Mobility", model = cz, nsim = 5000)
+ll[[3]] <- m_out(name = "Table S3e - CZ", dep = "Google Mobility", model = cz, nsim = 5000, R2 = FALSE)
 
 ss_h <- ss[Country == "Hungary"]
 hu <- lmer(
@@ -4485,7 +4483,7 @@ hu <- lmer(
     (scale(StringencyIndex) | year_weekday),
   data = ss_h, REML = FALSE
 )
-ll[[4]] <- m_out(name = "Table S3a - HU", dep = "Google Mobility", model = hu, nsim = 5000)
+ll[[4]] <- m_out(name = "Table S3e - HU", dep = "Google Mobility", model = hu, nsim = 5000, R2 = FALSE)
 
 ssa <- ss[Country == "Australia"]
 au <- lmer(
@@ -4496,7 +4494,7 @@ au <- lmer(
   # (1 | Year) + (1 | weekday) + (1|genus) + (1 | Species) + (1 | sp_day_year) + (1 | IDLocality),
   data = ssa, REML = FALSE
 )
-ll[[5]] <- m_out(name = "Table S3a - AU", dep = "Google Mobility", model = au, nsim = 5000)
+ll[[5]] <- m_out(name = "Table S3e - AU", dep = "Google Mobility", model = au, nsim = 5000, R2 = FALSE)
 
 out_g_s <- data.table(do.call(rbind, ll))
 out_g_s[is.na(out_g_s)] <- ""
@@ -4505,7 +4503,7 @@ out_g_s[, effect := gsub("scale\\(Year\\)", "year", effect)]
 out_g_s[, effect := gsub("scale\\(StringencyIndex\\)", "Stringency index", effect)]
 out_g_s[, effect := gsub("year_weekday", "weekday within year", effect)]
 out_g_s[type == "random" & grepl("Stringency index", effect, fixed = TRUE), effect := paste("Stringency index (slope) |", gsub(" Stringency index", "", effect))]
-fwrite(file = here::here("Outputs/Table_S3a_rev.csv"), out_g_s)
+fwrite(file = here::here("Outputs/Table_S3e_rev.csv"), out_g_s)
 
 out_g_s$error_structure <- out_g_s$response <- NULL
 out_g_s[model != "", model := c(
@@ -4519,17 +4517,13 @@ setnames(out_g_s, old = c("estimate_r", "lwr_r", "upr_r"), new = c("estimate", "
 out_g_s %>%
   kbl() %>%
   kable_paper("hover", full_width = F) %>%
-  scroll_box(width = "100%", height = "650px")
+  scroll_box(width = "100%")
 #'
-
-
-
- 
 #'
 #' ***
 #'
 #' ### Testing for phylo-signal in residuals
-#' Example code. Don't run, as it takes too long. To make the Table S7, load the saved mcmc outputs instead.
+#' Example code. Don't run, as it takes too long. To make the Table S4, load the saved mcmc outputs instead.
 #+ prep_phylo, eval = FALSE, results = 'hide', warning=FALSE
 # read trees 
 trees = read.tree("Data/trees.tre")
@@ -4953,38 +4947,77 @@ ts5 <- data.table(
     round(post_prob(mH_yes, mH_no)[2], 2)
   )
 )
-#save(file = "Data/T_S7.Rdata", ts5)
-fwrite(file = here::here("Outputs/Table_S7.csv"), ts5)
+#save(file = "Data/T_S4.Rdata", ts5)
+fwrite(file = here::here("Outputs/Table_S4.csv"), ts5)
 
 #+t_s7, echo=FALSE,results='hide', warning=FALSE, message=FALSE
-#' <a name="T_S7">
-#' **Table S7 | Are residuals confounded by phylogeny? Comparison of models on residulas without and with control for phylogeny.**</a> TODO:need fixing to correct models
-ts5 = fread(here::here('Outputs/Table_S7.csv'))
+#' <a name="T_S4">
+#' **Table S4 | Variance in residuals explained by phylogeny and comparison of models on residulas without and with control for phylogeny.**</a> TODO:need fixing to correct models
+ts5 = fread(here::here('Outputs/Table_S4.csv'))
 ts5$R2_mar <- ts5$R2_con <- NULL
 ts5 %>%
   kbl(align=c('l', 'r', 'r','r')) %>%
   kable_paper("hover", full_width = F)
 #'
-#' Testing whether residuals of the original a-models from Table [S2a](#T_S2a), [S2b](#T_S2b) and [S2c](#T_S2c) are confounded by phylogeny. **Variance explained by phylogeny (95%CI)** represents percentage of variance explained by phylogeny in an intercept only model fitted to residuals of the original models in STAN (Stan Development Team 2022) using ‘brm’ function from ‘brms’ R-package (Bürkner 2017, Bürkner 2018) with phylogeny and species as random effects. **Bayes factor** in favour of model without phylogeny and **probability of non-phylogenetic model** in comparison to a model with phylogeny. The Gelman-Rubin diagnostics was 1 for all models, indicating model convergence (Brooks & Gelman 1998). Note that for all cases, the model without phylogeny fits residuals better than a model with phylogeny, which justifies our use of simple original models, not controlled for phylogeny (Table [S2a](#T_S2a), [S2b](#T_S2b) and [S2c](#T_S2c)).
+#' Testing whether residuals of the original a-models from Table [S1a](#T_S1a), [S1b](#T_S1b), [S1c](#T_S1c), and [S1d](#T_S1d) are confounded by phylogeny. **Variance explained by phylogeny (95%CI)** represents percentage of variance explained by phylogeny in an intercept only model fitted to residuals of the original models in STAN (Stan Development Team 2022) using ‘brm’ function from ‘brms’ R-package (Bürkner 2017, Bürkner 2018) with phylogeny and species as random effects. **Bayes factor** in favour of model without phylogeny and **probability of non-phylogenetic model** in comparison to a model with phylogeny. The Gelman-Rubin diagnostics was 1 for all models, indicating model convergence (Brooks & Gelman 1998). Note that for all cases, the model without phylogeny fits residuals better than a model with phylogeny, which justifies our use of simple original models, not controlled for phylogeny (Table [S1a](#T_S1a), [S1b](#T_S1b), [S1c](#T_S1c), and [S1d](#T_S1d)).
 #'
 #'*** 
 #' 
 #' ### Model assumptions  {#MS_}
 #+ mode_ass_png, eval = FALSE, results = 'hide', warning=FALSE
-# generates pngs with model assumptions that are later loaded within the html TODO:fix names
-# Table S1
-m_ass(name = "Table S1 - full a", mo = ms, dat = d, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - full b", mo = mx, dat = d, fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - CZ a", mo = cs, dat = d[Country == "Czechia"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - CZ b", mo = cx, dat = d[Country == "Czechia"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - FI a", mo = fs, dat = d[Country == "Finland"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - FI b", mo = fx, dat = d[Country == "Finland"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - HU a", mo = hs, dat = d[Country == "Hungary"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - HU b", mo = hx, dat = d[Country == "Hungary"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - PL a", mo = ps, dat = d[Country == "Poland"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - PL b", mo = px, dat = d[Country == "Poland"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - AU a", mo = as, dat = d[Country == "Australia"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S1 - AU b", mo = ax, dat = d[Country == "Australia"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+# generates pngs with model assumptions that are later loaded within the html 
+# Table S1a
+m_ass(name = "Table S1a - full a", mo = mhs, dat = dh, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - full b", mo = mhx, dat = dh, fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - CZ a", mo = chs, dat = dh[Country == "Czechia"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - CZ b", mo = chx, dat = dh[Country == "Czechia"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - FI a", mo = fhs, dat = dh[Country == "Finland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - FI b", mo = fhx, dat = dh[Country == "Finland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - HU a", mo = hhs, dat = dh[Country == "Hungary"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - HU b", mo = hhx, dat = dh[Country == "Hungary"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - PL a", mo = phs, dat = dh[Country == "Poland"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1a - PL b", mo = phx, dat = dh[Country == "Poland"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+
+# Table S1b
+m_ass(name = "Table S1b - full a", mo = mgs, dat = ss, fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - full b", mo = mgx, dat = ss, fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - FI a", mo = fgs, dat = ss[Country == "Finland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - FI b", mo = fgx, dat = ss[Country == "Finland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - PL a", mo = pgs, dat = ss[Country == "Poland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - PL b", mo = pgx, dat = ss[Country == "Poland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - CZ a", mo = cgs, dat = ss[Country == "Czechia"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - CZ b", mo = cgx, dat = ss[Country == "Czechia"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - HU a", mo = hgs, dat = ss[Country == "Hungary"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - HU b", mo = hgx, dat = ss[Country == "Hungary"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - AU a", mo = ags, dat = ss[Country == "Australia"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1b - AU b", mo = agx, dat = ss[Country == "Australia"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "GoogleMobility"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+
+# Table S1c
+m_ass(name = "Table S1c - full a", mo = mss, dat = s, fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - full b", mo = msx, dat = s, fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - FI a", mo = fss, dat = s[Country == "Finland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - FI b", mo = fsx, dat = s[Country == "Finland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - PL a", mo = pss, dat = s[Country == "Poland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - PL b", mo = psx, dat = s[Country == "Poland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("","log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - CZ a", mo = css, dat = s[Country == "Czechia"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - CZ b", mo = csx, dat = s[Country == "Czechia"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - HU a", mo = hss, dat = s[Country == "Hungary"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - HU b", mo = hsx, dat = s[Country == "Hungary"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - AU a", mo = ass, dat = s[Country == "Australia"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1c - AU b", mo = asx, dat = s[Country == "Australia"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+# Table S1d
+m_ass(name = "Table S1d - full a", mo = ms, dat = d, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - full b", mo = mx, dat = d, fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - CZ a", mo = cs, dat = d[Country == "Czechia"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - CZ b", mo = cx, dat = d[Country == "Czechia"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - FI a", mo = fs, dat = d[Country == "Finland"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - FI b", mo = fx, dat = d[Country == "Finland"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - HU a", mo = hs, dat = d[Country == "Hungary"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - HU b", mo = hx, dat = d[Country == "Hungary"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - PL a", mo = ps, dat = d[Country == "Poland"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - PL b", mo = px, dat = d[Country == "Poland"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - AU a", mo = as, dat = d[Country == "Australia"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
+m_ass(name = "Table S1d - AU b", mo = ax, dat = d[Country == "Australia"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
 
 # Table S2a
 m_ass(name = "Table S2a - 1a", mo = m1a, dat = d, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Covid"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
@@ -5069,67 +5102,85 @@ m_ass(name = "Table S3e - FI", mo = shfi_g_ln, dat = sshf, fixed = c("Year", "pa
 m_ass(name = "Table S3e - CZ", mo = shcz_g_ln, dat = sshc, fixed = c("Year", "parks_percent_change_from_baseline"), trans = c("", ""), outdir = here::here("Outputs/modelAss/"))
 m_ass(name = "Table S3e - HU", mo = shhu_g_ln, dat = ssh_h, fixed = c("Year", "parks_percent_change_from_baseline"), trans = c("", ""), outdir = here::here("Outputs/modelAss/"))
 
-# Table S4
-m_ass(name = "Table S4 - full a", mo = mss, dat = s, fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - full b", mo = msx, dat = s, fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - FI a", mo = fss, dat = s[Country == "Finland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - FI b", mo = fsx, dat = s[Country == "Finland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - PL a", mo = pss, dat = s[Country == "Poland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - PL b", mo = psx, dat = s[Country == "Poland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("","log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - CZ a", mo = css, dat = s[Country == "Czechia"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - CZ b", mo = csx, dat = s[Country == "Czechia"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - HU a", mo = hss, dat = s[Country == "Hungary"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - HU b", mo = hsx, dat = s[Country == "Hungary"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - AU a", mo = ass, dat = s[Country == "Australia"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S4 - AU b", mo = asx, dat = s[Country == "Australia"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-
-# Table SS
-m_ass(name = "Table S5 - full a", mo = mgs, dat = ss, fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - full b", mo = mgx, dat = ss, fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - FI a", mo = fgs, dat = ss[Country == "Finland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - FI b", mo = fgx, dat = ss[Country == "Finland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - PL a", mo = pgs, dat = ss[Country == "Poland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - PL b", mo = pgx, dat = ss[Country == "Poland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - CZ a", mo = cgs, dat = ss[Country == "Czechia"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - CZ b", mo = cgx, dat = ss[Country == "Czechia"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - HU a", mo = hgs, dat = ss[Country == "Hungary"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - HU b", mo = hgx, dat = ss[Country == "Hungary"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - AU a", mo = ags, dat = ss[Country == "Australia"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S5 - AU b", mo = agx, dat = ss[Country == "Australia"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "StringencyIndex"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-
-# Table S6
-m_ass(name = "Table S6 - full a", mo = mhs, dat = dh, fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - full b", mo = mhx, dat = dh, fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - CZ a", mo = chs, dat = dh[Country == "Czechia"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - CZ b", mo = chx, dat = dh[Country == "Czechia"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - FI a", mo = fhs, dat = dh[Country == "Finland"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - FI b", mo = fhx, dat = dh[Country == "Finland"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - HU a", mo = hhs, dat = dh[Country == "Hungary"], fixed = c("Year", "SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - HU b", mo = hhx, dat = dh[Country == "Hungary"], fixed = c("Year", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - PL a", mo = phs, dat = dh[Country == "Poland"], fixed = c("SD", "FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-m_ass(name = "Table S6 - PL b", mo = phx, dat = dh[Country == "Poland"], fixed = c("FlockSize", "BodyMass", "rad", "rad", "Temp", "Human"), trans = c("log", "log", "sin", "cos", "", ""), outdir = here::here("Outputs/modelAss/"))
-
 #' Titles indicate specific models from specific Tables and highlight the model formula in lmer syntax   
 #' <br />
 #'  
-#' #### for Table S1 | Escape distance in relations to Period, given country  {#MS_TS1}
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - full a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - full b.png"))
+#' #### for Table S1a | Escape distance in relations to # of human numbers during an escape distance trial {#MS_TS1a}
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - full a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - full b.png"))
 
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - FI a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - FI b.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - FI a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - FI b.png"))
 
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - PL a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - PL b.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - PL a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - PL b.png"))
 
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - CZ a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - CZ b.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - CZ a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - CZ b.png"))
 
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - HU a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - HU b.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - HU a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1a - HU b.png"))
 
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - AU a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S1 - AU b.png"))
+#' <br />
+#'  
+#' #### for Table S1b | Escape distance in relations to Google Mobility {#MS_TS1b}
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - full a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - full b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - FI a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - FI b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - PL a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - PL b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - CZ a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - CZ b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - HU a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - HU b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - AU a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1b - AU b.png"))
+#' <br />
+#'  
+#' #### for Table S1c | Escape distance in relations to Stringency index {#MS_TS1c}
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - full a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - full b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - FI a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - FI b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - PL a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - PL b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - CZ a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - CZ b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - HU a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - HU b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - AU a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1c - AU b.png"))
+#' <br />
+#'
+#' #### for Table S1d | Escape distance in relations to Period {#MS_TS1d}
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - full a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - full b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - FI a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - FI b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - PL a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - PL b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - CZ a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - CZ b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - HU a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - HU b.png"))
+
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - AU a.png"))
+knitr::include_graphics(here::here("Outputs/modelAss/Table S1d - AU b.png"))
 #' <br />
 #'  
 #' #### for Table S2a | Alternative models on escape distance given Period  
@@ -5222,62 +5273,6 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S3e - FI.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3e - CZ.png"))
 knitr::include_graphics(here::here("Outputs/modelAss/Table S3e - HU.png"))
 #' <br />
-#'   
-#' #### for Table S4 | Escape distance in relation to Stringency index  
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - full a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - full b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - FI a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - FI b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - PL a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - PL b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - CZ a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - CZ b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - HU a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - HU b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - AU a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S4 - AU b.png"))
-#' <br />
-#'   
-#' #### for Table S5 | Escape distance in relations to Google Mobility  
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - full a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - full b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - FI a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - FI b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - PL a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - PL b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - CZ a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - CZ b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - HU a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - HU b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - AU a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S5 - AU b.png"))
-#' <br />
-#'   
-#' #### for Table S6 | Escape distance in relation to # of humans  
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - full a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - full b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - FI a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - FI b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - PL a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - PL b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - CZ a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - CZ b.png"))
-
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - HU a.png"))
-knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - HU b.png"))
 #'  
 #' *** 
 #' 
@@ -5285,11 +5280,11 @@ knitr::include_graphics(here::here("Outputs/modelAss/Table S6 - HU b.png"))
 #' - Bulla, M., Blumstein, D.T., Benedetti, Y., Floigl, K., Jokimäki, J., Kaisanlahti-Jokimäki, M.-L., Markó, G., Morelli, F., Siretckaia, A., Szakony, S., Weston, M.A., Zeid, F.A., Tryjanowski, P., Albrecht, T. & Mikula, P. (2022). Supporting information for 'Urban birds' flight responses were unaffected by the COVID-19 shutdowns'. Open Science Framework https://doi.org/10.17605/OSF.IO/WUZH7.
 #' - Bürkner PC. (2018). Advanced Bayesian multilevel modeling with the R package brms. R Journal 10:395–411. https://doi.org/10.32614/RJ-2018-017
 #' - Bürkner PC. (2017). brms: An R package for Bayesian multilevel models using Stan. J Stat Softw 80:1–28. https://doi.org/10.18637/jss.v080.i01
-#' - Gelman, A., Su, Y.-S., Yajima, M., Hill, J., Pittau, M., Kerman, J., Zheng, T., & Vincent, D. (2016). Data Analysis using Regression and Multilevel/Hierarchical Models. In CRAN Repository (1.8-6.; pp. 1–53).
+#' - Gelman, A., Su, Y.-S., Yajima, M., Hill, J., Pittau, M., Kerman, J., Zheng, T., & Vincent, D. (2016). Data Analysis using Regression and Multilevel/Hierarchical Models. In CRAN Repository (1.8-6.; pp. 1–53). https://www.cambridge.org/highereducation/books/data-analysis-using-regression-and-multilevel-hierarchical-models/32A29531C7FD730C3A68951A17C9D983#overview
 #' - Hale T., Angrist N., Goldszmidt R., Kira B., Petherick A., Phillips T., Webster S., Cameron-Blake E., Hallas L., Majumdar S., Tatlow H. (2021). A global panel database of pandemic policies (Oxford COVID-19 Government Response Tracker). Nature Human Behaviour 2021 5:4 5:529–538. https://doi.org/10.1038/s41562-021-01079-8.
 #' - Peterson, B. G., & Carl, P. (2020). PerformanceAnalytics: Econometric Tools for Performance and Risk Analysis. R package version 2.0.4. https://CRAN.R-project.org/package=PerformanceAnalytics
 #' - Stan Development Team (2022). Stan Modeling Language Users Guide and Reference Manual, Version 2.28. https://mc-stan.org/users/documentation/
-#' - Wickham, H. (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag, New York.
+#' - Wickham, H. (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag, New York. https://ggplot2-book.org
 #'
 #'***
 #'
