@@ -1937,7 +1937,7 @@ out_FID_s %>%
 #' For model descriptions see legend of Fig. [1](#F_1), for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
 #'
 #' <a name="T_S1d"> 
-#' **Table S1d | Escape distance in relations to Period, given country**</a>
+#' **Table S1d | Escape distance in relations to Period**</a>
 out_FID_c <- fread(here::here("Outputs/Table_S1d.csv"))
 out_FID_c$error_structure = out_FID_c$response = NULL
 out_FID_c[model!="", model:=c('Finland', 'Finland, without starting distance', 
@@ -2796,7 +2796,7 @@ out_FID_c %>%
 #' <br />
 #'  
 #' <a name="T_S2b">
-#' **Table S2b | Alternative models on escape distance given Stringency** </a>
+#' **Table S2b | Alternative models on escape distance given Stringency index** </a>
     m01a_ = m_out(name = "Table S2b - 1a", dep = "Escape distance", model = m01a, nsim = 5000)
     m01b_ = m_out(name = "Table S2b - 1b", dep = "Escape distance", model = m01b, nsim = 5000)
     m01c_ = m_out(name = "Table S2b - 1c", dep = "Escape distance", model = m01c, nsim = 5000)
@@ -2953,7 +2953,7 @@ chart.Correlation(dp, histogram = TRUE, pch = 19, alpha = 0.5)
 mtext("Single observations", side = 3, line = 3)
 
 #' <a name="F_S2">
-#' **Figure S2 | Pairwise correlations among predictors of escape distance used in this study.**</a> On the diagonal: histograms and density lines (red) for each variable. Above diagonal: Pearson’s correlation with stars indicating significance . Below diagonal: the bivariate scatterplots, with each dot representing a single observation and a red line representing smoothed fit. Note that first four predictors were never entered togetheer in a single model with escape distance as dependent variable. Created with *chart.Correlation* function from R-package *PerformanceAnalytics* ([Peterson & Carl 2020](https://CRAN.R-project.org/package=PerformanceAnalytics)).
+#' **Figure S2 | Pairwise correlations among predictors of escape distance used in this study.**</a> On the diagonal: histograms and density lines (red) for each variable. Above diagonal: Pearson’s correlation with stars indicating significance. Below diagonal: the bivariate scatterplots, with each dot representing a single observation and a red line representing smoothed fit. Note that first four predictors were never entered togetheer in a single model with escape distance as dependent variable. Created with *chart.Correlation* function from R-package *PerformanceAnalytics* ([Peterson & Carl 2020](https://CRAN.R-project.org/package=PerformanceAnalytics)).
 #'
 #' ***
 #' 
@@ -3052,7 +3052,7 @@ if (save_plot == TRUE) {
 }
 grid::grid.draw(gtg2)
 #' <a name="F_S4">
-#' **Figure S4 | Species-specific avian tolerance towards humans in relation to relaative daily human levels (Google Mobility).**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of Google Mobility for parks in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
+#' **Figure S4 | Species-specific avian tolerance towards humans in relation to relative daily human levels (Google Mobility).**</a> Each dot represents a single escape distance observation (not corrected for other factors such as starting distance of the observer) and a day-specific value of Google Mobility for parks in a given country. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the ggplot function of ggplot2 package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species with ≥10 escape distance observations.
 #'
 #+ Fig_S5_species_string, fig.width=6, fig.height = 7.5
 ss_sp <- s[Nsp > 9]
@@ -3297,7 +3297,7 @@ if (save_plot == TRUE) {
 grid::grid.draw(ggsl)
 
 #' <a name="F_S9">
-#' **Figure S9 | Variation in avian tolerance toward weekly human numbers across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and with available Stringency index data. Panels are ordered alphabetically according to species names.
+#' **Figure S9 | Variation in avian tolerance toward weekly human numbers (proxied by Stringency index) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and with available Stringency index data. Panels are ordered alphabetically according to species names.
 #'
 #+ Fig_S10_site_period, fig.width=8, fig.height = 6
 pxx = pp[N_during > 4 & N_before > 4]
