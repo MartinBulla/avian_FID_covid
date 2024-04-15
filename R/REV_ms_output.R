@@ -2998,6 +2998,169 @@ mtext("Single observations", side = 3, line = 3)
 #'
 #' ***
 #' 
+#' ### Species-site specific trends
+#'
+#+ Fig_2_site_human, fig.width=16*.393701, fig.height = .393701*12 * 19 / 9
+dh[, NspL := .N, by = "sp_loc"]
+dhl <- dh[NspL > 9]
+dhl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
+dhl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
+
+col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
+col_gssh <- col3_[4:7]
+
+gssh <-
+  ggplot(dhl, aes(x = Human, y = FID)) +
+  # stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
+  geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = "grey20") +
+  stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
+  facet_wrap(~sp_C_loc2, ncol = 9) +
+  scale_fill_manual(values = col_gssh, guide = guide_legend(reverse = TRUE)) +
+  scale_colour_manual(values = col_fit) + #c("grey60")) +#
+  scale_x_continuous("Hourly human levels\n[# of humans]", expand = c(0, 0)) +
+  scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
+  coord_cartesian(xlim = c(-3, 40)) +
+  theme_bw() + theme_MB2 +
+  theme(
+    legend.position = c(1, 0.0625),
+    legend.spacing.y = unit(-0.8, "cm"),
+  )
+ 
+
+ggssh <- ggplotGrob(gssh) # gg$layout$name
+ggssh <- gtable_filter_remove(ggssh, name = c("axis-b-2-8", "axis-b-4-8", "axis-b-6-8" , "axis-b-8-7"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
+
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_2_width-180mm_site-humans_v01.png"), ggssh, width = 21.5, height = 8.89 * 19 / 9, unit = "cm", dpi = 600)
+}
+grid::grid.draw(ggssh)
+
+#' <a name="F_2">
+#' **Figure 2 | Variation in avian tolerance toward human numbers during escape trial across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and where # of humans was estimated.The y-axes is on the log-scale. Panels are ordered alphabetically according to species names, then country and site identifier Abbreviated genus names represent Col = Columba, Den = Dendrocopos, Eri = Erithacus, Fri = Fringilla, Gar = Garrulus , Lar = Larus, Lus = Luscinia, Pas = Passer, Str = Streptopelia, Stu = Sturnus, and abbreviated species name megarhync = megarhynchos.
+#'
+#+ Fig_3_site_google, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
+ss[, NspL := .N, by = "sp_loc"]
+ssl <- ss[NspL > 9]
+ssl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary","Australia")))]
+ssl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
+ssl[, Google_mobility := parks_percent_change_from_baseline]
+
+col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
+col3_ssl <- col3_[3:7]
+
+gssl <-
+  ggplot(ssl, aes(x = Google_mobility, y = FID)) +
+  # stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
+  geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = "grey20") +
+  stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
+  facet_wrap(~sp_C_loc2, ncol = 9) + # mayby do 9
+  scale_fill_manual(values = col3_ssl, guide = guide_legend(reverse = TRUE)) +
+  scale_colour_manual(values = col_fit) + # c("grey60")) +
+  scale_x_continuous("Daily human levels\n[Google Mobility]", expand = c(0, 0)) +
+  scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
+  theme_bw() + theme_MB2 +
+  theme(
+    legend.position = c(1, 0.0625),
+    legend.spacing.y = unit(-0.95, "cm"),
+  )
+
+ggssl <- ggplotGrob(gssl) # gg$layout$name
+#ggssl <- gtable_filter_remove(ggssl, name = c("axis-b-2-10", "axis-b-4-10", "axis-b-6-10"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
+
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_3_width-180mm_site-google_v01.png"), ggssl, width = 21.5, height = 10  * 19 / 9, unit = "cm", dpi = 600)
+}
+grid::grid.draw(ggssl)
+
+#' <a name="F_3">
+#' **Figure 3 | Variation in avian tolerance toward daily human levels (Google Mobility) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations, for which Google Mobility data were available. The y-axes is on the log-scale.  Panels are ordered alphabetically according to species names, then country and site identifier Abbreviation in the species names represent Aca. chrysorrh. = Acanthiza chrysorrhoa, Acr = Acridotheres, Ana. Platurhyn. = Anas platyrhynchos,  Ant. caruncula. = Anthochaera carunculata, Che = Chenonetta, Col = Columba, Den = Dendrocopos, Fri = Fringilla, Gal = Gallinula, Gra = Grallina, Gym = Gymnorhina, Lar. novaehol. = Larus novaehollandiae, Lic penicilla = Lichenostomus penicillatus, Lus. megarhync. = Luscinia megarhynchos, Man. melanocep. = Manorina melanocephala, Ocy = Ocyphaps, Pas = Passer, Phy. novaeholl. = Phylidonyris novaehollandiae, Por. = Porphyrio, Rhi = Rhipidura, Sti = Stigmatopelia, and Stu = Sturnus.
+#'
+#+ Fig_4_site_stringency, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
+s[, NspL := .N, by = "sp_loc"]
+sl <- s[NspL > 9]
+sl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary","Australia")))]
+sl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
+
+col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
+col_sl <- col3_[3:7]
+
+gsl <-
+  ggplot(sl, aes(x = StringencyIndex, y = FID)) +
+  # stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
+  geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = "grey20") +
+  stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
+  facet_wrap(~sp_C_loc2, ncol = 9) +
+  scale_fill_manual(values = col_sl, guide = guide_legend(reverse = TRUE)) +
+  scale_colour_manual(values = col_fit) +
+  scale_x_continuous("Weekly human levels\n[Stringency index]", expand = c(0, 0)) +
+  scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
+  theme_bw() + theme_MB2 +
+  theme(
+      legend.position = c(1, 0.0625),
+      legend.spacing.y = unit(-0.95, "cm"),
+    )
+
+ggsl <- ggplotGrob(gsl) # gg$layout$name
+ggsl <- gtable_filter_remove(ggsl, name = c("axis-b-2-9", "axis-b-4-8", "axis-b-6-8", "axis-b-8-8"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
+
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_4_width-180mm_site-stringency_v01.png"), ggsl, width = 21.5, height = 10 * 19 / 9, unit = "cm", dpi = 600)
+}
+
+grid::grid.draw(ggsl)
+
+#' <a name="F_4">
+#' **Figure 4 | Variation in avian tolerance toward weekly human levels (proxied by Stringency index) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations, for whic Stringency index data were available. The y-axes is on the log-scale. Panels are ordered alphabetically according to species names, then country and site identifier Abbreviation in the species names represent Aca. chrysorrh. = Acanthiza chrysorrhoa, Acr = Acridotheres, Ana. Platurhyn. = Anas platyrhynchos,  Ant. caruncula. = Anthochaera carunculata, Che = Chenonetta, Col = Columba, Den = Dendrocopos, Fri = Fringilla, Gal = Gallinula, Gra = Grallina, Gym = Gymnorhina, Lar. novaehol. = Larus novaehollandiae, Lic penicilla = Lichenostomus penicillatus, Lus. megarhync. = Luscinia megarhynchos, Man. melanocep. = Manorina melanocephala, Ocy = Ocyphaps, Pas = Passer, Phy. novaeholl. = Phylidonyris novaehollandiae, Por. = Porphyrio, Rhi = Rhipidura, Sti = Stigmatopelia, and Stu = Sturnus.
+#'
+#+ Fig_5_site_period, fig.width=8, fig.height = 6
+pxx = pp[N_during > 4 & N_before > 4]
+dxx = d[paste(IDLocality, Species) %in% paste(pxx$IDLocality, pxx$Species)]
+# table(dxx$IDLocality, dxx$Year)
+#length(unique(pxx$IDLocality))
+#length(unique(pxx$Species))
+#sum(pxx$N_during) + sum(pxx$N_before)
+
+dxx[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia")))]
+dxx[, sp_C_loc2 := paste(gsub("[_]", " ", Species), Country, IDLocality, sep = "\n")]
+dxx[, genus := sub("_.*", "", Species)]
+dxx[Covid == 0, period := "before COVID-19"]
+dxx[Covid == 1, period := "during COVID-19"]
+
+col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
+col3__ <- col3_[3:7]
+
+g_f2 = 
+ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
+  geom_boxplot(outlier.size = 0.5) +
+  #geom_rect(data=NULL, aes(xmin = 3.5, xmax = Inf, ymin = -Inf, ymax = Inf), color = "grey60", fill = "grey60")+
+  scale_y_continuous("Flight initiation distance [m]", trans = "log10") +
+  annotate(geom = "rect",
+             xmin = 3.5,
+             xmax = +Inf,
+             ymin = 0.6,
+             ymax = +Inf,
+             color = "grey95", fill = "grey95") +
+  geom_boxplot(outlier.size = 0.5) +
+  facet_wrap(~sp_C_loc2) +
+  
+  scale_x_discrete("Year", guide = guide_axis(angle = 45)) +
+  # scale_color_continuous() +
+  scale_colour_manual(values = col3__, guide = guide_legend(reverse = TRUE)) +
+  #scale_fill_manual(values = c("white", "lightgrey")) +
+  theme_bw() + theme_MB2 +
+  theme(legend.position = "none")
+
+if (save_plot == TRUE) {
+  ggsave(here::here("Outputs/Fig_5_width-160mm_v01.png"), g_f2, width = 19.1, height = 19.2, units = "cm") # width = 18, height = 16, 
+}
+
+g_f2
+
+#' <a name="F_5">
+#' **Figure 5 | Between-year variation in avian tolerance toward humans across species and sites.**</a> Each heading denotes the scientific name of the species, country and unique site identifier within each country (e.g. specific park or cemetery). Boxplots outline colour highlights country (as in previous figures), background colour indicates Period (white: before the COVID-19 shutdowns; grey: during the COVID-19 shutdowns). Boxplots depict median (horizontal line inside the box), the 25th and 75th percentiles (box) ± 1.5 times the interquartile range or the minimum/maximum value, whichever is smaller (bars), and the outliers (dots). Included are only species–site combinations with ≥5 observations per Period. Y-axis is on the log-scale. Note the lack of consistent shutdowns effects within and between species, sites and countries.
+#' 
+#' ***
+#' 
 #' ### Species trends
 #+ Fig_S3_species_human, fig.width=0.393701*15.25, fig.height = .393701*6 * 19 / 9
     #fig.width= 0.393701*18, fig.height = 0.393701*5 * 19 / 9
@@ -3192,173 +3355,6 @@ grid::grid.draw(ggx3)
 #' <a name="F_S6">
 #' **Figure S6 | Avian tolerance towards humans before and during the COVID-19 shutdowns according to species.**</a> Dots represent means or single escape distance observations of species at specific sites (e.g. specific park or cemetery) with data for both periods (i.e. before and during the shutdowns) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Dotted lines indicate no difference, dots above the lines indicate lower tolerance towards humans (i.e. longer escape distances), dots below the lines indicate lower tolerance before than during the COVID-19 shutdowns. Panels are ordered alphabetically. The axes are on the log-scale.
 #'
-#' ### Species-site specific trends
-#'
-#+ Fig_2_site_human, fig.width=16*.393701, fig.height = .393701*12 * 19 / 9
-dh[, NspL := .N, by = "sp_loc"]
-dhl <- dh[NspL > 9]
-dhl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
-dhl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
-
-col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
-col_gssh <- col3_[4:7]
-
-gssh <-
-  ggplot(dhl, aes(x = Human, y = FID)) +
-  # stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
-  geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = "grey20") +
-  stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
-  facet_wrap(~sp_C_loc2, ncol = 7) +
-  scale_fill_manual(values = col_gssh, guide = guide_legend(reverse = TRUE)) +
-  scale_colour_manual(values = col_fit) + #c("grey60")) +#
-  scale_x_continuous("Hourly human levels\n[# of humans]", expand = c(0, 0)) +
-  scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
-  coord_cartesian(xlim = c(-3, 40)) +
-  theme_bw() + theme_MB2 +
-  theme(
-    legend.position = c(1, 0.05),
-    legend.spacing.y = unit(-0.8, "cm"),
-  )
- 
-
-ggssh <- ggplotGrob(gssh) # gg$layout$name
-ggssh <- gtable_filter_remove(ggssh, name = c("axis-b-2-10", "axis-b-4-10", "axis-b-6-10"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
-
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_2_width-134mm_site-humans_v03.png"), ggssh, width = 16, height = 12 * 19 / 9, unit = "cm", dpi = 600)
-}
-grid::grid.draw(ggssh)
-
-#' <a name="F_2">
-#' **Figure 2 | Variation in avian tolerance toward human numbers during escape trial across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and where # of humans was estimated.The y-axes is on the log-scale. Panels are ordered alphabetically according to species names, then country and site identifier Abbreviated genus names represent Col = Columba, Den = Dendrocopos, Eri = Erithacus, Fri = Fringilla, Gar = Garrulus , Lar = Larus, Lus = Luscinia, Pas = Passer, Str = Streptopelia, Stu = Sturnus, and abbreviated species name megarhync = megarhynchos.
-#'
-#+ Fig_3_site_google, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
-ss[, NspL := .N, by = "sp_loc"]
-ssl <- ss[NspL > 9]
-ssl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary","Australia")))]
-ssl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
-ssl[, Google_mobility := parks_percent_change_from_baseline]
-
-col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
-col3_ssl <- col3_[3:7]
-
-gssl <-
-  ggplot(ssl, aes(x = Google_mobility, y = FID)) +
-  # stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
-  geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = "grey20") +
-  stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
-  facet_wrap(~sp_C_loc2, ncol = 7) + # mayby do 9
-  scale_fill_manual(values = col3_ssl, guide = guide_legend(reverse = TRUE)) +
-  scale_colour_manual(values = col_fit) + # c("grey60")) +
-  scale_x_continuous("Daily human levels\n[Google Mobility]", expand = c(0, 0)) +
-  scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
-  #coord_cartesian(xlim = c(-3, 40)) +
-  # labs(title = "Species-site specific distributions") +
-  # annotate("text", x = 1, y = 1, label = c(rep("", 52),"Observation"), hjust = -0.08, size = 1) +
-  # labs(title = "Species means per sampling location")+
-  # scale_colour_manual(values=c('grey60'))+
-  # scale_color_manual(name = 'try', values = c('LOESS smoothed = "grey60"'))+
-  theme_bw() + theme_MB2 +
-  theme(
-    legend.position = c(1, 0.05),
-    legend.spacing.y = unit(-0.95, "cm"),
-  )
-
-ggssl <- ggplotGrob(gssl) # gg$layout$name
-#ggssl <- gtable_filter_remove(ggssl, name = c("axis-b-2-10", "axis-b-4-10", "axis-b-6-10"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
-
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_3_width-134mm_site-google_v01.png"), ggssl, width = 16, height = 13.2 * 19 / 9, unit = "cm", dpi = 600)
-}
-grid::grid.draw(ggssl)
-
-#' <a name="F_3">
-#' **Figure 3 | Variation in avian tolerance toward daily human levels (Google Mobility) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations, for which Google Mobility data were available. The y-axes is on the log-scale.  Panels are ordered alphabetically according to species names, then country and site identifier Abbreviation in the species names represent Aca. chrysorrh. = Acanthiza chrysorrhoa, Acr = Acridotheres, Ana. Platurhyn. = Anas platyrhynchos,  Ant. caruncula. = Anthochaera carunculata, Che = Chenonetta, Col = Columba, Den = Dendrocopos, Fri = Fringilla, Gal = Gallinula, Gra = Grallina, Gym = Gymnorhina, Lar. novaehol. = Larus novaehollandiae, Lic penicilla = Lichenostomus penicillatus, Lus. megarhync. = Luscinia megarhynchos, Man. melanocep. = Manorina melanocephala, Ocy = Ocyphaps, Pas = Passer, Phy. novaeholl. = Phylidonyris novaehollandiae, Por. = Porphyrio, Rhi = Rhipidura, Sti = Stigmatopelia, and Stu = Sturnus.
-#'
-#+ Fig_4_site_stringency, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
-s[, NspL := .N, by = "sp_loc"]
-sl <- s[NspL > 9]
-sl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary","Australia")))]
-sl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
-
-col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
-col_sl <- col3_[3:7]
-
-gsl <-
-  ggplot(sl, aes(x = StringencyIndex, y = FID)) +
-  # stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
-  geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = "grey20") +
-  stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
-  facet_wrap(~sp_C_loc2, ncol = 7) +
-  scale_fill_manual(values = col_sl, guide = guide_legend(reverse = TRUE)) +
-  scale_colour_manual(values = col_fit) +
-  scale_x_continuous("Weekly human levels\n[Stringency index]", expand = c(0, 0)) +
-  scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
-  theme_bw() + theme_MB2 +
-  theme(
-      legend.position = c(1, 0.05),
-      legend.spacing.y = unit(-0.95, "cm"),
-    )
-
-ggsl <- ggplotGrob(gsl) # gg$layout$name
-ggsl <- gtable_filter_remove(ggsl, name = c("axis-b-2-11", "axis-b-4-11", "axis-b-6-10"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
-
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_4_width-134mm_site-stringency_v03.png"), ggsl, width = 16, height = 13.2 * 19 / 9, unit = "cm", dpi = 600)
-}
-
-grid::grid.draw(ggsl)
-
-#' <a name="F_4">
-#' **Figure 4 | Variation in avian tolerance toward weekly human levels (proxied by Stringency index) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations, for whic Stringency index data were available. The y-axes is on the log-scale. Panels are ordered alphabetically according to species names, then country and site identifier Abbreviation in the species names represent Aca. chrysorrh. = Acanthiza chrysorrhoa, Acr = Acridotheres, Ana. Platurhyn. = Anas platyrhynchos,  Ant. caruncula. = Anthochaera carunculata, Che = Chenonetta, Col = Columba, Den = Dendrocopos, Fri = Fringilla, Gal = Gallinula, Gra = Grallina, Gym = Gymnorhina, Lar. novaehol. = Larus novaehollandiae, Lic penicilla = Lichenostomus penicillatus, Lus. megarhync. = Luscinia megarhynchos, Man. melanocep. = Manorina melanocephala, Ocy = Ocyphaps, Pas = Passer, Phy. novaeholl. = Phylidonyris novaehollandiae, Por. = Porphyrio, Rhi = Rhipidura, Sti = Stigmatopelia, and Stu = Sturnus.
-#'
-#+ Fig_5_site_period, fig.width=8, fig.height = 6
-pxx = pp[N_during > 4 & N_before > 4]
-dxx = d[paste(IDLocality, Species) %in% paste(pxx$IDLocality, pxx$Species)]
-# table(dxx$IDLocality, dxx$Year)
-#length(unique(pxx$IDLocality))
-#length(unique(pxx$Species))
-#sum(pxx$N_during) + sum(pxx$N_before)
-
-dxx[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia")))]
-dxx[, sp_C_loc2 := paste(gsub("[_]", " ", Species), Country, IDLocality, sep = "\n")]
-dxx[, genus := sub("_.*", "", Species)]
-dxx[Covid == 0, period := "before COVID-19"]
-dxx[Covid == 1, period := "during COVID-19"]
-
-col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
-col3__ <- col3_[3:7]
-
-g_f2 = 
-ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
-  geom_boxplot(outlier.size = 0.5) +
-  #geom_rect(data=NULL, aes(xmin = 3.5, xmax = Inf, ymin = -Inf, ymax = Inf), color = "grey60", fill = "grey60")+
-  scale_y_continuous("Flight initiation distance [m]", trans = "log10") +
-  annotate(geom = "rect",
-             xmin = 3.5,
-             xmax = +Inf,
-             ymin = 0.6,
-             ymax = +Inf,
-             color = "grey95", fill = "grey95") +
-  geom_boxplot(outlier.size = 0.5) +
-  facet_wrap(~sp_C_loc2) +
-  
-  scale_x_discrete("Year", guide = guide_axis(angle = 45)) +
-  # scale_color_continuous() +
-  scale_colour_manual(values = col3__, guide = guide_legend(reverse = TRUE)) +
-  #scale_fill_manual(values = c("white", "lightgrey")) +
-  theme_bw() + theme_MB2 +
-  theme(legend.position = "none")
-
-if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_5_width-160mm_v01.png"), g_f2, width = 19.1, height = 19.2, units = "cm") # width = 18, height = 16, 
-}
-
-g_f2
-
-#' <a name="F_5">
-#' **Figure 5 | Between-year variation in avian tolerance toward humans across species and sites.**</a> Each heading denotes the scientific name of the species, country and unique site identifier within each country (e.g. specific park or cemetery). Boxplots outline colour highlights country (as in previous figures), background colour indicates Period (white: before the COVID-19 shutdowns; grey: during the COVID-19 shutdowns). Boxplots depict median (horizontal line inside the box), the 25th and 75th percentiles (box) ± 1.5 times the interquartile range or the minimum/maximum value, whichever is smaller (bars), and the outliers (dots). Included are only species–site combinations with ≥5 observations per Period. Y-axis is on the log-scale. Note the lack of consistent shutdowns effects within and between species, sites and countries.
-#' 
 #' ***
 #' 
 #' ### Exploration of human presence
