@@ -1,5 +1,5 @@
 #' ---
-#' title: <font size="2">Supporting code, figures and tables for</font><br><font size="5">Urban birds’ tolerance towards humans was largely unaffected by the COVID-19 shutdowns</font>
+#' title: <font size="2">Supporting code, figures and tables for</font><br><font size="5">Urban birds’ tolerance towards humans was largely unaffected by COVID-19 shutdown-induced variation in human levels</font>
 #' author: <font size="2">Peter Mikula, Martin Bulla, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht</font><br><br><font size="2">created by Martin Bulla</font><br>
 #' date: <font size="1.5">`r Sys.time()`</font>
 #' bibliography: _bib.bib
@@ -71,6 +71,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     nsim = 5000 # number of simulations to extract estimates and 95%CrI
     ax_lines = "grey60" # defines color of the axis lines
     #colors <- c("#999999", "#E69F00", "#56B4E9") #viridis(3)
+    col_fit = '#f2e030'# line color of loes smoothed fit '#fdff00'#'#8cff32'#'#abff32'#'orange'
     set.seed(42)
     #width_ = .7 # spacing between error bars
     #col_ = c(brewer.pal(n =12, name = "Paired"), 'grey30','grey80')
@@ -128,7 +129,37 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
                   legend.margin = margin(0,0,0,0, unit="cm"),
                   legend.box.margin = margin(l = -6), #legend.justification = c(-1,0),
                   legend.background = element_blank()
-                  )  
+                  ) 
+        theme_MB2 =  theme(
+            #axis.title.y = element_text(vjust=3.5),
+            #axis.title.x = element_text(vjust=1),
+            axis.title = element_text(size = 7),
+            axis.text = element_text(size=6),
+            axis.line = element_blank(),#axis.line = element_line(colour = ax_lines, linewidth = 0.25),
+            axis.ticks = element_line(colour = ax_lines, linewidth = 0.25),
+            axis.ticks.length = unit(1, "pt"),
+        
+            legend.position = c(1, 0.06),
+            legend.justification = c(1, 0),
+            legend.title = element_blank(),
+            legend.spacing.y = unit(-0.9, "cm"),
+            legend.text=element_text(size=6),
+            legend.key = element_rect(colour = NA, fill = NA),
+            legend.key.height= unit(0.5,"line"),
+            legend.key.width = unit(0.25, "cm"),
+            legend.margin = margin(0,0,0,0, unit="cm"),
+            legend.box.margin = margin(l = -6), #legend.justification = c(-1,0),
+            legend.background = element_blank(),
+
+            strip.background = element_blank(),
+            strip.text.x = element_text(size = 6, color="grey30",  margin=margin(1,1,1,1,"mm")), 
+            strip.text.y = element_text(size = 6, color="grey30",  margin=margin(1,1,1,1,"mm")), 
+
+            panel.spacing = unit(0, "mm"),
+            panel.background=element_blank(),
+            panel.border = element_rect(colour="grey70", linewidth=0.1, fill = NA),
+            panel.grid = element_blank()
+        ) 
     # for estimates
         est_out =function(model = m, label = "", nsim = 5000){
             bsim = sim(model, n.sim=5000) 
@@ -433,6 +464,17 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     d[, flock_ln := log(FlockSize)]
     d[, weekday := weekdays(date_)]
     #d[Country == 'Australia', Day_:= abs(Day - 189)]
+    # add species abbreviations
+    
+    si = data.table(Species = unique(d$Species), nch = nchar(unique(d$Species)))
+    si[, scinam2:=Species]
+    si[nch>15, scinam2:=paste0(substr(Species, 1,3),'. ',sub('.*_', '', Species))]
+    si[is.na(scinam2), scinam2 := Species]
+    si[, nch2 := nchar(scinam2)]
+    si[, scinam_abb:=scinam2]
+    si[nch2>15, scinam_abb:=paste0(substr(scinam2, 1, nch2 - (nch2-14)),'.')]
+    si[, scinam_abb := gsub("[_]", " ", scinam_abb)]
+    d = merge(d, si[,.(Species, scinam_abb)], by = 'Species')
 
     # species with data before and during
     d1 = d[Covid == 1, .N, by = Species]
@@ -472,7 +514,6 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     ppp4 = merge(p1p4,p2p4) # species-localities with data before and during, but without Poland & 2014 data
 
     # add google mobility
-    d[, sp := gsub("[_]", " ", Species)]
     d = merge(d, g[,.(Country,  date_, parks_percent_change_from_baseline)], all.x = TRUE, by = c('Country', 'date_'))
      
     # limit to data with # of humans
@@ -513,7 +554,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
     ssh[, year_day := paste(Year, Day)]
     ssh[, year_weekday := paste(Year, weekday)]
 
-    # add sinam
+    # add scinam
     d[, scinam := Species]
     s[, scinam := Species]
     ss[, scinam := Species]
@@ -530,7 +571,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' 
 #' Questions can be directed to bulla.mar@gmail.com & petomikula158@gmail.com
 #' 
-#' <a name="1"></a>(1) Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023). *Supporting information for "Urban birds’ tolerance towards humans was largely unaffected by the COVID-19 shutdowns"*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/).
+#' <a name="1"></a>(1) Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023). *Supporting information for "Urban birds’ tolerance towards humans was largely unaffected by COVID-19 shutdown-induced variation in human levels"*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/).
 #' 
 #' 
 #' ***
@@ -1894,7 +1935,7 @@ out_FID_h %>%
   kbl() %>%
   kable_paper("hover", full_width = F) %>%
   scroll_box(width = "100%", height = "650px")
-#' For model descriptions see legend of Fig. [1](#F_1), for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
+#' For model descriptions see legend of Fig. [1](#F_1) above, for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
 #'
 #' <a name="T_S1b">
 #' **Table S1b | Escape distance in relations to Google Mobility**</a>
@@ -1914,9 +1955,9 @@ out_FID_g %>%
   kbl() %>%
   kable_paper("hover", full_width = F) %>%
   scroll_box(width = "100%", height = "650px")
-#' For model descriptions see legend of Fig. [1](#F_1), for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
+#' For model descriptions see legend of Fig. [1](#F_1) above, for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
 #'
-#' #' <a name="T_S1c">
+#' <a name="T_S1c">
 #' **Table S1c | Escape distance in relation to Stringency index**</a>
 out_FID_s <- fread(here::here("Outputs/Table_S1c.csv"))
 out_FID_s$error_structure = out_FID_s$response = NULL
@@ -1934,7 +1975,7 @@ out_FID_s %>%
   kbl() %>%
   kable_paper("hover", full_width = F) %>%
   scroll_box(width = "100%", height = "650px")
-#' For model descriptions see legend of Fig. [1](#F_1), for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
+#' For model descriptions see legend of Fig. [1](#F_1) above, for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
 #'
 #' <a name="T_S1d"> 
 #' **Table S1d | Escape distance in relations to Period**</a>
@@ -1951,7 +1992,7 @@ out_FID_c %>%
   kbl() %>%
   kable_paper("hover", full_width = F)  %>%
   scroll_box(width = "100%", height = "650px")
-#' For model descriptions see legend of Fig. [1](#F_1), for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
+#' For model descriptions see legend of Fig. [1](#F_1) above, for descriptions of variables Methods of the [paper](https://doi.org/10.1101/2022.07.15.500232).
 #' 
 #' ***
 #' 
@@ -2845,9 +2886,9 @@ out_FID_c %>%
 #' **Table S2c | Alternative models on escape distance given Google Mobility**</a>
 #'
     # google
-     mg01a_ = m_out(name = "Table S2c - 1a", dep = "Escape distance", model = mg01a, nsim = 5000)
-     mg01b_ = m_out(name = "Table S2c - 1b", dep = "Escape distance", model = mg01b, nsim = 5000)
-     mg01c_ = m_out(name = "Table S2c - 1c", dep = "Escape distance", model = mg01c, nsim = 5000)
+     mg01a_ = m_out(name = "Table S2c - 1a", dep = "Escape distance", model = mg01a, nsim = 5000, R2 = FALSE)
+     mg01b_ = m_out(name = "Table S2c - 1b", dep = "Escape distance", model = mg01b, nsim = 5000, R2 = FALSE)
+     mg01c_ = m_out(name = "Table S2c - 1c", dep = "Escape distance", model = mg01c, nsim = 5000, R2 = FALSE)
 
      mg02a_ = m_out(name = "Table S2c - 2a", dep = "Escape distance", model = mg02a, nsim = 5000)
      mg02b_ = m_out(name = "Table S2c - 2b", dep = "Escape distance", model = mg02b, nsim = 5000)
@@ -3153,11 +3194,11 @@ grid::grid.draw(ggx3)
 #'
 #' ### Species-site specific trends
 #'
-#+ Fig_S7_site_human, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
+#+ Fig_2_site_human, fig.width=16*.393701, fig.height = .393701*12 * 19 / 9
 dh[, NspL := .N, by = "sp_loc"]
 dhl <- dh[NspL > 9]
 dhl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary")))]
-dhl[, sp_C_loc2 := paste(gsub("[_]", " ", Species), Country, IDLocality, sep = "\n")]
+dhl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
 
 col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
 col_gssh <- col3_[4:7]
@@ -3169,45 +3210,33 @@ gssh <-
   stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
   facet_wrap(~sp_C_loc2, ncol = 7) +
   scale_fill_manual(values = col_gssh, guide = guide_legend(reverse = TRUE)) +
-  scale_colour_manual(values = c("grey60")) + #c("red")) +#
+  scale_colour_manual(values = col_fit) + #c("grey60")) +#
   scale_x_continuous("Hourly human levels\n[# of humans]", expand = c(0, 0)) +
   scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
   coord_cartesian(xlim = c(-3, 40)) +
-  #labs(title = "Species-site specific distributions") +
-  # annotate("text", x = 1, y = 1, label = c(rep("", 52),"Observation"), hjust = -0.08, size = 1) +
-  # labs(title = "Species means per sampling location")+
-  # scale_colour_manual(values=c('grey60'))+
-  # scale_color_manual(name = 'try', values = c('LOESS smoothed = "grey60"'))+
-  theme_MB +
+  theme_bw() + theme_MB2 +
   theme(
-    plot.title = element_text(size = 7),
-    strip.background = element_blank(),
-    # strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
-    # panel.spacing = unit(1, "mm"),
-    legend.position = c(1, 0.06),
-    legend.justification = c(1, 0),
-    legend.title = element_blank(),
-    # legend.spacing.y = unit(-0.78, "cm")
-    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
-    legend.spacing.y = unit(-0.9, "cm")
+    legend.position = c(1, 0.05),
+    legend.spacing.y = unit(-0.8, "cm"),
   )
+ 
 
 ggssh <- ggplotGrob(gssh) # gg$layout$name
 ggssh <- gtable_filter_remove(ggssh, name = c("axis-b-2-10", "axis-b-4-10", "axis-b-6-10"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
 
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S7_width-152mm_site-humans.png"), ggssh, width = 17, height = 12 * 19 / 9, unit = "cm", dpi = 600)
+  ggsave(here::here("Outputs/Fig_2_width-134mm_site-humans_v03.png"), ggssh, width = 16, height = 12 * 19 / 9, unit = "cm", dpi = 600)
 }
 grid::grid.draw(ggssh)
 
-#' <a name="F_S7">
-#' **Figure S7 | Variation in avian tolerance toward human numbers during escape trial across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and where # of humans was estimated. Panels are ordered alphabetically according to species names. 
+#' <a name="F_2">
+#' **Figure 2 | Variation in avian tolerance toward human numbers during escape trial across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and where # of humans was estimated.The y-axes is on the log-scale. Panels are ordered alphabetically according to species names, then country and site identifier Abbreviated genus names represent Col = Columba, Den = Dendrocopos, Eri = Erithacus, Fri = Fringilla, Gar = Garrulus , Lar = Larus, Lus = Luscinia, Pas = Passer, Str = Streptopelia, Stu = Sturnus, and abbreviated species name megarhync = megarhynchos.
 #'
-#+ Fig_S8_site_google, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
+#+ Fig_3_site_google, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
 ss[, NspL := .N, by = "sp_loc"]
 ssl <- ss[NspL > 9]
 ssl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary","Australia")))]
-ssl[, sp_C_loc2 := paste(gsub("[_]", " ", Species), Country, IDLocality, sep = "\n")]
+ssl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
 ssl[, Google_mobility := parks_percent_change_from_baseline]
 
 col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
@@ -3218,9 +3247,9 @@ gssl <-
   # stat_smooth(method = 'rlm', se = FALSE, col = 'black', lwd = 0.5)+
   geom_point(pch = 21, alpha = 0.7, aes(fill = Country), col = "grey20") +
   stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
-  facet_wrap(~sp_C_loc2, ncol = 7) +
+  facet_wrap(~sp_C_loc2, ncol = 7) + # mayby do 9
   scale_fill_manual(values = col3_ssl, guide = guide_legend(reverse = TRUE)) +
-  scale_colour_manual(values = c("grey60")) + # c("grey60")) +
+  scale_colour_manual(values = col_fit) + # c("grey60")) +
   scale_x_continuous("Daily human levels\n[Google Mobility]", expand = c(0, 0)) +
   scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
   #coord_cartesian(xlim = c(-3, 40)) +
@@ -3229,36 +3258,28 @@ gssl <-
   # labs(title = "Species means per sampling location")+
   # scale_colour_manual(values=c('grey60'))+
   # scale_color_manual(name = 'try', values = c('LOESS smoothed = "grey60"'))+
-  theme_MB +
+  theme_bw() + theme_MB2 +
   theme(
-    plot.title = element_text(size = 7),
-    strip.background = element_blank(),
-    # strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
-    # panel.spacing = unit(1, "mm"),
-    legend.position = c(1, 0.06),
-    legend.justification = c(1, 0),
-    legend.title = element_blank(),
-    # legend.spacing.y = unit(-0.78, "cm")
-    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
-    legend.spacing.y = unit(-0.9, "cm")
+    legend.position = c(1, 0.05),
+    legend.spacing.y = unit(-0.95, "cm"),
   )
 
 ggssl <- ggplotGrob(gssl) # gg$layout$name
 #ggssl <- gtable_filter_remove(ggssl, name = c("axis-b-2-10", "axis-b-4-10", "axis-b-6-10"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
 
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S8_width-152mm_site-google.png"), ggssl, width = 17, height = 12 * 19 / 9, unit = "cm", dpi = 600)
+  ggsave(here::here("Outputs/Fig_3_width-134mm_site-google_v01.png"), ggssl, width = 16, height = 13.2 * 19 / 9, unit = "cm", dpi = 600)
 }
 grid::grid.draw(ggssl)
 
-#' <a name="F_S8">
-#' **Figure S8 | Variation in avian tolerance toward daily human numbers (Google Mobility) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and with available Google Mobility data. Panels are ordered alphabetically according to species names.
+#' <a name="F_3">
+#' **Figure 3 | Variation in avian tolerance toward daily human levels (Google Mobility) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations, for which Google Mobility data were available. The y-axes is on the log-scale.  Panels are ordered alphabetically according to species names, then country and site identifier Abbreviation in the species names represent Aca. chrysorrh. = Acanthiza chrysorrhoa, Acr = Acridotheres, Ana. Platurhyn. = Anas platyrhynchos,  Ant. caruncula. = Anthochaera carunculata, Che = Chenonetta, Col = Columba, Den = Dendrocopos, Fri = Fringilla, Gal = Gallinula, Gra = Grallina, Gym = Gymnorhina, Lar. novaehol. = Larus novaehollandiae, Lic penicilla = Lichenostomus penicillatus, Lus. megarhync. = Luscinia megarhynchos, Man. melanocep. = Manorina melanocephala, Ocy = Ocyphaps, Pas = Passer, Phy. novaeholl. = Phylidonyris novaehollandiae, Por. = Porphyrio, Rhi = Rhipidura, Sti = Stigmatopelia, and Stu = Sturnus.
 #'
-#+ Fig_S9_site_stringency, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
+#+ Fig_4_site_stringency, fig.width=17*.393701, fig.height = .393701*12 * 19 / 9
 s[, NspL := .N, by = "sp_loc"]
 sl <- s[NspL > 9]
 sl[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary","Australia")))]
-sl[, sp_C_loc2 := paste(gsub("[_]", " ", Species), Country, IDLocality, sep = "\n")]
+sl[, sp_C_loc2 := paste(scinam_abb, Country, IDLocality, sep = "\n")]
 
 col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
 col_sl <- col3_[3:7]
@@ -3270,36 +3291,28 @@ gsl <-
   stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
   facet_wrap(~sp_C_loc2, ncol = 7) +
   scale_fill_manual(values = col_sl, guide = guide_legend(reverse = TRUE)) +
-  scale_colour_manual(values = c("grey60")) +
+  scale_colour_manual(values = col_fit) +
   scale_x_continuous("Weekly human levels\n[Stringency index]", expand = c(0, 0)) +
   scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
-  theme_MB +
+  theme_bw() + theme_MB2 +
   theme(
-    plot.title = element_text(size = 7),
-    strip.background = element_blank(),
-    # strip.text.x = element_text(size = 4.5, color="grey30",  margin=margin(1,1,1,1,"mm")),
-    # panel.spacing = unit(1, "mm"),
-    legend.position = c(1, 0.04),
-    legend.justification = c(1, 0),
-    legend.title = element_blank(),
-    # legend.spacing.y = unit(-0.78, "cm")
-    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
-    legend.spacing.y = unit(-0.9, "cm")
-  )
+      legend.position = c(1, 0.05),
+      legend.spacing.y = unit(-0.95, "cm"),
+    )
 
 ggsl <- ggplotGrob(gsl) # gg$layout$name
 ggsl <- gtable_filter_remove(ggsl, name = c("axis-b-2-11", "axis-b-4-11", "axis-b-6-10"), trim = FALSE) # paste0("axis-b-", c(2, 4), "-9")
 
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S9_width-152mm_site-stringency.png"), ggsl, width = 17, height = 12 * 19 / 9, unit = "cm", dpi = 600)
+  ggsave(here::here("Outputs/Fig_4_width-134mm_site-stringency_v03.png"), ggsl, width = 16, height = 13.2 * 19 / 9, unit = "cm", dpi = 600)
 }
 
 grid::grid.draw(ggsl)
 
-#' <a name="F_S9">
-#' **Figure S9 | Variation in avian tolerance toward weekly human numbers (proxied by Stringency index) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Grey lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. The y-axes is on the log-scale. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations and with available Stringency index data. Panels are ordered alphabetically according to species names.
+#' <a name="F_4">
+#' **Figure 4 | Variation in avian tolerance toward weekly human levels (proxied by Stringency index) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations, for whic Stringency index data were available. The y-axes is on the log-scale. Panels are ordered alphabetically according to species names, then country and site identifier Abbreviation in the species names represent Aca. chrysorrh. = Acanthiza chrysorrhoa, Acr = Acridotheres, Ana. Platurhyn. = Anas platyrhynchos,  Ant. caruncula. = Anthochaera carunculata, Che = Chenonetta, Col = Columba, Den = Dendrocopos, Fri = Fringilla, Gal = Gallinula, Gra = Grallina, Gym = Gymnorhina, Lar. novaehol. = Larus novaehollandiae, Lic penicilla = Lichenostomus penicillatus, Lus. megarhync. = Luscinia megarhynchos, Man. melanocep. = Manorina melanocephala, Ocy = Ocyphaps, Pas = Passer, Phy. novaeholl. = Phylidonyris novaehollandiae, Por. = Porphyrio, Rhi = Rhipidura, Sti = Stigmatopelia, and Stu = Sturnus.
 #'
-#+ Fig_S10_site_period, fig.width=8, fig.height = 6
+#+ Fig_5_site_period, fig.width=8, fig.height = 6
 pxx = pp[N_during > 4 & N_before > 4]
 dxx = d[paste(IDLocality, Species) %in% paste(pxx$IDLocality, pxx$Species)]
 # table(dxx$IDLocality, dxx$Year)
@@ -3324,7 +3337,7 @@ ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
   annotate(geom = "rect",
              xmin = 3.5,
              xmax = +Inf,
-             ymin = 1,
+             ymin = 0.6,
              ymax = +Inf,
              color = "grey95", fill = "grey95") +
   geom_boxplot(outlier.size = 0.5) +
@@ -3334,29 +3347,17 @@ ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
   # scale_color_continuous() +
   scale_colour_manual(values = col3__, guide = guide_legend(reverse = TRUE)) +
   #scale_fill_manual(values = c("white", "lightgrey")) +
-  theme_MB +
-  theme(
-    plot.title = element_text(size = 7),
-    strip.background = element_blank(),
-    strip.text.x = element_text(size = 5, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
-    # panel.spacing = unit(1, "mm"),
-    legend.position = "none", # c(1, 0.01),
-    legend.justification = c(1, 0),
-    legend.title = element_blank(),
-    # legend.spacing.y = unit(-0.78, "cm")
-    # legend.spacing.y = unit(0.02, "cm") use if LOESS smooth text as legend
-    legend.spacing.y = unit(-0.9, "cm"),
-    axis.text.x = element_text(colour = "grey30", size = 6),
-    axis.text.y = element_text(colour = "grey30", size = 6)
-  )
+  theme_bw() + theme_MB2 +
+  theme(legend.position = "none")
+
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_S10_width-180mm.png"), g_f2, width = 18, height = 16, units = "cm")
+  ggsave(here::here("Outputs/Fig_5_width-160mm_v01.png"), g_f2, width = 19.1, height = 19.2, units = "cm") # width = 18, height = 16, 
 }
 
 g_f2
 
-#' <a name="F_S10">
-#' **Figure S10 | Between-year variation in avian tolerance toward humans across species and sites.**</a> Each heading denotes the scientific name of the species, country and unique site ID within each country. Boxplots outline colour highlights country (as in previous figures), background colour indicates Period (white: before the COVID-19 shutdowns; grey: during the COVID-19 shutdowns). Boxplots depict median (horizontal line inside the box), the 25th and 75th percentiles (box) ± 1.5 times the interquartile range or the minimum/maximum value, whichever is smaller (bars), and the outliers (dots). Included are only species–site combinations with ≥5 observations per Period. Y-axis is on the log-scale. Note the lack of consistent shutdowns effects within and between species, sites and countries.
+#' <a name="F_5">
+#' **Figure 5 | Between-year variation in avian tolerance toward humans across species and sites.**</a> Each heading denotes the scientific name of the species, country and unique site identifier within each country (e.g. specific park or cemetery). Boxplots outline colour highlights country (as in previous figures), background colour indicates Period (white: before the COVID-19 shutdowns; grey: during the COVID-19 shutdowns). Boxplots depict median (horizontal line inside the box), the 25th and 75th percentiles (box) ± 1.5 times the interquartile range or the minimum/maximum value, whichever is smaller (bars), and the outliers (dots). Included are only species–site combinations with ≥5 observations per Period. Y-axis is on the log-scale. Note the lack of consistent shutdowns effects within and between species, sites and countries.
 #' 
 #' ***
 #' 
@@ -3473,8 +3474,8 @@ if(save_plot==TRUE){
 ggsave(here::here("Outputs/Fig_4_width-160mm.png"), g123, width = 8 * 2, height = 11, unit = "cm", dpi = 600)
 }
 g123
-#' <a name="F_4">
-#' **Figure 4 | Changes in human presence in parks within and between years and countries.**</a> (**a**) Left plots represent distributions (histograms) of daily human presence (Google Mobility), middle plots the raw daily data across years, and right plots locally estimated scatterplot smoothing (Loess). Dotted vertical line in “Distribution” plots indicates baseline value of human presence, separating negative values that represent decreased human presence and positive values that indicate increased human presence when compared with the baseline. The baseline is country and weekday specific (for weekday-specific patterns, see Fig. [S11](#F_S11)). Note that Google Mobility data were unavailable for the years before the COVID-19 pandemic (i.e. before 2020) but the year 2022 was without shutdowns in the studied countries.
+#' <a name="F_8">
+#' **Figure 8 | Changes in human presence in parks within and between years and countries.**</a> (**a**) Left plots represent distributions (histograms) of daily human presence (Google Mobility), middle plots the raw daily data across years, and right plots locally estimated scatterplot smoothing (Loess). Dotted vertical line in “Distribution” plots indicates baseline value of human presence, separating negative values that represent decreased human presence and positive values that indicate increased human presence when compared with the baseline. The baseline is country and weekday specific (for weekday-specific patterns, see Fig. [S11](#F_S7)). Note that Google Mobility data were unavailable for the years before the COVID-19 pandemic (i.e. before 2020) but the year 2022 was without shutdowns in the studied countries.
 #' 
 #'  
 #+ Fig_S11_gm_week_year, fig.width=10, fig.height=6
@@ -3497,8 +3498,8 @@ if(save_plot==TRUE){
 ggsave(here::here("Outputs/Fig_S11_rev.png"), g_s5, width = 8 * 2.54, height = 6 * 2.54, unit = "cm", dpi = 600)
 }
 g_s5
-#' <a name="F_S11">
-#' **Figure S11 | Changes in daily human presence (Google Mobility) in parks across weekdays and years.**</a> Depicted are raw data connected by lines. Note that Google Mobility data were not freely available for years before the COVID-19 pandemic (i.e. before 2020) but 2022 was a year without shutdowns in the studied countries.
+#' <a name="F_S7">
+#' **Figure S7 | Changes in daily human presence (Google Mobility) in parks across weekdays and years.**</a> Depicted are raw data connected by lines. Note that Google Mobility data were not freely available for years before the COVID-19 pandemic (i.e. before 2020) but 2022 was a year without shutdowns in the studied countries.
 #' 
 #' ***
 #' 
@@ -4049,8 +4050,8 @@ ggsave(file = here::here("Outputs/Fig_2_width-160mm.png"), fig_2, width = 16, he
 
 fig_2
 
-#' <a name="F_2">
-#' **Figure 2 | Human numbers during escape trial in association with daily human presence in parks (Google Mobility, left) and stringency of antipandemic governmental restrictions (Stringency index, right).**</a> Dots represent individual data points (**top** panels on original scale, **bottom** on ln-scale), jittered to increase visibility. Lines with shaded areas represent predictions with 95%CIs from mixed effect models controlled for the year (in case of Finland and Hungary) and non-independence of data points by including weekday within the year as a random intercept and Stringency index or Google Mobility as a random slope (Table [S3a](#T_S3a), [S3b](#T_S3b), [S3c](#T_S3c), [S3d](#T_S3d)). Human numbers during escape trial were missing for Australia and Poland during shutdowns. Note the weak and country-specific associations.
+#' <a name="F_6">
+#' **Figure 6 | Human numbers during escape trial in association with daily human presence in parks (Google Mobility, left) and stringency of antipandemic governmental restrictions (Stringency index, right).**</a> Dots represent individual data points (**top** panels on original scale, **bottom** on ln-scale), jittered to increase visibility. Lines with shaded areas represent predictions with 95%CIs from mixed effect models controlled for the year (in case of Finland and Hungary) and non-independence of data points by including weekday within the year as a random intercept and Stringency index or Google Mobility as a random slope (Table [S3a](#T_S3a), [S3b](#T_S3b), [S3c](#T_S3c), [S3d](#T_S3d)). Human numbers during escape trial were missing for Australia and Poland during shutdowns. Note the weak and country-specific associations.
 #' 
 #' ***
 #' 
@@ -4446,8 +4447,8 @@ if (save_plot == TRUE) {
 
 p
 
-#' <a name="F_3">
-#' **Figure 3 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (Stringency index).**</a> Lines with shaded areas represent predictions with 95%CIs from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and Stringency index as a random slope (Table [S3e](#T_S3e)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and Stringency index.
+#' <a name="F_7">
+#' **Figure 7 | Association between human presence in parks (Google Mobility) and stringency of antipandemic governmental restrictions (Stringency index).**</a> Lines with shaded areas represent predictions with 95%CIs from country-specific mixed effect models controlled for the year and non-independence of data points by including weekday within the year as random intercept and Stringency index as a random slope (Table [S3e](#T_S3e)). Dots represent raw data, jittered to increase visibility, for days within which we collected escape distances in each city. Colours indicate country. Note the generally negative but weak association between human presence and Stringency index.
 #'
 #' <a name="T_S3e">
 #' **Table S3e | Google Mobility in relation to Stringency index**</a>
