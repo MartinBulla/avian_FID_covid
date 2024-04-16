@@ -3092,7 +3092,7 @@ grid::grid.draw(ggsl)
 #' <a name="F_4">
 #' **Figure 4 | Variation in avian tolerance toward weekly human levels (proxied by Stringency index) across species and sites.**</a> Dots represent single escape distance observations of species at specific sites (e.g. specific park or cemetery) and not corrected for other factors such as starting distance of the observer. Dot colour highlights the country. Yellow lines represent locally weighted smoothing, a non-parametric local regression fitted with the *ggplot* function of the *ggplot2* package ([Wickham 2016](https://ggplot2-book.org)), highlighting heterogenous (and usually unclear – close to zero) within- and between- species trends. Some species lack trend lines because data distribution hindered the smoothing and visualised are only data for species-site combinations with ≥10 escape distance observations, for which Stringency index data were available. The y-axes are on the log-scale. Panels are ordered alphabetically according to species names, then country and site identifier Abbreviation in the species names represent Aca. chrysorrh. = Acanthiza chrysorrhoa, Acr = Acridotheres, Anas platyrhy. = Anas platyrhynchos,  Ant. caruncula. = Anthochaera carunculata, Che = Chenonetta, Col = Columba, Den = Dendrocopos, Fri = Fringilla, Gal = Gallinula, Gra = Grallina, Gym = Gymnorhina, Lar. novaehol. = Larus novaehollandiae, Lic penicilla = Lichenostomus penicillatus, Lus. megarhync. = Luscinia megarhynchos, Man. melanocep. = Manorina melanocephala, Ocy = Ocyphaps, Pas = Passer, Phy. novaeholl. = Phylidonyris novaehollandiae, Por. = Porphyrio, Rhi = Rhipidura, Sti = Stigmatopelia, and Stu = Sturnus.
 #'
-#+ Fig_5_site_period, fig.width=8, fig.height = 6
+#+ Fig_5_site_period, fig.width=17*.393701, fig.height = 14*.393701
 pxx = pp[N_during > 4 & N_before > 4]
 dxx = d[paste(IDLocality, Species) %in% paste(pxx$IDLocality, pxx$Species)]
 # table(dxx$IDLocality, dxx$Year)
@@ -3109,7 +3109,7 @@ dxx[Covid == 1, period := "during COVID-19"]
 col3_ <- c("#357EBDFF", "#D43F3AFF", "#46B8DAFF", "#5CB85CFF", "#EEA236FF", "#9632B8FF", "#9632B8FF")[7:1]
 col3__ <- col3_[3:7]
 
-g_f2 = 
+g_f5 = 
 ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
   geom_boxplot(outlier.size = 0.5) +
   #geom_rect(data=NULL, aes(xmin = 3.5, xmax = Inf, ymin = -Inf, ymax = Inf), color = "grey60", fill = "grey60")+
@@ -3128,16 +3128,19 @@ ggplot(dxx, aes(x = as.factor(Year), y = FID, col = Country)) +
   scale_colour_manual(values = col3__, guide = guide_legend(reverse = TRUE)) +
   #scale_fill_manual(values = c("white", "lightgrey")) +
   theme_bw() + theme_MB2 +
-  theme(legend.position = "none")
+  theme(legend.position = "right",
+        legend.justification = c(0, 0.94),
+        legend.margin = margin(0,0,0,0, unit="cm"),
+        legend.box.margin = margin(5, 5, 5, 5))
 
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_5_width-160mm.png"), g_f2, width = 16.1, height = 16, units = "cm") # width = 18, height = 16, 
+  ggsave(here::here("Outputs/Fig_5_width-170mm.png"), g_f5, width = 17, height = 14, units = "cm") # width = 18, height = 16, 
 }
 
-g_f2
+g_f5
 
 #' <a name="F_5">
-#' **Figure 5 | Between-year variation in avian tolerance toward humans across species and sites.**</a> Panels are ordered alphabetically according to species names, then country and site identifier within each country (e.g. specific park or cemetery). Boxplots outline colour highlights country (as in Fig. 2-4), background colour indicates Period (white: before the COVID-19 shutdowns; grey: during the COVID-19 shutdowns). Boxplots depict median (horizontal line inside the box), the 25th and 75th percentiles (box) ± 1.5 times the interquartile range or the minimum/maximum value, whichever is smaller (bars), and the outliers (dots). Included are only species–site combinations with ≥5 observations per Period. The y-axes are on the log-scale. Note the lack of consistent shutdowns effects within and between species, sites and countries.
+#' **Figure 5 | Between-year variation in avian tolerance toward humans across species and sites.**</a> Panels are ordered alphabetically according to species names, then country and site identifier within each country (e.g. specific park or cemetery). Boxplots outline colour highlights country, background colour indicates Period (white: before the COVID-19 shutdowns; grey: during the COVID-19 shutdowns). Boxplots depict median (horizontal line inside the box), the 25th and 75th percentiles (box) ± 1.5 times the interquartile range or the minimum/maximum value, whichever is smaller (bars), and the outliers (dots). Included are only species–site combinations with ≥5 observations per Period. The y-axes are on the log-scale. Note the lack of consistent shutdowns effects within and between species, sites and countries.
 #' 
 #' ***
 #' 
@@ -3160,7 +3163,7 @@ gh2 <-
   stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
   facet_wrap(~sp2, ncol = 6) +
   scale_fill_manual(values = col_gh2, guide = guide_legend(reverse = TRUE)) +
-  scale_colour_manual(values = c("grey60")) +
+  scale_colour_manual(values = col_fit) +
   scale_x_continuous("Hourly human levels\n[# of humans]", expand = c(0, 0)) +
   scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
   coord_cartesian(xlim = c(-5, 70)) +
@@ -3211,7 +3214,7 @@ gt2 <-
   stat_smooth(se = FALSE, aes(colour = "Locally weighted\nsmoothing"), lwd = 0.5) + # show_guide=TRUE
   facet_wrap(~sp2, ncol = 6) +
   scale_fill_manual(values = col3__, guide = guide_legend(reverse = TRUE)) +
-  scale_colour_manual(values = c("grey60")) +
+  scale_colour_manual(values = col_fit) +
   scale_x_continuous("Daily human levels\n[Google Mobility]", expand = c(0, 0)) +
   scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
   theme_MB +
@@ -3254,7 +3257,7 @@ gs2 <-
   scale_y_continuous("Flight initiation distance [m]", expand = c(0, 0), trans = "log10") +
   # annotate("text", x = 1, y = 1, label = c(rep("", 52),"Observation"), hjust = -0.08, size = 1) +
   # labs(title = "Species means per sampling location")+
-  scale_colour_manual(values = c("grey60")) +
+  scale_colour_manual(values = col_fit) +
   # scale_color_manual(name = 'try', values = c('LOESS smoothed = "grey60"'))+
   theme_MB +
   theme(
@@ -4484,24 +4487,20 @@ g2 <- ggplot(g_, aes(x = Day, y = parks_percent_change_from_baseline, col = fact
 
 g1$labels$x <- g2$labels$x <- " \n "
 
-(g0|g1|g2)
-grid::grid.draw(grid::textGrob('Day in the breading season\n ', y = 0.055, x = 0.6, gp = gpar(fontsize =7)))
+#if(save_plot==TRUE){
+#png(here::here("Outputs/Fig_8_width-160mm.png"),  width = 16, height = 11, unit = "cm", res = 600)
+#(g0|g1|g2)
+#grid::grid.draw(grid::textGrob('Day in the breading season\n ', y = 0.055, x = 0.6, gp = gpar(fontsize =7)))
+#dev.off()
+#}
 
-if(save_plot==TRUE){
-png(here::here("Outputs/Fig_8_width-160mm.png"),  width = 16, height = 11, unit = "cm", res = 600)
-(g0|g1|g2)
-grid::grid.draw(grid::textGrob('Day in the breading season\n ', y = 0.055, x = 0.6, gp = gpar(fontsize =7)))
-dev.off()
-}
-
-(g0|g1|g2)
-grid::grid.draw(grid::textGrob('Day in the breading season\n ', y = 0.055, x = 0.6, gp = gpar(fontsize =7)))
+g0|g1|g2; grid::grid.draw(grid::textGrob('Day in the breading season\n ', y = 0.055, x = 0.6, gp = gpar(fontsize =7)))
 
 #' <a name="F_8">
-#' **Figure 8 | Changes in human levels in parks within and between years and countries.**</a> (**a**) **Left panels** represent distributions (histograms) of daily human levels (Google Mobility), **middle panels** the raw daily data across years, and **right plots** locally estimated scatterplot smoothing. Dotted vertical line in “Distribution” panels indicates baseline value of human levels, separating negative values that represent decreased human presence and positive values that indicate increased human presence when compared with the country and weekday specific baseline human levels estimated as the median from 3 January - 6 February 2020 (see also Methods; for weekday-specific patterns see Fig. [S7](#F_S7)). The zeros on the x-axes of middle and right panels represent the beginning of the breading season. Note that Google Mobility data were unavailable for the years before the COVID-19 pandemic (i.e. before 2020) but the year 2022 was without shutdowns in the studied countries.
+#' **Figure 8 | Changes in human levels in parks within and between years and countries.**</a> **Left panels** represent distributions (histograms) of daily human levels (Google Mobility), **middle panels** the raw daily data across years, and **right panels** locally estimated scatterplot smoothing. Dotted vertical line in “Distribution” panels indicates baseline value of human levels, separating negative values that represent decreased human presence and positive values that indicate increased human presence when compared with the country and weekday specific baseline human levels estimated as the median from 3 January - 6 February 2020 (see also Methods; for weekday-specific patterns see Fig. [S7](#F_S7)). The zeros on the x-axes of middle and right panels represent the beginning of the breading season. Note that Google Mobility data were unavailable for the years before the COVID-19 pandemic (i.e. before 2020) but the year 2022 was without shutdowns in the studied countries.
 #' 
 #'  
-#+ Fig_S7_gm_week_year, fig.width=10, fig.height=6
+#+ Fig_S7_gm_week_year, fig.width=18*.393701, fig.height=13*.393701
 g_w <- fread(here::here("Data/google_mobility.txt")) # fwrite(d, here::here('Data/data.txt'), sep ='\t')
 g_w[, Year := as.integer(substring(date, nchar(date) - 3, nchar(date)))]
 g_w[nchar(date) == 9, date := paste0("0", date)]
@@ -4516,9 +4515,43 @@ ggplot(g_w, aes(x = Day, y = parks_percent_change_from_baseline, col = factor(Ye
     geom_line() +
     facet_grid(rows = vars(Country), cols = vars(weekday)) +
     # scale_y_continuous(trans = 'log')+
-    scale_color_manual(values = c("orange", "skyblue", "black"))
+    scale_color_manual(values = c("orange", "skyblue", "black"), labels = c("2020", "2021", "2022 (post-COVID-19)"), name = "Year") +
+    labs(x = "Day in the breading season", y = "Google Mobility\n[% change in human presence]")+
+    theme_bw() +  
+  theme(
+    title = element_text(size=8, colour="grey30"),
+    plot.subtitle = element_text(size = 7, color="grey30"),
+  
+    strip.text.x = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm")),
+    strip.text.y = element_text(size = 6, color = "grey30", margin = margin(1, 1, 1, 1, "mm"), angle = 90),
+    strip.background = element_blank(), 
+
+    legend.text = element_text(color = "grey30", size = 6),
+    legend.title=element_text(size=6), 
+    legend.justification = c(0, 1),
+    legend.margin = margin(0,0,0,0, unit="cm"),
+    legend.box.margin = margin(5, 5, 5, 5),
+
+    #legend.spacing.y = unit(-0.9, "cm"),
+    legend.background = element_blank(),
+    legend.key = element_rect(colour = NA, fill = NA),
+    legend.key.height= unit(0.5,"line"),
+    legend.key.width = unit(0.25, "cm"),
+  
+    axis.title = element_text(size = 7),
+    axis.text = element_text(size=6),
+    axis.line = element_blank(),
+    axis.ticks = element_line(colour = "grey70", linewidth = 0.1),
+    axis.ticks.length = unit(1, "pt"),
+
+    panel.spacing = unit(0, "mm"),
+    panel.background=element_blank(),
+    panel.border = element_rect(colour="grey70", linewidth=0.1, fill = NA),
+    panel.grid = element_blank()           
+  )
+
 if(save_plot==TRUE){
-ggsave(here::here("Outputs/Fig_S7.png"), g_s5, width = 8 * 2.54, height = 6 * 2.54, unit = "cm", dpi = 600)
+ggsave(here::here("Outputs/Fig_S7.png"), g_s5, width = 18, height = 13, unit = "cm", dpi = 600)
 }
 g_s5
 #' <a name="F_S7">
