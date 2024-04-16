@@ -76,7 +76,7 @@ Table S1d - CZ a,Escape distancey,Gaussian,2013,fixed,(Intercept),0.113,-0.253,0
 "","","","",random,weekday (Intercept),0%,0%,0%
 "","","","",random,year (Intercept),15%,1%,33%
 "","","","",random,Residual,52%,34%,70%
-Table S1d - CZ b,Escape distance,Gaussian,2013,fixed,(Intercept),-0.036,-0.965,0.867
+Table S1d - CZ b,Escape distance,Gaussian,2013,fixed,(Intercept),-0.036,-0.964,0.867
 "","","","",fixed,flock size (ln),0.005,-0.03,0.04
 "","","","",fixed,body mass (ln),0.23,0.079,0.383
 "","","","",fixed,time (sine of radians),0.138,0.085,0.193
@@ -103,7 +103,7 @@ Table S1d - HU a,Escape distance,Gaussian,1456,fixed,(Intercept),0.099,-0.182,0.
 "","","","",random,species within day & year (Intercept),5%,4%,5%
 "","","","",random,species within site (Intercept),0%,0%,0%
 "","","","",random,species (Intercept),3%,2%,3%
-"","","","",random,genus (Intercept),7%,5%,7%
+"","","","",random,genus (Intercept),7%,5%,8%
 "","","","",random,site (Intercept),2%,0%,9%
 "","","","",random,Period (slope) | site,2%,0%,9%
 "","","","",random,weekday (Intercept),1%,0%,1%

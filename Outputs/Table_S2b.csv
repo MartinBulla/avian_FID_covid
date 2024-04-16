@@ -107,7 +107,7 @@ Table S2b - 3a,Escape distance,Gaussian,3425,fixed,(Intercept),-0.14,-0.451,0.18
 "","","","",fixed,time (sine of radians),-0.013,-0.055,0.03
 "","","","",fixed,time (cosine of radians),-0.009,-0.045,0.028
 "","","","",fixed,temperature,-0.011,-0.055,0.032
-"","","","",fixed,Stringency index,0.017,-0.154,0.186
+"","","","",fixed,Stringency index,0.017,-0.155,0.186
 "","","","",random,species within day & year (Intercept),5%,3%,7%
 "","","","",random,species within site (Intercept),5%,3%,7%
 "","","","",random,site (Intercept),8%,5%,10%

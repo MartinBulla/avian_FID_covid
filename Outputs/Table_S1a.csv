@@ -16,7 +16,7 @@ Table S1a - full a,Escape distance,Gaussian,3504,fixed,(Intercept),0.153,-0.196,
 "","","","",random,country (Intercept),0%,-2%,15%
 "","","","",random,# of humans (slope) | country,0%,-2%,15%
 "","","","",random,Year (Intercept),6%,4%,7%
-"","","","",random,Residual,61%,38%,70%
+"","","","",random,Residual,61%,37%,70%
 Table S1a - full b,Escape distance,Gaussian,3504,fixed,(Intercept),0.306,-0.027,0.64
 "","","","",fixed,flock size (ln),-0.004,-0.032,0.024
 "","","","",fixed,body mass (ln),0.285,0.156,0.418

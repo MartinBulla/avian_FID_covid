@@ -17,23 +17,23 @@ Table S1c - full a,Escape distance,Gaussian,3676,fixed,(Intercept),-0.079,-0.335
 "","","","",random,country (Intercept),2%,-16%,16%
 "","","","",random,Stringency index (slope) | country,2%,-16%,16%
 "","","","",random,Residual,67%,45%,96%
-Table S1c  - full b,Escape distance,Gaussian,3676,fixed,(Intercept),0.051,-0.098,0.199
-"","","","",fixed,year,0.083,0.031,0.139
-"","","","",fixed,flock size (ln),0.011,-0.02,0.039
-"","","","",fixed,body mass (ln),0.14,0.052,0.225
-"","","","",fixed,time (sine of radians),0.047,-0.001,0.095
-"","","","",fixed,time (cosine of radians),0.05,0.009,0.089
-"","","","",fixed,temperature,0.005,-0.042,0.053
-"","","","",fixed,Stringency index,-0.002,-0.229,0.222
-"","","","",random,species within day & year (Intercept),6%,5%,8%
-"","","","",random,species within site (Intercept),5%,4%,6%
-"","","","",random,species (Intercept),9%,9%,10%
-"","","","",random,site (Intercept),13%,13%,14%
-"","","","",random,genus (Intercept),5%,5%,6%
+Table S1c  - full b,Escape distance,Gaussian,3676,fixed,(Intercept),-0.115,-0.462,0.226
+"","","","",fixed,year,0.084,0.031,0.14
+"","","","",fixed,flock size (ln),0.01,-0.021,0.039
+"","","","",fixed,body mass (ln),0.135,0.046,0.222
+"","","","",fixed,time (sine of radians),0.045,-0.003,0.094
+"","","","",fixed,time (cosine of radians),0.048,0.008,0.087
+"","","","",fixed,temperature,0.009,-0.038,0.057
+"","","","",fixed,Stringency index,0.015,-0.22,0.246
+"","","","",random,species within day & year (Intercept),6%,4%,11%
+"","","","",random,species within site (Intercept),5%,3%,9%
+"","","","",random,species (Intercept),10%,7%,15%
+"","","","",random,site (Intercept),10%,7%,16%
+"","","","",random,genus (Intercept),6%,5%,9%
 "","","","",random,weekday (Intercept),0%,0%,0%
-"","","","",random,country (Intercept),3%,-8%,9%
-"","","","",random,Stringency index (slope) | country,3%,-8%,9%
-"","","","",random,Residual,55%,45%,73%
+"","","","",random,country (Intercept),3%,-33%,20%
+"","","","",random,Stringency index (slope) | country,3%,-33%,20%
+"","","","",random,Residual,57%,34%,106%
 Table S1c  - FI a,Escape distance,Gaussian,354,fixed,(Intercept),0.031,-0.184,0.248
 "","","","",fixed,year,-0.105,-0.338,0.126
 "","","","",fixed,starting distance (ln)),0.19,0.082,0.293

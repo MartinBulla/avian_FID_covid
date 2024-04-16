@@ -91,7 +91,7 @@ Table S2d - 2b,Escape distance,Gaussian,3446,fixed,(Intercept),-0.003,-0.349,0.3
 Table S2d - 2c,Escape distance,Gaussian,3446,fixed,(Intercept),0.071,-0.261,0.412
 "","","","",fixed,starting distance (ln),0.469,0.434,0.504
 "","","","",fixed,flock size (ln),-0.028,-0.055,-0.002
-"","","","",fixed,body mass (ln),0.094,-0.013,0.198
+"","","","",fixed,body mass (ln),0.094,-0.013,0.197
 "","","","",fixed,time (sine of radians),0.022,-0.017,0.062
 "","","","",fixed,time (cosine of radians),-0.013,-0.045,0.019
 "","","","",fixed,temperature,-0.028,-0.066,0.01
@@ -140,7 +140,7 @@ Table S2d - 3b,Escape distance,Gaussian,3408,fixed,(Intercept),-0.001,-0.355,0.3
 "","","","",random,country (Intercept),0%,-3%,16%
 "","","","",random,# of humans (slope) | country,0%,-3%,16%
 "","","","",random,year (Intercept),7%,5%,7%
-"","","","",random,Residual,70%,36%,79%
+"","","","",random,Residual,70%,35%,79%
 Table S2d - 3c,Escape distancey,Gaussian,3408,fixed,(Intercept),0.06,-0.271,0.402
 "","","","",fixed,starting distance (ln),0.463,0.428,0.497
 "","","","",fixed,flock size (ln),-0.029,-0.054,-0.002
