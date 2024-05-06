@@ -1599,16 +1599,16 @@ oho[, N := as.numeric(sub(".*N = ", "", model))]
 # add meta-analytical mean
 oho_s <- oho[control_for_starting_distance == "yes"]
 met <- summary(meta.summaries(d = oho_s$estimate, se = oho_s$sd, method = "fixed", weights = oho_s$N))$summci
-oho_met <- data.table(predictor = "# of humans", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(metanalytical)", N = NA)
+oho_met <- data.table(predictor = "# of humans", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(meta-analytical)", N = NA)
 
 oho_sx <- oho[control_for_starting_distance == "no"]
 metx <- summary(meta.summaries(d = oho_sx$estimate, se = oho_sx$sd, method = "fixed", weights = oho_sx$N))$summci
-oho_metx <- data.table(predictor = "# of humans", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(metanalytical)", N = NA)
+oho_metx <- data.table(predictor = "# of humans", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(meta-analytical)", N = NA)
 
 oho_au <- data.table(predictor = "# of humans", estimate = NA, lwr = NA, upr = NA, sd = NA, model = NA, control_for_starting_distance = c("no", "yes"), Country = "Australia", N = 0) # dummy for australia
 oho <- rbind(oho, oho_met, oho_metx, oho_au)
 
-oho[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(metanalytical)", "All\n(mixed model)")))]
+oho[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(meta-analytical)", "All\n(mixed model)")))]
 
 # prepare for adding N
 oho[, N := as.character(N)]
@@ -1633,12 +1633,12 @@ g1a <-
   scale_x_continuous(breaks = round(seq(-0.3, 0.1, by = 0.1), 1), limits = c(-0.3, 0.132)) +
   ylab("") +
   xlab("Hourly human levels\n[# of humans]") +
-  labs(tag = "a)") +
+  labs(tag = "a") +
   # coord_cartesian(xlim = c(-.15, .15)) +
   # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
   theme_bw() +
   theme(
-    plot.tag = element_text(size = 7),
+    plot.tag = element_text(size = 7,face = "bold"),
     legend.position = "right",
     legend.title = element_text(size = tx_legend_tit),
     legend.text = element_text(size = 6),
@@ -1670,15 +1670,15 @@ ogo[, N := as.numeric(sub(".*N = ", "", model))]
 # add meta-analytical mean
 ogo_s <- ogo[control_for_starting_distance == "yes"]
 met <- summary(meta.summaries(d = ogo_s$estimate, se = ogo_s$sd, method = "fixed", weights = ogo_s$N))$summci
-ogo_met <- data.table(predictor = "Period", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(metanalytical)", N = NA)
+ogo_met <- data.table(predictor = "Period", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(meta-analytical)", N = NA)
 
 ogo_sx <- ogo[control_for_starting_distance == "no"]
 metx <- summary(meta.summaries(d = ogo_sx$estimate, se = ogo_sx$sd, method = "fixed", weights = ogo_sx$N))$summci
-ogo_metx <- data.table(predictor = "Period", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(metanalytical)", N = NA)
+ogo_metx <- data.table(predictor = "Period", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(meta-analytical)", N = NA)
 
 ogo <- rbind(ogo, ogo_met, ogo_metx)
 
-ogo[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(metanalytical)", "All\n(mixed model)")))]
+ogo[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(meta-analytical)", "All\n(mixed model)")))]
 
 # prepare for adding N
 ogo[, N := as.character(N)]
@@ -1702,12 +1702,12 @@ g1b <-
   scale_x_continuous(breaks = round(seq(-0.3, 0.2, by = 0.1), 1)) +
   ylab("") +
   xlab("Daily human levels\n[Google Mobility]") +
-  labs(tag = "b)") +
+  labs(tag = "b") +
   # coord_cartesian(xlim = c(-.15, .15)) +
   # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
   theme_bw() +
   theme(
-    plot.tag = element_text(size = 7),
+    plot.tag = element_text(size = 7,face = "bold"),
     legend.position = "right",
     legend.title = element_text(size = tx_legend_tit),
     legend.text = element_text(size = 6),
@@ -1739,15 +1739,15 @@ oso[, N := as.numeric(sub(".*N = ", "", model))]
 # add meta-analytical mean
 oso_s <- oso[control_for_starting_distance == "yes"]
 met <- summary(meta.summaries(d = oso_s$estimate, se = oso_s$sd, method = "fixed", weights = oso_s$N))$summci
-oso_met <- data.table(predictor = "Period", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(metanalytical)", N = NA)
+oso_met <- data.table(predictor = "Period", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(meta-analytical)", N = NA)
 
 oso_sx <- oso[control_for_starting_distance == "no"]
 metx <- summary(meta.summaries(d = oso_sx$estimate, se = oso_sx$sd, method = "fixed", weights = oso_sx$N))$summci
-oso_metx <- data.table(predictor = "Period", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(metanalytical)", N = NA)
+oso_metx <- data.table(predictor = "Period", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(meta-analytical)", N = NA)
 
 oso <- rbind(oso, oso_met, oso_metx)
 
-oso[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(metanalytical)", "All\n(mixed model)")))]
+oso[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(meta-analytical)", "All\n(mixed model)")))]
 
 # prepare for adding N
 oso[, N := as.character(N)]
@@ -1771,13 +1771,13 @@ g1c <-
   scale_x_continuous(breaks = round(seq(-0.2, 0.4, by = 0.2), 1), , expand = c(0.04, 0.04)) +
   ylab("") +
   xlab("Weekly human levels\n[Stringency index]") +
-  labs(tag = "c)") +
+  labs(tag = "c") +
   # coord_cartesian(xlim = c(-.15, .15)) +
   # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
   theme_bw() +
   theme(
     legend.position = "right",
-    plot.tag = element_text(size = 7),
+    plot.tag = element_text(size = 7,face = "bold"),
     legend.title = element_text(size = tx_legend_tit),
     legend.text = element_text(size = 6),
     # legend.spacing.y = unit(0.1, 'cm'),
@@ -1808,15 +1808,15 @@ oo[, N:=as.numeric(sub('.*N = ', '', model))]
 # add meta-analytical mean
   oo_s = oo[control_for_starting_distance == 'yes']
   met = summary(meta.summaries(d = oo_s$estimate, se = oo_s$sd, method = "fixed", weights = oo_s$N))$summci
-  oo_met = data.table(predictor = "Period", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(metanalytical)", N = NA)
+  oo_met = data.table(predictor = "Period", estimate = met[2], lwr = met[1], upr = met[3], sd = NA, model = NA, control_for_starting_distance = "yes", Country = "Combined\n(meta-analytical)", N = NA)
 
   oo_sx = oo[control_for_starting_distance == "no"]
   metx = summary(meta.summaries(d = oo_sx$estimate, se = oo_sx$sd, method = "fixed", weights = oo_sx$N))$summci
-  oo_metx = data.table(predictor = "Period", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(metanalytical)", N = NA)
+  oo_metx = data.table(predictor = "Period", estimate = metx[2], lwr = metx[1], upr = metx[3], sd = NA, model = NA, control_for_starting_distance = "no", Country = "Combined\n(meta-analytical)", N = NA)
   
   oo = rbind(oo, oo_met, oo_metx)
     
-oo[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(metanalytical)", "All\n(mixed model)")))]
+oo[, Country := factor(Country, levels = rev(c("Finland", "Poland", "Czechia", "Hungary", "Australia", "Combined\n(meta-analytical)", "All\n(mixed model)")))]
 
 # prepare for adding N
 oo[control_for_starting_distance == "no" | is.na(N), N := ""]
@@ -1839,13 +1839,13 @@ ggplot(oo, aes(x = estimate, y = Country, col = Country, shape = control_for_sta
     scale_x_continuous(breaks = round(seq(-0.6, 0.9, by = 0.3), 1)) +
     ylab("") +
     xlab("Yearly human levels\n[Period]") +
-    labs(tag = "d)") +
+    labs(tag = "d") +
     # coord_cartesian(xlim = c(-.15, .15)) +
     # scale_x_continuous(breaks = round(seq(-.15, .15, by = 0.05),2)) +
     theme_bw() +
     theme(
         legend.position = "right",
-        plot.tag = element_text(size = 7),
+        plot.tag = element_text(size = 7,face = "bold"),
         legend.title = element_text(size = tx_legend_tit),
         legend.text = element_text(size = 6),
         # legend.spacing.y = unit(0.1, 'cm'),
@@ -1914,7 +1914,7 @@ gg_f1[[4]] <- gg_f1[[4]] + theme(
 )
 
 if (save_plot == TRUE) {
-  ggsave(here::here("Outputs/Fig_1_width-160mm.png"), gg_f1, width = 16, height = 6.5, unit = "cm", dpi = 600)
+  ggsave(here::here("Outputs/Fig_1_width-160mm_r2.png"), gg_f1, width = 16, height = 6.5, unit = "cm", dpi = 600)
 }
 
 gg_f1
@@ -4262,7 +4262,7 @@ p <-
   geom_ribbon(aes(ymin = lwr, ymax = upr, fill = Country, color = NULL), alpha = .15) +
   geom_jitter(aes(y = parks_percent_change_from_baseline, fill = Country), data = s, pch = 21, col = "grey20", width = 0.7, height = 3, alpha = 0.5) +
   geom_line(lwd = 1) +
-  labs(subtitle = "Mixed model per country predicitons", y = "Google Mobiligy\n[% change from baseline]", x = "Stringency index") +
+  labs(subtitle = "Mixed model per country predicitons", y = "Google Mobility\n[% change from baseline]", x = "Stringency index") +
   # scale_color_locuszoom()+
   # scale_fill_locuszoom(guide = "none")
   scale_x_continuous(breaks = round(seq(25, 75, by = 25), 1)) +
