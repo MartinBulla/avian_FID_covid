@@ -1,5 +1,5 @@
 #' ---
-#' title: <font size="2">Supporting code, figures and tables for</font><br><font size="5">Urban birds’ tolerance towards humans was largely unaffected by COVID-19 shutdown-induced variation in human levels</font>
+#' title: <font size="2">Supporting code, figures and tables for</font><br><font size="5">Urban birds’ tolerance towards humans was largely unaffected by COVID-19 shutdown-induced variation in human presence</font>
 #' author: <font size="2">Peter Mikula, Martin Bulla, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht</font><br><br><font size="2">created by Martin Bulla</font><br>
 #' date: <font size="1.5">`r Sys.time()`</font>
 #' bibliography: _bib.bib
