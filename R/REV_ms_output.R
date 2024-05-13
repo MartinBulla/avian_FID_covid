@@ -575,7 +575,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
 #' 
 #' Questions can be directed to bulla.mar@gmail.com & petomikula158@gmail.com
 #' 
-#' <a name="1"></a>(1) Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2023). *Supporting information for "Urban birds’ tolerance towards humans was largely unaffected by COVID-19 shutdown-induced variation in human presence"*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/).
+#' <a name="1"></a>(1) Martin Bulla, Peter Mikula, Daniel T. Blumstein, Yanina Benedetti, Kristina Floigl, Jukka Jokimäki, Marja-Liisa Kaisanlahti-Jokimäki, Gábor Markó, Federico Morelli, Anders Pape Møller, Anastasiia Siretckaia, Sára Szakony, Michael A. Weston, Farah Abou Zeid, Piotr Tryjanowski & Tomáš Albrecht (2024). *Supporting information for "Urban birds’ tolerance towards humans was largely unaffected by COVID-19 shutdown-induced variation in human presence"*, GitHub, [https://martinbulla.github.io/avian_FID_covid/](https://martinbulla.github.io/avian_FID_covid/).
 #' 
 #' 
 #' ***
