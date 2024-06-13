@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/490718600.svg)](https://zenodo.org/doi/10.5281/zenodo.11633803)
+
 ## Supporting information for "[Urban birds’ tolerance towards humans was largely unaffected by the COVID-19 shutdowns](https://doi.org/10.1101/2022.07.15.500232)"  
 
 When using this content **PLEASE CITE** the [paper](https://doi.org/10.1101/2022.07.15.500232) and this repository[<sup>1</sup>](#1).  
